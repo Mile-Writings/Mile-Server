@@ -58,3 +58,48 @@ ex. #123 [feat] 로그인 구현
 | remove | 기능 삭제 및 파일 삭제 |
 | test | 테스트 코드 작성 |
 | hotfix | hotfix |
+
+<br />
+
+## 👨🏻‍💻 Stack
+| Stack | Version | Content |
+| --- | --- | --- |
+| Spring Boot | 3.2.1 | - |
+| JDK | 17 | - |
+| MySql | 8.0.33 | - |
+| Openfeign - Spring Cloud | 2022.0.4 | 소셜 로그인 연동 |
+| Redis | 2.3.1 | 리프레시 토큰 저장 |
+| QueryDsl | 5.0.0 | 동적 쿼리 생성 |
+
+<br />
+
+## 🗂️ Directory
+```jsx
+├── build.gradle
+├── 🗂️ module-api
+│   ├── build.gradle
+│   └── 📂 src/main/java/com/mile
+│       ├── 📂 common
+│       ├── 📂 config
+│       └── 📂 post # 도메인 별로 controller 분리
+├── 🗂️ module-auth
+│   ├── build.gradle
+│   └── 📂 src/main/java/com/mile
+│       └── 📂 external
+│           └── 📂 client
+├── 🗂️ module-common
+│   ├── build.gradle
+│   └── 📂 src/main/java/com/mile
+│        └── 📂 exception
+│            ├── 📂 message
+│            └── 📂 model
+│        └── 📂 util
+├── 🗂️ module-domain
+│   ├── build.gradle
+│   └── 📂 src/main/java/com/mile
+│          └── 📂 post #도메인 별로 분리
+│              ├── 📂 domain
+│              ├── 📂 repository
+│              └── 📂 service
+└── settings.gradle
+```
