@@ -22,8 +22,8 @@ jobs:
     - name: create application.yml
       run: |
         ## create application.yml
-        mkdir ./src/main/resources
-        cd ./src/main/resources
+        mkdir ./module-api/src/main/resources
+        cd ./module-api/src/main/resources
 
         # application.yml 파일 생성
         touch ./application.yml
