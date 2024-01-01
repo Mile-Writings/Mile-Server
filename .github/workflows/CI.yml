@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04 
+
+
+    steps: 
+    - name: checkout
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'corretto'
+        java-version: '17'
+
+    - name: create application.yml
+      run: |
+        ## create application.yml
+        mkdir ./src/main/resources
+        cd ./src/main/resources
+
+        # application.yml 파일 생성
+        touch ./application.yml
+
+        # GitHub-Actions 에서 설정한 값을 application.yml 파일에 쓰기
+        echo "${{ secrets.CI_APPLICATION }}" >> ./application.yml
+        
+        # application.yml 파일 확인
+        cat ./application.yml
+      shell: bash
+      
+    - name: build
+      run: |
+          chmod +x gradlew
+          ./gradlew build -x test
+      shell: bash
