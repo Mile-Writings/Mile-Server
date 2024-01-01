@@ -7,4 +7,4 @@ module-common/build/libs/
 
 module-domain/build/libs/
 
-module-api/build/tmp/bootJar/
+module-api/build/
