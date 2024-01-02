@@ -29,10 +29,9 @@
 - `develop` : 개발 전용 브랜치
 - `이슈 기반 브랜치`
     - 생성된 이슈 번호로 브랜치를 생성한다
-    - 이슈번호 뒤에 `해야 할 기능 요약` (자유롭게 정의)
-    - feat/#{이슈번호}-aaa
-    - ex. feat/#1-aaa,
-    - ex. hotfix/#3-signin-password
+    - feat/#{이슈번호}
+    - ex. feat/#1,
+    - ex. hotfix/#3
 - PR이 Merge되면 해당 브랜치는 삭제한다.
 
 
