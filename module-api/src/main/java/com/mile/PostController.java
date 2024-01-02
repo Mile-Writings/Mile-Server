@@ -1,4 +1,4 @@
-package com.mile.post;
+package com.mile;
 
 public class PostController {
 }
