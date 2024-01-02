@@ -56,5 +56,5 @@ jobs:
         username: ${{ secrets.PROD_SERVER_USER }}
         key: ${{ secrets.PROD_SERVER_KEY }}
         script: |
-					cd ~
+          cd ~
           ./deploy.sh
