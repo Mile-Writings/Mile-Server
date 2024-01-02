@@ -16,7 +16,7 @@ public class Post {
     private Topic topic;
     private String title;
     private String content;
-    private String image;
+    private String imageUrl;
     private int curiousCount;
     private boolean anonymous;
     private boolean isTemporary;
