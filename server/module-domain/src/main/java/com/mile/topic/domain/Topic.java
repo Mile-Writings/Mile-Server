@@ -1,4 +1,4 @@
-package com.mile.content.domain;
+package com.mile.topic.domain;
 
 import com.mile.moim.domain.Moim;
 import jakarta.persistence.Entity;
@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Content {
+public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,7 +16,7 @@ public class Content {
     @ManyToOne
     private Moim moim;
 
-    private String content;
+    private String topic;
     private int week;
     private boolean isClosed;
 }

@@ -1,6 +1,6 @@
 package com.mile.post.domain;
 
-import com.mile.content.domain.Content;
+import com.mile.topic.domain.Topic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,9 +13,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private Content content;
+    private Topic topic;
     private String title;
-    private String writings;
+    private String content;
     private String image;
     private int curiousCount;
     private boolean anonymous;
