@@ -1,4 +1,4 @@
-package com.mile.curious.domain;
+package com.mile.config;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -12,4 +12,3 @@ public abstract class BaseTimeEntity {
     @CreatedDate
     private LocalDateTime createdAt;
 }
-

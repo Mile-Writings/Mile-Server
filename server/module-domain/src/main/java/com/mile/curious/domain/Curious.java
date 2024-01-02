@@ -1,6 +1,6 @@
 package com.mile.curious.domain;
 
-import com.mile.comment.domain.BaseTimeEntity;
+import com.mile.config.BaseTimeEntity;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import jakarta.persistence.Entity;

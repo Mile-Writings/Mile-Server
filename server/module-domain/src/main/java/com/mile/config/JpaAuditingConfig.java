@@ -1,4 +1,4 @@
-package com.mile.curious.config;
+package com.mile.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
