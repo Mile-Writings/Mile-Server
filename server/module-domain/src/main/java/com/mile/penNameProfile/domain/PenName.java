@@ -1,6 +1,7 @@
-package com.mile.post.domain;
+package com.mile.penNameProfile.domain;
 
-import com.mile.content.domain.Content;
+import com.mile.moim.domain.Moim;
+import com.mile.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,16 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Post {
+public class PenName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
-    private Content content;
-    private String title;
-    private String writings;
+    private Moim moim;
+
+    private String penName;
     private String image;
-    private int curiousCount;
-    private boolean anonymous;
-    private boolean isTemporary;
+
+    @ManyToOne
+    private User writer;
 }
