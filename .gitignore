@@ -1,10 +1,8 @@
 .idea/
 .DS_Store
 .gradle/
-module-api/build/libs/
-
-module-common/build/libs/
-
-module-domain/build/libs/
-
+build/
 module-api/build/
+module-common/build/
+module-domain/build/
+module-auth/build/
