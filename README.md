@@ -60,6 +60,10 @@ ex. #123 [feat] 로그인 구현
 
 <br />
 
+
+## 📍 Architecture
+<img src="https://github.com/Mile-Writings/Mile-Server/assets/116873401/f3eaa175-19fc-4ceb-8ab4-49687ddebf0e" width = "900" >
+
 ## 👨🏻‍💻 Stack
 | Stack | Version | Content |
 | --- | --- | --- |
