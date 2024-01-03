@@ -25,7 +25,9 @@ jobs:
       run: | 
           mkdir ./module-api/src/main/resources
           cd ./module-api/src/main/resources
+          touch ./application.yml
           echo "${{ secrets.PROD_APPLICATION }}" > ./application.yml
+          cat ./application.yml
       working-directory: ${{ env.working-directory }}
 
     - name: 빌드
