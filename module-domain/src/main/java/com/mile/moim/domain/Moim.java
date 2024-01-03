@@ -15,7 +15,7 @@ public class Moim {
     @ManyToOne
     private User owner;
     private String name;
-    private String image;
+    private String imageUrl;
     private String information;
     private boolean isPublic;
 }

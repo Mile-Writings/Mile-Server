@@ -18,7 +18,7 @@ public class PenName {
     private Moim moim;
 
     private String penName;
-    private String image;
+    private String imageUrl;
 
     @ManyToOne
     private User writer;
