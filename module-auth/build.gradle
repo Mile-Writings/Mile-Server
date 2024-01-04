@@ -3,4 +3,16 @@ jar { enabled = true }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE'
+
+    //외부 API 호출
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
+
+    //JWT 토큰
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+}
+
+ext {
+    set('springCloudVersion', "2022.0.4")
 }
