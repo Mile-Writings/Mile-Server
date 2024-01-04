@@ -4,6 +4,14 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'mysql:mysql-connector-java:8.0.33'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    //Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    //Health Check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.1'
+
 }
