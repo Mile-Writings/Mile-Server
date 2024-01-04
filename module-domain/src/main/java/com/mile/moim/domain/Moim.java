@@ -9,7 +9,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Moim")
 public class Moim {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
