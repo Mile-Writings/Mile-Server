@@ -7,6 +7,6 @@ public record ErrorResponse(
         String message
 ) {
     public static ErrorResponse of(final ErrorMessage errorMessage) {
-        return new ErrorResponse(ErrorMessage.INTERNAL_SERVER_ERROR.getStatus(), ErrorMessage.INTERNAL_SERVER_ERROR.getMessage());
+        return new ErrorResponse(errorMessage.getStatus(), errorMessage.getMessage());
     }
 }
