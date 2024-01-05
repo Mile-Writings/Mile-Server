@@ -1,4 +1,4 @@
-package com.mile.config.redis;
+package com.mile.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
