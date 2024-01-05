@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController implements UserControllerSwagger {
 
@@ -48,7 +48,6 @@ public class UserController implements UserControllerSwagger {
     public SuccessResponse deleteUser(
             final Principal principal
     ) {
-        tokenService.deleteRefreshToken(Long.valueOf(principal.getName()));
         userService.deleteUser(Long.valueOf(principal.getName()));
         return SuccessResponse.of(SuccessMessage.USER_DELETE_SUCCESS);
     }
