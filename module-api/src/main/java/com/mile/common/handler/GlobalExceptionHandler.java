@@ -17,12 +17,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
-        return ResponseEntity.badRequest().body(ErrorResponse.of(ErrorMessage.ENUM_VALUE_BAD_REQUEST));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.ENUM_VALUE_BAD_REQUEST));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(final BadRequestException e) {
-        return ResponseEntity.badRequest().body(ErrorResponse.of(e.getErrorMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
@@ -37,6 +37,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MileException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(final MileException e) {
-        return ResponseEntity.internalServerError().body(ErrorResponse.of(ErrorMessage.INTERNAL_SERVER_ERROR));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.of(ErrorMessage.INTERNAL_SERVER_ERROR));
     }
 }
