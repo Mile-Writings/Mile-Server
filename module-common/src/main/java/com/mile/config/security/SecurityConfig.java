@@ -1,8 +1,9 @@
 package com.mile.config.security;
 
+
 import com.mile.authentication.CustomAccessDeniedHandler;
 import com.mile.authentication.CustomJwtAuthenticationEntryPoint;
-import com.mile.token.filter.JwtAuthenticationFilter;
+import com.mile.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ public class SecurityConfig {
 
 
     private static final String[] AUTH_WHITELIST = {
+            "/test",
             "/user/login",
             "/user/token-refresh",
             "/actuator/health",

@@ -1,7 +1,7 @@
 package com.mile.controller.user;
 
-import com.mile.common.dto.ErrorResponse;
-import com.mile.common.dto.SuccessResponse;
+import com.mile.dto.ErrorResponse;
+import com.mile.dto.SuccessResponse;
 import com.mile.external.client.dto.UserLoginRequest;
 import com.mile.user.serivce.dto.AccessTokenGetSuccess;
 import com.mile.user.serivce.dto.LoginSuccessResponse;

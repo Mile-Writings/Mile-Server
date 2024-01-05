@@ -9,7 +9,7 @@ import com.mile.external.client.SocialType;
 import com.mile.external.client.dto.UserLoginRequest;
 import com.mile.external.client.kakao.KakaoSocialService;
 import com.mile.external.client.service.dto.UserInfoResponse;
-import com.mile.token.provider.JwtTokenProvider;
+import com.mile.jwt.JwtTokenProvider;
 import com.mile.token.service.TokenService;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
