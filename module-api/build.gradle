@@ -1,3 +1,7 @@
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
 dependencies {
     implementation project(':module-domain')
     implementation project(':module-common')
@@ -18,6 +22,9 @@ dependencies {
 
     //Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.1'
+
+    //Discord
+    implementation('com.github.napstr:logback-discord-appender:1.0.0')
 }
 
 ext {
