@@ -12,6 +12,7 @@
 |도소현|박희정|
 |:------:|:------:|
 |<img src="https://avatars.githubusercontent.com/u/79795051?v=4" width="300" height="300" />|<img src="https://github.com/GOSOPT-CDS-TEAM2/frontend/assets/97084864/c6d35974-8fc1-4089-93be-9430d4d33d2d" width="300" height="300" />|
+
 |[@sohyundoh](https://github.com/sohyundoh)|[@parkheeddong](https://github.com/parkheeddong)|
 
 
@@ -19,9 +20,9 @@
 
 ## 🌳 Branch Convention
 <details>
-	<summary> 브랜치 전략 </summary>
+	<summary> GIT - FLOW 전략 </summary>
   	<div markdown="1">
-      <img src="https://github.com/Mile-Writings/Mile-Server/assets/116873401/013c85c1-675e-484a-a453-83de917f5684" width = "500" >
+      <img src="https://github.com/Mile-Writings/Mile-Server/assets/116873401/5c3f34cb-5ab1-4a16-ad44-712a39108985" width = "600"/>
   	</div>
 </details>
 
