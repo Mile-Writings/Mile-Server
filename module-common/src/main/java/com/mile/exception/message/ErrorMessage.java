@@ -18,7 +18,7 @@ public enum ErrorMessage {
      */
     ENUM_VALUE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "요청한 값이 유효하지 않습니다."),
     AUTHENTICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST.value(), "인가 코드가 만료되었습니다."),
-
+    SOCIAL_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "로그인 요청이 유효하지 않습니다."),
     /*
     Unauthorized
      */

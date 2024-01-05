@@ -2,6 +2,7 @@ package com.mile.user.serivce;
 
 import com.mile.authentication.UserAuthentication;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.exception.model.UnauthorizedException;
 import com.mile.external.client.SocialType;
@@ -30,7 +31,19 @@ public class UserService {
             final String authorizationCode,
             final UserLoginRequest loginRequest
     ) {
-        return getTokenDto(kakaoSocialService.login(authorizationCode, loginRequest));
+        return getTokenDto(getUserInfoResponse(authorizationCode, loginRequest));
+    }
+
+    public UserInfoResponse getUserInfoResponse(
+            final String authorizationCode,
+            final UserLoginRequest loginRequest
+    ) {
+        switch (loginRequest.socialType()) {
+            case KAKAO:
+                return kakaoSocialService.login(authorizationCode, loginRequest);
+            default:
+                throw new BadRequestException(ErrorMessage.SOCIAL_TYPE_BAD_REQUEST);
+        }
     }
 
     public Long createUser(final UserInfoResponse userResponse) {
