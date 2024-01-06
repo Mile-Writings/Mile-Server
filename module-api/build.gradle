@@ -25,6 +25,9 @@ dependencies {
 
     //Discord
     implementation('com.github.napstr:logback-discord-appender:1.0.0')
+
+    //Aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 ext {
