@@ -1,9 +1,32 @@
 dependencies {
     implementation project(':module-domain')
     implementation project(':module-common')
+    implementation project(':module-auth')
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'mysql:mysql-connector-java:8.0.33'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    //External API
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'
+
+    //Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    //Health Check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.1'
+}
+
+ext {
+    set('springCloudVersion', "2023.0.0")
+}
+dependencyManagement {
+
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+
 }
