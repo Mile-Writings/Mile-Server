@@ -3,6 +3,7 @@ package com.mile.handler;
 import com.mile.dto.ErrorResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.JwtValidationException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.exception.model.UnauthorizedException;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -38,9 +40,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(final UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.of(e.getErrorMessage()));
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(e.getErrorMessage()));
+    }
+
+    @ExceptionHandler({NoHandlerFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(final NoHandlerFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(ErrorMessage.HANDLER_NOT_FOUND));
     }
 
     @ExceptionHandler(Exception.class)
