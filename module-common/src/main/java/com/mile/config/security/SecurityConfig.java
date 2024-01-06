@@ -24,7 +24,6 @@ public class SecurityConfig {
 
 
     private static final String[] AUTH_WHITELIST = {
-            "/test",
             "/user/login",
             "/user/token-refresh",
             "/actuator/health",
