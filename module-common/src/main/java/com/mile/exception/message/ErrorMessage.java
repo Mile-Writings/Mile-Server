@@ -24,7 +24,7 @@ public enum ErrorMessage {
      */
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "액세스 토큰이 만료되었습니다."),
     TOKEN_INCORRECT_ERROR(HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 유효하지 않습니다."),
-
+    TOKEN_VALIDATION_ERROR(HttpStatus.UNAUTHORIZED.value(), "사용자 검증 토큰이 유효하지 안습니다."),
     /*
     Internal Server Error
      */

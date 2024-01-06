@@ -1,4 +1,4 @@
-package com.mile.common.dto;
+package com.mile.dto;
 
 import com.mile.exception.message.ErrorMessage;
 

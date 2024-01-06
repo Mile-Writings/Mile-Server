@@ -1,4 +1,4 @@
-package com.mile.token.provider;
+package com.mile.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

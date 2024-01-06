@@ -1,7 +1,7 @@
 name: CD
 
 on:
-  pull_request:
+  push:
     branches: [ "develop" ]
 
 jobs:
@@ -23,7 +23,6 @@ jobs:
 
     - name: application.yaml 생성
       run: | 
-          mkdir ./module-api/src/main/resources
           cd ./module-api/src/main/resources
           touch ./application.yml
           echo "${{ secrets.PROD_APPLICATION }}" > ./application.yml

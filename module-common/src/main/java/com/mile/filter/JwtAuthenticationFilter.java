@@ -1,7 +1,10 @@
-package com.mile.token.filter;
+package com.mile.filter;
 
 import com.mile.authentication.UserAuthentication;
-import com.mile.token.provider.JwtTokenProvider;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.JwtValidationException;
+import com.mile.jwt.JwtTokenProvider;
+import com.mile.jwt.JwtValidationType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.mile.token.provider.JwtValidationType.VALID_JWT;
-
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             final String token = getJwtFromRequest(request);
-            if (jwtTokenProvider.validateToken(token) == VALID_JWT) {
+            if (jwtTokenProvider.validateToken(token) == JwtValidationType.VALID_JWT) {
                 Long memberId = jwtTokenProvider.getUserFromJwt(token);
                 // authentication 객체 생성 -> principal에 유저정보를 담는다.
                 UserAuthentication authentication = new UserAuthentication(memberId.toString(), null, null);
@@ -38,11 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception exception) {
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            throw new JwtValidationException(ErrorMessage.TOKEN_VALIDATION_ERROR);
         }
         // 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
