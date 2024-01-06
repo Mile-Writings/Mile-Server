@@ -2,6 +2,7 @@ package com.mile.filter;
 
 import com.mile.authentication.UserAuthentication;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.JwtValidationException;
 import com.mile.jwt.JwtTokenProvider;
 import com.mile.jwt.JwtValidationType;
@@ -49,7 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring("Bearer ".length());
+        } else {
+            throw new BadRequestException(ErrorMessage.BEARER_LOST_ERROR);
         }
-        return null;
     }
 }
