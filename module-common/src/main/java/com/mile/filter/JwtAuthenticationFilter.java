@@ -1,6 +1,8 @@
 package com.mile.filter;
 
 import com.mile.authentication.UserAuthentication;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.JwtValidationException;
 import com.mile.jwt.JwtTokenProvider;
 import com.mile.jwt.JwtValidationType;
 import jakarta.servlet.FilterChain;
@@ -37,11 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception exception) {
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            throw new JwtValidationException(ErrorMessage.TOKEN_VALIDATION_ERROR);
         }
         // 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
