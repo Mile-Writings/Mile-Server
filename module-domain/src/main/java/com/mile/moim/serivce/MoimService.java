@@ -1,6 +1,7 @@
 package com.mile.moim.serivce;
 
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.UnauthorizedException;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.topic.serivce.TopicService;
@@ -27,7 +28,7 @@ public class MoimService {
             final Long userId
     ) {
         if (!penNameService.isUserInMoim(moimId, userId)) {
-            throw new UnauthorizedException(ErrorMessage.USER_AUTHENTICATE_ERROR);
+            throw new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR);
         }
     }
 }
