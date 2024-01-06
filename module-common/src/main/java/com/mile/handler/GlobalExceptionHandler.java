@@ -41,17 +41,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    protected ErrorResponse handleException(final Exception error, final HttpServletRequest request) {
+    protected ResponseEntity<ErrorResponse> handleException(final Exception error, final HttpServletRequest request) {
         log.error("================================================NEW===============================================");
         log.error(error.getMessage(), error);
-        return ErrorResponse.of(ErrorMessage.INTERNAL_SERVER_ERROR);
-    }
-
-
-    @ExceptionHandler(MileException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(final MileException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.of(ErrorMessage.INTERNAL_SERVER_ERROR));
     }
 }
