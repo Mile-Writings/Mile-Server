@@ -22,7 +22,7 @@ public class MoimService {
         return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
     }
 
-    private void authenticateUserOfMoim(
+    public void authenticateUserOfMoim(
             final Long moimId,
             final Long userId
     ) {

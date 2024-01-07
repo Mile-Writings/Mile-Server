@@ -12,6 +12,12 @@ public enum SuccessMessage {
     USER_DELETE_SUCCESS(HttpStatus.OK.value(), "회원 삭제가 완료되었습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK.value(), "로그아웃이 완료되었습니다."),
 
+    /*
+    201 CREATED
+     */
+    COMMENT_CREATE_SUCCESS(HttpStatus.CREATED.value(), "댓글 등록이 완료되었습니다."),
+
+
     TOPIC_SEARCH_SUCCESS(HttpStatus.OK.value(), "주제 조회가 완료되었습니다."),
     ;
 

@@ -19,6 +19,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
+
     public List<ContentResponse> getContentsFromMoim(
             final Long moimId
     ) {
