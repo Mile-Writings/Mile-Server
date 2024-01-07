@@ -1,19 +1,29 @@
-package com.mile.aws.service;
+package com.mile.aws.utils;
 
 
 import com.mile.aws.config.AwsConfig;
-import com.mile.aws.utils.S3BucketDirectory;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.MileException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 @Component
 public class S3Service {
 
@@ -36,8 +46,7 @@ public class S3Service {
         validateExtension(image);
         validateFileSize(image);
 
-        final String key = directoryPath.value() + generateImageFileName();
-
+        String key = directoryPath.value() + generateImageFileName();
         try {
             final S3Client s3Client = awsConfig.getS3Client();
             PutObjectRequest request = PutObjectRequest.builder()
@@ -48,20 +57,18 @@ public class S3Service {
 
             RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
             s3Client.putObject(request, requestBody);
+            key = s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucketName).key(key).build()).toString();
             return key;
         } catch (RuntimeException e) {
-            throw new BusinessException(FAIL_TO_UPLOAD_IMAGE);
+            throw new MileException(ErrorMessage.INVALID_BUCKET_PREFIX);
         }
     }
 
 
     // PreSigned Url을 통한 이미지 업로드
-    public PreSignedUrlResponse getUploadPreSignedUrl(final S3BucketDirectory prefix) throws IOException {
+    public PreSignedUrlResponse getUploadPreSignedUrl(final S3BucketDirectory prefix) {
         final String fileName = generateImageFileName();   // UUID 문자열
         final String key = prefix.value() + fileName;
-
-        log.info("S3 세팅 성공!: {}", key);
-        log.info("업로드할 image 경로: {}", prefix);
 
         try {
             final S3Presigner preSigner = awsConfig.getS3PreSigner();
@@ -77,12 +84,12 @@ public class S3Service {
             String url = preSigner.presignPutObject(preSignedUrlRequest).url().toString();
             return PreSignedUrlResponse.of(fileName, url);
         } catch (RuntimeException e) {
-            throw new BusinessException(FAIL_TO_UPLOAD_IMAGE);
+            throw new MileException(ErrorMessage.IMAGE_UPLOAD_ERROR);
         }
     }
 
     // S3 버킷에 업로드된 이미지 삭제
-    public void deleteImage(String key) throws IOException {
+    public void deleteImage(final String key) throws IOException {
         try {
             final S3Client s3Client = awsConfig.getS3Client();
 
@@ -90,7 +97,7 @@ public class S3Service {
                     builder.bucket(bucketName)
                             .key(key).build());
         } catch (RuntimeException e) {
-            throw new BusinessException(FAIL_TO_DELETE_IMAGE);
+            throw new MileException(ErrorMessage.IMAGE_DELETE_ERROR);
         }
     }
 
@@ -101,13 +108,13 @@ public class S3Service {
     private void validateExtension(MultipartFile image) {
         String contentType = image.getContentType();
         if (!IMAGE_EXTENSIONS.contains(contentType)) {
-            throw new RuntimeException("이미지 확장자는 jpg, png, webp만 가능합니다.");
+            throw new BadRequestException(ErrorMessage.IMAGE_EXTENSION_INVALID_ERROR);
         }
     }
 
     private void validateFileSize(MultipartFile image) {
         if (image.getSize() > MAX_FILE_SIZE) {
-            throw new RuntimeException("이미지 사이즈는 5MB를 넘을 수 없습니다.");
+            throw new BadRequestException(ErrorMessage.IMAGE_SIZE_INVALID_ERROR);
         }
     }
 }

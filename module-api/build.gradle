@@ -6,6 +6,7 @@ dependencies {
     implementation project(':module-domain')
     implementation project(':module-common')
     implementation project(':module-auth')
+    implementation project(':module-external')
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
