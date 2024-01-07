@@ -1,4 +1,4 @@
-package com.mile.user.serivce.dto;
+package com.mile.user.service.dto;
 
 public record LoginSuccessResponse(
         String accessToken,

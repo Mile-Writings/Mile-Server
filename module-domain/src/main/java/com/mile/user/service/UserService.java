@@ -1,4 +1,4 @@
-package com.mile.user.serivce;
+package com.mile.user.service;
 
 import com.mile.authentication.UserAuthentication;
 import com.mile.exception.message.ErrorMessage;
@@ -13,8 +13,8 @@ import com.mile.jwt.JwtTokenProvider;
 import com.mile.token.service.TokenService;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
-import com.mile.user.serivce.dto.AccessTokenGetSuccess;
-import com.mile.user.serivce.dto.LoginSuccessResponse;
+import com.mile.user.service.dto.AccessTokenGetSuccess;
+import com.mile.user.service.dto.LoginSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
