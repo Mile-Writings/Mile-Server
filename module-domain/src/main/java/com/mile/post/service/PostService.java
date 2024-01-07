@@ -3,10 +3,10 @@ package com.mile.post.service;
 import com.mile.comment.service.CommentService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.serivce.MoimService;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
-import com.mile.topic.serivce.TopicService;
 import com.mile.user.serivce.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final TopicService topicService;
+    private final MoimService moimService;
     private final CommentService commentService;
     private final UserService userService;
 
@@ -38,7 +38,7 @@ public class PostService {
             final Post post,
             final Long userId
     ) {
-        topicService.authenticateUserWithTopic(post.getTopic(), userId);
+        moimService.authenticateUserOfMoim(post.getTopic().getMoim().getId(), userId);
     }
 
     public Post findById(

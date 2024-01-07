@@ -19,7 +19,7 @@ public class Topic extends BaseTimeEntity {
     @ManyToOne
     private Moim moim;
 
-    private String topic;
     private String keyword;
+    private String topic;
     private String description;
 }

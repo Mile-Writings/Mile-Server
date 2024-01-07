@@ -1,5 +1,6 @@
 package com.mile.post.domain;
 
+import com.mile.config.BaseTimeEntity;
 import com.mile.topic.domain.Topic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +11,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class Post {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

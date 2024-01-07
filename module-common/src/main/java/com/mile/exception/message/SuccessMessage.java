@@ -17,6 +17,8 @@ public enum SuccessMessage {
      */
     COMMENT_CREATE_SUCCESS(HttpStatus.CREATED.value(), "댓글 등록이 완료되었습니다."),
 
+
+    TOPIC_SEARCH_SUCCESS(HttpStatus.OK.value(), "주제 조회가 완료되었습니다."),
     ;
 
     int status;

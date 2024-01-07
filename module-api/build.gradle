@@ -28,6 +28,10 @@ dependencies {
 
     //Aop
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    //Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 ext {
@@ -39,4 +43,7 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 
+}
+tasks.named('test') {
+    useJUnitPlatform()
 }
