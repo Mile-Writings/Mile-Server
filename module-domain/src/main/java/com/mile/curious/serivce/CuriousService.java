@@ -4,8 +4,6 @@ import com.mile.curious.domain.Curious;
 import com.mile.curious.repository.CuriousRepository;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.exception.model.ForbiddenException;
-import com.mile.exception.model.MileException;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import lombok.RequiredArgsConstructor;
