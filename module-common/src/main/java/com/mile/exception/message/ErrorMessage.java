@@ -13,6 +13,7 @@ public enum ErrorMessage {
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저는 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저의 리프레시 토큰이 존재하지 않습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 댓글이 존재하지 않습니다."),
     /*
     Bad Request
      */
@@ -25,6 +26,10 @@ public enum ErrorMessage {
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "액세스 토큰이 만료되었습니다."),
     TOKEN_INCORRECT_ERROR(HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 유효하지 않습니다."),
     TOKEN_VALIDATION_ERROR(HttpStatus.UNAUTHORIZED.value(), "사용자 검증 토큰이 유효하지 안습니다."),
+    /*
+    Forbidden
+     */
+    COMMENT_ACCESS_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 댓글에 접근 권한이 없습니다."),
     /*
     Internal Server Error
      */
