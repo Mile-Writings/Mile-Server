@@ -1,0 +1,55 @@
+package com.mile.post.service;
+
+import com.mile.comment.service.CommentService;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.NotFoundException;
+import com.mile.moim.serivce.MoimService;
+import com.mile.post.domain.Post;
+import com.mile.post.repository.PostRepository;
+import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.post.service.dto.CommentListResponse;
+import com.mile.user.serivce.UserService;
+import com.mile.writerName.serivce.WriterNameService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class PostService {
+
+    private final PostRepository postRepository;
+    private final PostAuthenticateService postAuthenticateService;
+    private final CommentService commentService;
+    private final WriterNameService writerNameService;
+
+    @Transactional
+    public void createCommentOnPost(
+            final Long postId,
+            final Long userId,
+            final CommentCreateRequest commentCreateRequest
+
+    ) {
+        Post post = findById(postId);
+        Long moimId = post.getTopic().getMoim().getId();
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        commentService.createComment(post, writerNameService.findByMoimAndUser(moimId, userId), commentCreateRequest);
+    }
+
+    public CommentListResponse getComments(
+            final Long postId,
+            final Long userId
+    ) {
+        return CommentListResponse.of(commentService.getCommentResponse(postId, userId));
+    }
+
+
+    public Post findById(
+            final Long postId
+    ) {
+        return postRepository.findById(postId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
+                );
+    }
+}

@@ -118,4 +118,13 @@ public class UserService {
             return getTokenByUserId(id);
         }
     }
+
+    public User findById(
+            Long userId
+    ) {
+        return userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+                );
+    }
 }

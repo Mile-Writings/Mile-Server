@@ -1,14 +1,17 @@
 package com.mile.topic.domain;
 
+import com.mile.config.BaseTimeEntity;
 import com.mile.moim.domain.Moim;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
 
 @Entity
-public class Topic {
+@Getter
+public class Topic extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,7 +19,7 @@ public class Topic {
     @ManyToOne
     private Moim moim;
 
+    private String keyword;
     private String topic;
-    private int week;
-    private boolean isClosed;
+    private String description;
 }
