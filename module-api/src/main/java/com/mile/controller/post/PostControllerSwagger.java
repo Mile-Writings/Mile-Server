@@ -3,6 +3,7 @@ package com.mile.controller.post;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.post.service.dto.CommentListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,6 +36,23 @@ public interface PostControllerSwagger {
     SuccessResponse postComment(
             @PathVariable final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
+            final Principal principal
+    );
+
+    @Operation(summary = "댓글 리스트 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "댓글 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "해당 글에 대한 댓글이 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<CommentListResponse> getComments(
+            @PathVariable final Long postId,
             final Principal principal
     );
 }

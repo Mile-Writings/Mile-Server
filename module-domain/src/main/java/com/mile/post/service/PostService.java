@@ -8,6 +8,8 @@ import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.user.service.UserService;
+import com.mile.post.service.dto.CommentListResponse;
+import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final MoimService moimService;
+    private final PostAuthenticateService postAuthenticateService;
     private final CommentService commentService;
-    private final UserService userService;
+    private final WriterNameService writerNameService;
 
     @Transactional
     public void createCommentOnPost(
@@ -29,17 +31,18 @@ public class PostService {
 
     ) {
         Post post = findById(postId);
-        authenticateUserWithPost(post, userId);
-        commentService.createComment(post, userService.findById(userId), commentCreateRequest);
+        Long moimId = post.getTopic().getMoim().getId();
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        commentService.createComment(post, writerNameService.findByMoimAndUser(moimId, userId), commentCreateRequest);
     }
 
-
-    private void authenticateUserWithPost(
-            final Post post,
+    public CommentListResponse getComments(
+            final Long postId,
             final Long userId
     ) {
-        moimService.authenticateUserOfMoim(post.getTopic().getMoim().getId(), userId);
+        return CommentListResponse.of(commentService.getCommentResponse(postId, userId));
     }
+
 
     public Post findById(
             final Long postId
