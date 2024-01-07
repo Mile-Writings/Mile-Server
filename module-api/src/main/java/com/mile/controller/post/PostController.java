@@ -35,4 +35,15 @@ public class PostController implements PostControllerSwagger{
         );
         return SuccessResponse.of(SuccessMessage.COMMENT_CREATE_SUCCESS);
     }
+
+
+    @PostMapping("/{postId}/curious")
+    @Override
+    public SuccessResponse postCurious(
+            @PathVariable final Long postId,
+            final Principal principal
+    ) {
+        postService.createCuriousOnPost(postId, Long.valueOf(principal.getName()));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS);
+    }
 }
