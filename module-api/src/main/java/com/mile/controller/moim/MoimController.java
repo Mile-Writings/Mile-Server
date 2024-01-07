@@ -15,11 +15,12 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/moim")
-public class MoimController {
+public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
 
     @GetMapping("/{moimId}")
+    @Override
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @PathVariable final Long moimId,
             final Principal principal

@@ -55,6 +55,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else if (StringUtils.hasText(bearerToken) && !bearerToken.startsWith("Bearer ")) {
             throw new BadRequestException(ErrorMessage.BEARER_LOST_ERROR);
         }
-        return null;
     }
 }
