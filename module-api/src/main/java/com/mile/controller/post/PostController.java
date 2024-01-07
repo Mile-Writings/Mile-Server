@@ -4,8 +4,10 @@ import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.post.service.PostService;
 import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.post.service.dto.CommentListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
-public class PostController implements PostControllerSwagger{
+public class PostController implements PostControllerSwagger {
 
     private final PostService postService;
 
@@ -34,5 +36,14 @@ public class PostController implements PostControllerSwagger{
                 commentCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.COMMENT_CREATE_SUCCESS);
+    }
+
+    @GetMapping("/{postId}/comment")
+    @Override
+    public SuccessResponse<CommentListResponse> getComments(
+            @PathVariable final Long postId,
+            final Principal principal
+    ) {
+        return SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, Long.valueOf(principal.getName())));
     }
 }
