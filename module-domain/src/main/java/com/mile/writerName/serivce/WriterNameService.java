@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class WriterNameService {
-    private final WriterNameRepository penNameRepository;
+    private final WriterNameRepository writerNameRepository;
 
     public boolean isUserInMoim(
             final Long moimId,
             final Long writerId
     ) {
-        return penNameRepository.findByMoimIdAndWriterId(moimId, writerId).isPresent();
+        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId).isPresent();
     }
 
 }
