@@ -10,7 +10,7 @@ public record CommentResponse(
     String content,
     boolean isMyComment
 ) {
-    private static String ANONYMOUS = "작자미상";
+    private final static String ANONYMOUS = "작자미상";
 
     public static CommentResponse of(
             final Comment comment,
