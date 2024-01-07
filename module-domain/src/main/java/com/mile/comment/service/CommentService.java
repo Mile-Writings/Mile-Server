@@ -2,20 +2,14 @@ package com.mile.comment.service;
 
 import com.mile.comment.domain.Comment;
 import com.mile.comment.repository.CommentRepository;
-import com.mile.comment.service.dto.CommentResponse;
-import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.NotFoundException;
-import com.mile.post.domain.Post;
-import com.mile.post.service.PostAuthenticateService;
-import com.mile.post.service.dto.CommentCreateRequest;
-import com.mile.user.domain.User;
-import com.mile.writerName.domain.WriterName;
-import lombok.RequiredArgsConstructor;
-import com.mile.comment.domain.Comment;
-import com.mile.comment.repository.CommentRepository;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
+import com.mile.comment.service.dto.CommentResponse;
+import com.mile.post.domain.Post;
+import com.mile.post.service.PostAuthenticateService;
+import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.writerName.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private static boolean ANONYMOUS_TRUE = true;
+    private final PostAuthenticateService postAuthenticateService;
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -44,6 +40,7 @@ public class CommentService {
     ) {
         commentRepository.delete(comment);
     }
+
     private Comment findById(
             final Long commentId
     ) {
@@ -60,10 +57,6 @@ public class CommentService {
             throw new ForbiddenException(ErrorMessage.COMMENT_ACCESS_ERROR);
         }
     }
-    private static boolean ANONYMOUS_TRUE = true;
-    private final CommentRepository commentRepository;
-    private final PostAuthenticateService postAuthenticateService;
-
     public void createComment(
             final Post post,
             final WriterName writerName,
@@ -77,13 +70,13 @@ public class CommentService {
             final Long userId
     ) {
         postAuthenticateService.authenticateUserWithPostId(postId, userId);
-        List<Comment> commentList = findById(postId);
+        List<Comment> commentList = findByPostId(postId);
         throwIfCommentIsNull(commentList);
         return commentList.stream()
                 .map(comment -> CommentResponse.of(comment, userId)).collect(Collectors.toList());
     }
 
-    private List<Comment> findById(
+    private List<Comment> findByPostId(
             final Long postId
     ) {
         return commentRepository.findByPostId(postId);
