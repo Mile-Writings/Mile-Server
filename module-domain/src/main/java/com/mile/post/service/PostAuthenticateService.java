@@ -19,8 +19,7 @@ public class PostAuthenticateService {
             final Long userId
     ) {
         Post post = findById(postId);
-        Long moimId = post.getTopic().getMoim().getId();
-        moimService.authenticateUserOfMoim(moimId, userId);
+        authenticateUserWithPost(post, userId);
     }
 
     public void authenticateUserWithPost(
