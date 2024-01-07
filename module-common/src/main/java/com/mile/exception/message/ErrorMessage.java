@@ -30,6 +30,7 @@ public enum ErrorMessage {
 
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
 
+    CURIOUS_ALREADY_EXISTS_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "'궁금해요'는 이미 존재합니다."),
     /*
     Unauthorized
      */
