@@ -14,7 +14,7 @@ public enum ErrorMessage {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저는 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저의 리프레시 토큰이 존재하지 않습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글은 존재하지 않습니다."),
-
+    COMMENTS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글에 대한 댓글이 존재하지 않습니다."),
     MOIM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글모임이 존재하지 않습니다."),
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
@@ -25,9 +25,7 @@ public enum ErrorMessage {
     ENUM_VALUE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "요청한 값이 유효하지 않습니다."),
     AUTHENTICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST.value(), "인가 코드가 만료되었습니다."),
     SOCIAL_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "로그인 요청이 유효하지 않습니다."),
-
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청 값이 유효하지 않습니다."),
-
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
 
     /*
