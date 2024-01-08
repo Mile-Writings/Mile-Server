@@ -18,7 +18,6 @@ public enum ErrorMessage {
     MOIM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글모임이 존재하지 않습니다."),
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
-
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 댓글이 존재하지 않습니다."),
     /*
     Bad Request
@@ -26,9 +25,11 @@ public enum ErrorMessage {
     ENUM_VALUE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "요청한 값이 유효하지 않습니다."),
     AUTHENTICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST.value(), "인가 코드가 만료되었습니다."),
     SOCIAL_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "로그인 요청이 유효하지 않습니다."),
+    INVALID_BUCKET_PREFIX(HttpStatus.BAD_REQUEST.value(), "유효하지 않는 S3 버킷 디렉터리 이름입니다."),
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청 값이 유효하지 않습니다."),
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
-
+    IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
+    IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),
     /*
     Unauthorized
      */
@@ -47,6 +48,8 @@ public enum ErrorMessage {
     /*
     Internal Server Error
      */
+    IMAGE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷에 이미지를 업로드하는 데 실패했습니다."),
+    IMAGE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷으로부터 이미지를 삭제하는 데 실패했습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다.");
 
     final int status;
