@@ -37,4 +37,8 @@ public class Curious extends BaseTimeEntity {
                 .user(user)
                 .build();
     }
+
 }
+
+
+

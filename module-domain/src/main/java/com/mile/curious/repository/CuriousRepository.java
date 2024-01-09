@@ -1,5 +1,4 @@
 package com.mile.curious.repository;
-
 import com.mile.curious.domain.Curious;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;

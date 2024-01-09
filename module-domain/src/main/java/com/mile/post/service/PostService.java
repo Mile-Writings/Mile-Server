@@ -4,7 +4,6 @@ import com.mile.comment.service.CommentService;
 import com.mile.curious.serivce.CuriousService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
-import com.mile.moim.serivce.MoimService;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
@@ -37,6 +36,17 @@ public class PostService {
         Long moimId = post.getTopic().getMoim().getId();
         postAuthenticateService.authenticateUserWithPost(post, userId);
         commentService.createComment(post, writerNameService.findByMoimAndUser(moimId, userId), commentCreateRequest);
+    }
+
+
+    @Transactional
+    public void createCuriousOnPost(
+            final Long postId,
+            final Long userId
+    ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        curiousService.createCurious(post, userService.findById(userId));
     }
 
     public CommentListResponse getComments(

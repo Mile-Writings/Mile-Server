@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
 
-@Tag(name = "Post", description = "게시글 관련 API - 댓글 등록/ 조회 포함")
+@Tag(name = "Post", description = "게시글 관련 API - 댓글 등록/ 조회 및 궁금해요 등록/삭제 포함")
 public interface PostControllerSwagger {
 
     @Operation(summary = "댓글 작성")
@@ -36,6 +36,22 @@ public interface PostControllerSwagger {
     SuccessResponse postComment(
             @PathVariable final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
+            final Principal principal
+    );
+
+
+    @Operation(summary = "궁금해요 생성")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode =  "200", description = "궁금해요 생성이 완료되었습니다."),
+                    @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse postCurious(
+            @PathVariable final Long postId,
             final Principal principal
     );
 
