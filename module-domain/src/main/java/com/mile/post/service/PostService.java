@@ -1,6 +1,7 @@
 package com.mile.post.service;
 
 import com.mile.comment.service.CommentService;
+import com.mile.curious.serivce.CuriousService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.serivce.MoimService;
@@ -22,6 +23,8 @@ public class PostService {
     private final PostAuthenticateService postAuthenticateService;
     private final CommentService commentService;
     private final WriterNameService writerNameService;
+    private final CuriousService curiousService;
+    private final UserService userService;
 
     @Transactional
     public void createCommentOnPost(
@@ -52,4 +55,15 @@ public class PostService {
                         () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
                 );
     }
+
+    @Transactional
+    public void deleteCuriousOnPost(
+            final Long postId,
+            final Long userId
+    ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        curiousService.deleteCurious(post, userService.findById(userId));
+    }
+
 }
