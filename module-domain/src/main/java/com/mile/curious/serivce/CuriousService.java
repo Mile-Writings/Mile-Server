@@ -1,9 +1,7 @@
 package com.mile.curious.serivce;
 
-import com.mile.curious.domain.Curious;
 import com.mile.curious.repository.CuriousRepository;
 import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
