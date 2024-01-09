@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CuriousRepository extends JpaRepository<Curious, Long> {
     boolean existsByPostAndUser(Post post, User user);
     Curious findByPostAndUser(Post post, User user);
+
+    void deleteAllByPost(final Post post);
 }

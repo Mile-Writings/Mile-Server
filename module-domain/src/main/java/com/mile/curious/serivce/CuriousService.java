@@ -1,10 +1,11 @@
 package com.mile.curious.serivce;
+
+import com.mile.curious.domain.Curious;
 import com.mile.curious.repository.CuriousRepository;
 import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.NotFoundException;
-import com.mile.curious.domain.Curious;
 import com.mile.exception.model.ConflictException;
+import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,11 @@ public class CuriousService {
 
     public CuriousInfoResponse getCuriousInfoResponse(final Post post, final User user) {
         return CuriousInfoResponse.of(curiousRepository.existsByPostAndUser(post, user), post.getCuriousCount());
+    }
+
+    public void deleteAllByPost(
+            final Post post
+    ) {
+        curiousRepository.deleteAllByPost(post);
     }
 }

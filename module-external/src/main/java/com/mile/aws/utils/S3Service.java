@@ -89,7 +89,7 @@ public class S3Service {
     }
 
     // S3 버킷에 업로드된 이미지 삭제
-    public void deleteImage(final String key) throws IOException {
+    public void deleteImage(final String key) {
         try {
             final S3Client s3Client = awsConfig.getS3Client();
 

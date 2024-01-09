@@ -1,5 +1,6 @@
 package com.mile.post.service;
 
+import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
 import com.mile.curious.serivce.CuriousService;
 import com.mile.curious.serivce.dto.CuriousInfoResponse;
@@ -30,6 +31,7 @@ public class PostService {
     private final CuriousService curiousService;
     private final UserService userService;
     private final TopicService topicService;
+    private final S3Service s3Service;
 
     @Transactional
     public void createCommentOnPost(
@@ -118,5 +120,37 @@ public class PostService {
             final Long userId
     ) {
         return WriterAuthenticateResponse.of(postAuthenticateService.authenticateWriterWithPost(postId, userId));
+    }
+
+    @Transactional
+    public void deletePost(
+            final Long postId,
+            final Long userId
+    ) {
+        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        delete(postId);
+    }
+
+    private void delete(
+            final Long postId
+    ) {
+        Post post = findById(postId);
+        deleteRelatedData(post);
+        postRepository.delete(post);
+    }
+
+    private void deleteRelatedData(
+           final Post post
+    ) {
+        if(post.isContainPhoto()) {
+            deleteS3File(post.getImageUrl());
+        }
+        curiousService.deleteAllByPost(post);
+        commentService.deleteAllByPost(post);
+    }
+    private void deleteS3File(
+            final String key
+    ) {
+        s3Service.deleteImage(key);
     }
 }
