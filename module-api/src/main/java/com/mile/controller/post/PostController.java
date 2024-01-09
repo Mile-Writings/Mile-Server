@@ -1,5 +1,6 @@
 package com.mile.controller.post;
 
+import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.post.service.PostService;
@@ -45,5 +46,14 @@ public class PostController implements PostControllerSwagger {
             final Principal principal
     ) {
         return SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, Long.valueOf(principal.getName())));
+    }
+
+    @GetMapping("/{postId}/curiousInfo")
+    @Override
+    public SuccessResponse<CuriousInfoResponse> getCuriousInfo(
+            @PathVariable final Long postId,
+            final Principal principal
+    ) {
+        return SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfo(postId, Long.valueOf(principal.getName())));
     }
 }

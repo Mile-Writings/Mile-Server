@@ -1,5 +1,6 @@
 package com.mile.controller.post;
 
+import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
@@ -52,6 +53,21 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<CommentListResponse> getComments(
+            @PathVariable final Long postId,
+            final Principal principal
+    );
+
+    @Operation(summary = "궁금해요 개수 및 궁금해요 여부 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "궁금해요 개수 및 궁금해요 여부 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<CuriousInfoResponse> getCuriousInfo(
             @PathVariable final Long postId,
             final Principal principal
     );
