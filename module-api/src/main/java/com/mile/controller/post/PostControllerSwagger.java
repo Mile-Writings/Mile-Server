@@ -44,7 +44,7 @@ public interface PostControllerSwagger {
     @Operation(summary = "궁금해요 생성")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode =  "200", description = "궁금해요 생성이 완료되었습니다."),
+                    @ApiResponse(responseCode = "200", description = "궁금해요 생성이 완료되었습니다."),
                     @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
@@ -93,7 +93,7 @@ public interface PostControllerSwagger {
     @Operation(summary = "궁금해요 삭제")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode =  "200", description = "궁금해요 삭제가 완료되었습니다."),
+                    @ApiResponse(responseCode = "200", description = "궁금해요 삭제가 완료되었습니다."),
                     @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
@@ -101,6 +101,25 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse deleteCurious(
+            @PathVariable final Long postId,
+            final Principal principal
+    );
+
+
+    @Operation(summary = "게시글 삭제/수정 권한 확인")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "게시글 권한이 확인되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 글은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+            }
+    )
+    SuccessResponse getAuthenticateWrite(
             @PathVariable final Long postId,
             final Principal principal
     );

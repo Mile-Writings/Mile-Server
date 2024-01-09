@@ -17,6 +17,7 @@ public enum SuccessMessage {
     MOIM_AUTHENTICATE_SUCCESS(HttpStatus.OK.value(), "사용자의 권한이 확인되었습니다."),
     CURIOUS_INFO_SEARCH_SUCCESS(HttpStatus.OK.value(), "궁금해요 개수 및 궁금해요 여부 조회가 완료되었습니다."),
     CURIOUS_DELETE_SUCCESS(HttpStatus.OK.value(), "궁금해요 삭제가 완료되었습니다."),
+    WRITER_AUTHENTIACTE_SUCCESS(HttpStatus.OK.value(), "게시글 권한이 확인되었습니다."),
     /*
     201 CREATED
      */
