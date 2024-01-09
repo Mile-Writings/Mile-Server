@@ -15,10 +15,13 @@ public enum SuccessMessage {
     TOPIC_SEARCH_SUCCESS(HttpStatus.OK.value(), "주제 조회가 완료되었습니다."),
     COMMENT_SEARCH_SUCCESS(HttpStatus.OK.value(), "댓글 조회가 완료되었습니다."),
     CURIOUS_INFO_SEARCH_SUCCESS(HttpStatus.OK.value(), "궁금해요 개수 및 궁금해요 여부 조회가 완료되었습니다."),
+    CURIOUS_DELETE_SUCCESS(HttpStatus.OK.value(), "궁금해요 삭제가 완료되었습니다."),
     /*
     201 CREATED
      */
     COMMENT_CREATE_SUCCESS(HttpStatus.CREATED.value(), "댓글 등록이 완료되었습니다."),
+    CURIOUS_CREATE_SUCCESS(HttpStatus.CREATED.value(), "궁금해요 생성이 완료되었습니다."),
+
     ;
 
     int status;
