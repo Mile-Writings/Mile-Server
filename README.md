@@ -12,7 +12,6 @@
 |도소현|박희정|
 |:------:|:------:|
 |<img src="https://avatars.githubusercontent.com/u/79795051?v=4" width="300" height="300" />|<img src="https://github.com/GOSOPT-CDS-TEAM2/frontend/assets/97084864/c6d35974-8fc1-4089-93be-9430d4d33d2d" width="300" height="300" />|
-
 |[@sohyundoh](https://github.com/sohyundoh)|[@parkheeddong](https://github.com/parkheeddong)|
 
 
