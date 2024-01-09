@@ -1,6 +1,7 @@
 package com.mile.post.service;
 
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.serivce.MoimService;
 import com.mile.post.domain.Post;
@@ -44,5 +45,14 @@ public class PostAuthenticateService {
             final Long userId
     ) {
         return postRepository.existsPostByIdAndWriterNameId(postId, userId);
+    }
+
+    public void authenticateWriter(
+            final Long postId,
+            final Long userId
+    ) {
+        if (!authenticateWriterWithPost(postId, userId)) {
+            throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
+        }
     }
 }

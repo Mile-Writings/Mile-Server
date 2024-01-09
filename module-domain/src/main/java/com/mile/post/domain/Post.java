@@ -1,6 +1,7 @@
 package com.mile.post.domain;
 
 import com.mile.config.BaseTimeEntity;
+import com.mile.post.service.dto.PostPutRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.writerName.domain.WriterName;
 import jakarta.persistence.Entity;
@@ -18,12 +19,12 @@ public class Post extends BaseTimeEntity {
     private Long id;
     @ManyToOne
     private Topic topic;
-    @ManyToOne
-    private WriterName writerName;
-
     private String title;
     private String content;
     private String imageUrl;
+    @ManyToOne
+    private WriterName writerName;
+
     private int curiousCount;
     private boolean anonymous;
     private boolean isTemporary;
@@ -34,5 +35,16 @@ public class Post extends BaseTimeEntity {
 
     public void decreaseCuriousCount() {
         this.curiousCount--;
+    }
+
+    public void updatePost(
+            final Topic topic,
+            final PostPutRequest putRequest
+    ) {
+        this.topic = topic;
+        this.title = putRequest.title();
+        this.content = putRequest.content();
+        this.imageUrl = putRequest.imageUrl();
+        this.anonymous = putRequest.anonymous();
     }
 }

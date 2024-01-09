@@ -8,10 +8,12 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
-import com.mile.post.service.dto.WriterAuthenticateResponse;
-import com.mile.user.service.UserService;
 import com.mile.post.service.dto.CommentListResponse;
-import com.mile.writerName.domain.WriterName;
+import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.WriterAuthenticateResponse;
+import com.mile.topic.domain.Topic;
+import com.mile.topic.serivce.TopicService;
+import com.mile.user.service.UserService;
 import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class PostService {
     private final WriterNameService writerNameService;
     private final CuriousService curiousService;
     private final UserService userService;
+    private final TopicService topicService;
 
     @Transactional
     public void createCommentOnPost(
@@ -73,7 +76,7 @@ public class PostService {
     public CuriousInfoResponse getCuriousInfo(
             final Long postId,
             final Long userId
-           ) {
+    ) {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         return curiousService.getCuriousInfoResponse(post, userService.findById(userId));
@@ -88,6 +91,27 @@ public class PostService {
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.deleteCurious(post, userService.findById(userId));
     }
+
+    @Transactional
+    public void updatePost(
+            final Long postId,
+            final Long userId,
+            final PostPutRequest putRequest
+    ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateWriter(postId, userId);
+        Topic topic = topicService.findById(putRequest.topicId());
+        update(post, topic, putRequest);
+    }
+
+    private void update(
+            final Post post,
+            final Topic topic,
+            final PostPutRequest putRequest
+    ) {
+        post.updatePost(topic, putRequest);
+    }
+
 
     public WriterAuthenticateResponse getAuthenticateWriter(
             final Long postId,
