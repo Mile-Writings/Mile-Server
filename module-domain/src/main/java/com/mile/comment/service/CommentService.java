@@ -95,4 +95,10 @@ public class CommentService {
     ) {
         return commentList.isEmpty();
     }
+
+    public void deleteAllByPost(
+            final Post post
+    ) {
+        commentRepository.deleteAllByPost(post);
+    }
 }
