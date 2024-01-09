@@ -4,7 +4,7 @@ public record MoimAuthenticateResponse(
         boolean isMember
 ) {
     public static MoimAuthenticateResponse of(
-            boolean isMember
+            final boolean isMember
     ) {
         return new MoimAuthenticateResponse(isMember);
     }
