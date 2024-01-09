@@ -52,4 +52,13 @@ public class PostService {
                         () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
                 );
     }
+
+    @Transactional(readOnly = true)
+    public void getCuriousInfo(
+            final Long postId,
+            final Long userId
+           ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+    }
 }
