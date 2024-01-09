@@ -12,7 +12,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
