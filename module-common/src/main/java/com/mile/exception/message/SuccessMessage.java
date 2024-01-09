@@ -18,6 +18,8 @@ public enum SuccessMessage {
     201 CREATED
      */
     COMMENT_CREATE_SUCCESS(HttpStatus.CREATED.value(), "댓글 등록이 완료되었습니다."),
+    CURIOUS_CREATE_SUCCESS(HttpStatus.CREATED.value(), "궁금해요 생성이 완료되었습니다."),
+
     ;
 
     int status;
