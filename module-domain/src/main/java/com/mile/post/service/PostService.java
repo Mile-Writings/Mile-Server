@@ -2,6 +2,7 @@ package com.mile.post.service;
 
 import com.mile.comment.service.CommentService;
 import com.mile.curious.serivce.CuriousService;
+import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
@@ -64,6 +65,16 @@ public class PostService {
                 .orElseThrow(
                         () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
                 );
+    }
+
+    @Transactional(readOnly = true)
+    public CuriousInfoResponse getCuriousInfo(
+            final Long postId,
+            final Long userId
+           ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        return curiousService.getCuriousInfoResponse(post, userService.findById(userId));
     }
 
     @Transactional
