@@ -126,7 +126,7 @@ public interface PostControllerSwagger {
     );
 
 
-    @Operation(summary = "글 수정 API")
+    @Operation(summary = "글 수정")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글 수정이 완료되었습니다."),
