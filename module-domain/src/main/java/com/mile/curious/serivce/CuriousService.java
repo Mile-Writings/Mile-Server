@@ -17,7 +17,7 @@ public class CuriousService {
     public void deleteCurious(final Post post, final User user) {
         checkCuriousNotExists(post, user);
         curiousRepository.delete(curiousRepository.findByPostAndUser(post, user));
-        post.setCuriousCount(post.getCuriousCount()-1);
+        post.decreaseCuriousCount();
     }
 
     public void checkCuriousNotExists(final Post post, final User user) {

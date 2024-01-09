@@ -12,7 +12,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +24,8 @@ public class Post extends BaseTimeEntity {
     private int curiousCount;
     private boolean anonymous;
     private boolean isTemporary;
+
+    public void decreaseCuriousCount() {
+        this.curiousCount--;
+    }
 }
