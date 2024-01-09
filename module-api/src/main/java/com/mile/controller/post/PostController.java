@@ -68,8 +68,7 @@ public class PostController implements PostControllerSwagger {
             @PathVariable final Long postId,
             final Principal principal
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS,
-                postService.getCuriousInfo(postId, Long.valueOf(principal.getName())));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS,  postService.getCuriousInfo(postId, Long.valueOf(principal.getName())));
     }
 
     @DeleteMapping("/{postId}/curious")

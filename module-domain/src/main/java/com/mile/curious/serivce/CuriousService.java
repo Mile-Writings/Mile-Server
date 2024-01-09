@@ -1,5 +1,6 @@
 package com.mile.curious.serivce;
 import com.mile.curious.repository.CuriousRepository;
+import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.curious.domain.Curious;
@@ -38,5 +39,9 @@ public class CuriousService {
         if (curiousRepository.existsByPostAndUser(post, user)) {
             throw new ConflictException(ErrorMessage.CURIOUS_ALREADY_EXISTS_EXCEPTION);
         }
+    }
+
+    public CuriousInfoResponse getCuriousInfoResponse(final Post post, final User user) {
+        return CuriousInfoResponse.of(curiousRepository.existsByPostAndUser(post, user), post.getCuriousCount());
     }
 }
