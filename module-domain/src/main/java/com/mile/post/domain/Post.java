@@ -25,4 +25,8 @@ public class Post extends BaseTimeEntity {
     private int curiousCount;
     private boolean anonymous;
     private boolean isTemporary;
+
+    public void increaseCuriousCount() {
+        this.curiousCount++;
+    }
 }
