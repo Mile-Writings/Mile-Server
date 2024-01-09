@@ -14,6 +14,7 @@ public enum SuccessMessage {
     LOGOUT_SUCCESS(HttpStatus.OK.value(), "로그아웃이 완료되었습니다."),
     TOPIC_SEARCH_SUCCESS(HttpStatus.OK.value(), "주제 조회가 완료되었습니다."),
     COMMENT_SEARCH_SUCCESS(HttpStatus.OK.value(), "댓글 조회가 완료되었습니다."),
+    MOIM_AUTHENTICATE_SUCCESS(HttpStatus.OK.value(), "사용자의 권한이 확인되었습니다."),
     /*
     201 CREATED
      */
