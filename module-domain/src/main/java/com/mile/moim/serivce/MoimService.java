@@ -3,6 +3,7 @@ package com.mile.moim.serivce;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.serivce.dto.ContentListResponse;
+import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
 import com.mile.topic.serivce.TopicService;
 import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,12 @@ public class MoimService {
         if (!writerNameService.isUserInMoim(moimId, userId)) {
             throw new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR);
         }
+    }
+
+    public MoimAuthenticateResponse getAuthenticateUserOfMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
     }
 }
