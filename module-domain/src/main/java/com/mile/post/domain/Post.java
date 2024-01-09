@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -27,5 +26,9 @@ public class Post extends BaseTimeEntity {
 
     public void increaseCuriousCount() {
         this.curiousCount++;
+    }
+
+    public void decreaseCuriousCount() {
+        this.curiousCount--;
     }
 }

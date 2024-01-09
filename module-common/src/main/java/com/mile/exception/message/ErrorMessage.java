@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,6 +20,7 @@ public enum ErrorMessage {
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 댓글이 존재하지 않습니다."),
+    CURIOUS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 궁금해요는 존재하지 않습니다."),
     /*
     Bad Request
      */

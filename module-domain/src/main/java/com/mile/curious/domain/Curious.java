@@ -21,7 +21,6 @@ public class Curious extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     private Post post;
 
@@ -38,4 +37,8 @@ public class Curious extends BaseTimeEntity {
                 .user(user)
                 .build();
     }
+
 }
+
+
+
