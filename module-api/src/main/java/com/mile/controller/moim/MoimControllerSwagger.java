@@ -31,4 +31,20 @@ public interface MoimControllerSwagger {
             @PathVariable final Long moimId,
             final Principal principal
     );
+
+
+    @Operation(summary = "댓글 및 궁금해요 기능 권한 조회 API")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "사용자의 권한이 확인되었습니다."),
+                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 안습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse getAuthenticationOfMoim(
+            final Long moimId,
+            final Principal principal
+    );
 }
