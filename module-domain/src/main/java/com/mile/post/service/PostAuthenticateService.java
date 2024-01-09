@@ -38,4 +38,11 @@ public class PostAuthenticateService {
                         () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
                 );
     }
+
+    public boolean authenticateWriterWithPost(
+            final Long postId,
+            final Long userId
+    ) {
+        return postRepository.existsPostByIdAndWriterNameId(postId, userId);
+    }
 }

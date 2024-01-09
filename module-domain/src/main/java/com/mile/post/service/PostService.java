@@ -7,8 +7,10 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.user.service.UserService;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -76,4 +78,10 @@ public class PostService {
         curiousService.deleteCurious(post, userService.findById(userId));
     }
 
+    public WriterAuthenticateResponse getAuthenticateWriter(
+            final Long postId,
+            final Long userId
+    ) {
+        return WriterAuthenticateResponse.of(postAuthenticateService.authenticateWriterWithPost(postId, userId));
+    }
 }
