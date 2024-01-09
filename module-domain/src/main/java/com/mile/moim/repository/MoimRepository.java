@@ -6,5 +6,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MoimRepository extends JpaRepository<Moim, Long> {
-    List<Post> getPostsByMoimId(final Long moimId);
+    List<Post> getPostsById(final Long id);
 }

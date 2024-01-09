@@ -53,7 +53,7 @@ public class MoimService {
     public PopularWriterListResponse getPopularWriters(
             final Long moimId
     ) {
-        List<Post> posts = moimRepository.getPostsByMoimId(moimId);
+        List<Post> posts = moimRepository.getPostsById(moimId);
         Map<WriterName, Integer> curiousCountMap = new HashMap<>();
         for (Post post : posts) {
             int curiousCount = post.getCuriousCount();
