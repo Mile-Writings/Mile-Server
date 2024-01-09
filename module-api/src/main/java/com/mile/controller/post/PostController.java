@@ -40,7 +40,6 @@ public class PostController implements PostControllerSwagger {
     }
 
 
-
     @PostMapping("/{postId}/curious")
     @Override
     public SuccessResponse postCurious(
@@ -68,5 +67,14 @@ public class PostController implements PostControllerSwagger {
     ) {
         postService.deleteCuriousOnPost(postId, Long.valueOf(principal.getName()));
         return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS);
+    }
+
+    @GetMapping("/{postId}/authenticate")
+    @Override
+    public SuccessResponse getAuthenticateWrite(
+            @PathVariable final Long postId,
+            final Principal principal
+    ) {
+        return SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, Long.valueOf(principal.getName())));
     }
 }

@@ -15,6 +15,7 @@ public enum SuccessMessage {
     TOPIC_SEARCH_SUCCESS(HttpStatus.OK.value(), "주제 조회가 완료되었습니다."),
     COMMENT_SEARCH_SUCCESS(HttpStatus.OK.value(), "댓글 조회가 완료되었습니다."),
     CURIOUS_DELETE_SUCCESS(HttpStatus.OK.value(), "궁금해요 삭제가 완료되었습니다."),
+    WRITER_AUTHENTIACTE_SUCCESS(HttpStatus.OK.value(), "게시글 권한이 확인되었습니다."),
     /*
     201 CREATED
      */
