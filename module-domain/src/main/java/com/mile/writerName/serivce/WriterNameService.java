@@ -30,7 +30,7 @@ public class WriterNameService {
                 );
     }
 
-    public int findWritersByMoimId(
+    public int findNumbersOfWritersByMoimId(
             final Long moimId
     ) {
         return writerNameRepository.findByMoimId(moimId).size();

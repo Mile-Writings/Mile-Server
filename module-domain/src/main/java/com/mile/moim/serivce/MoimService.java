@@ -54,7 +54,7 @@ public class MoimService {
                 moim.getName(),
                 writerNameService.getOwnerNameOfMoimId(moimId),
                 moim.getInformation(),
-                writerNameService.findWritersByMoimId(moimId),
+                writerNameService.findNumbersOfWritersByMoimId(moimId),
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
         );
     }
