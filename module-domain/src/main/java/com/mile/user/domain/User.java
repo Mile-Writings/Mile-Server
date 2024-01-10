@@ -26,6 +26,7 @@ public class User {
     private String email;
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
+    private Integer totalCuriousCount;
 
     public static User of(
             final Long socialId,
@@ -38,4 +39,15 @@ public class User {
                 .socialType(socialType)
                 .build();
     }
+
+    public void increaseTotalCuriousCount() {
+        totalCuriousCount++;
+    }
+
+    public void decreaseTotalCuriousCount() {
+        totalCuriousCount--;
+    }
+
+
+
 }

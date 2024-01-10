@@ -22,8 +22,6 @@ public class WriterName {
     private String name;
     private String information;
 
-    private Integer totalCuriousCount;
-
     @ManyToOne
     private User writer;
 }
