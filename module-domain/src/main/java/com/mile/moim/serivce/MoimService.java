@@ -90,8 +90,8 @@ public class MoimService {
     public List<WriterName> getWriters(
             List<WriterName> writersOfMoim
     ) {
-        if (writersOfMoim.size() == 0) {
-            // throw new Exception(ErrorMessage.ERROR);
+        if (writersOfMoim.size() < NUMBER_OF_MOST_CURIOUS_WRITERS) {
+            throw new NotFoundException(ErrorMessage.WRITER_NOT_FOUND);
         }
         return writersOfMoim.subList(0, NUMBER_OF_MOST_CURIOUS_WRITERS);
     }
