@@ -29,4 +29,17 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.USER_AUTHENTICATE_ERROR)
                 );
     }
+
+    public int findWritersByMoimId(
+            final Long moimId
+    ) {
+        return writerNameRepository.findByMoimId(moimId).size();
+    }
+
+    public String getOwnerNameOfMoimId(
+            final Long moimId
+    ) {
+        return writerNameRepository.getOwnerWriterNameByMoimId(moimId);
+    }
+
 }
