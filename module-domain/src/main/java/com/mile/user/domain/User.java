@@ -40,14 +40,5 @@ public class User {
                 .build();
     }
 
-    public void increaseTotalCuriousCount() {
-        totalCuriousCount++;
-    }
-
-    public void decreaseTotalCuriousCount() {
-        totalCuriousCount--;
-    }
-
-
 
 }

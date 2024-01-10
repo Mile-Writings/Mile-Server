@@ -24,4 +24,14 @@ public class WriterName {
 
     @ManyToOne
     private User writer;
+
+    private Integer totalCuriousCount;
+
+    public void increaseTotalCuriousCount() {
+        totalCuriousCount++;
+    }
+
+    public void decreaseTotalCuriousCount() {
+        totalCuriousCount--;
+    }
 }

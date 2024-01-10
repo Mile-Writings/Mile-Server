@@ -24,8 +24,6 @@ public class Post extends BaseTimeEntity {
     private String title;
     private String content;
     private String imageUrl;
-    @ManyToOne
-    private WriterName writerName;
     private int curiousCount;
     private boolean containPhoto;
     private boolean anonymous;
