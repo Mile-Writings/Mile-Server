@@ -15,11 +15,9 @@ public class Topic extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     private Moim moim;
-
     private String keyword;
-    private String topic;
+    private String content;
     private String description;
 }
