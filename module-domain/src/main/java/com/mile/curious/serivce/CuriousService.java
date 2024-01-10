@@ -25,7 +25,7 @@ public class CuriousService {
         checkCuriousNotExists(post, user);
         curiousRepository.delete(curiousRepository.findByPostAndUser(post, user));
         post.decreaseCuriousCount();
-        WriterName writerName = writerNameRepository.findByUserId(user.getId());
+        WriterName writerName = writerNameRepository.findByWriterId(user.getId());
         writerName.decreaseTotalCuriousCount();
     }
 
@@ -39,7 +39,7 @@ public class CuriousService {
         checkCuriousExists(post, user);
         curiousRepository.save(Curious.create(post, user));
         post.increaseCuriousCount();
-        WriterName writerName = writerNameRepository.findByUserId(user.getId());
+        WriterName writerName = writerNameRepository.findByWriterId(user.getId());
         writerName.increaseTotalCuriousCount();
     }
 
