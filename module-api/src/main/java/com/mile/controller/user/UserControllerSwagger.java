@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,9 +31,10 @@ public interface UserControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<LoginSuccessResponse> login(
+    ResponseEntity<SuccessResponse<AccessTokenGetSuccess>> login(
             @RequestParam final String authorizationCode,
-            @RequestBody final UserLoginRequest loginRequest
+            @RequestBody final UserLoginRequest loginRequest,
+            HttpServletResponse response
     );
 
     @Operation(summary = "회원 탈퇴")
