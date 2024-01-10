@@ -2,18 +2,14 @@ package com.mile.moim.serivce;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
-import com.mile.exception.model.UnauthorizedException;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
-import com.mile.post.domain.Post;
 import com.mile.topic.serivce.TopicService;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.repository.WriterNameRepository;
 import com.mile.writerName.serivce.WriterNameService;
 import com.mile.writerName.serivce.dto.PopularWriterListResponse;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +87,9 @@ public class MoimService {
     public List<WriterName> getWriters(
             List<WriterName> writersOfMoim
     ) {
-
+        if (writersOfMoim.size() == 0) {
+            // throw new Exception(ErrorMessage.ERROR);
+        }
         return writersOfMoim.subList(0, NUMBER_OF_MOST_CURIOUS_WRITERS);
     }
 }
