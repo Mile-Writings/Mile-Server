@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,22 +31,10 @@ public interface UserControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<LoginSuccessResponse> login(
+    ResponseEntity<SuccessResponse<AccessTokenGetSuccess>> login(
             @RequestParam final String authorizationCode,
-            @RequestBody final UserLoginRequest loginRequest
-    );
-
-    @Operation(summary = "액세스 토큰 재발급")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "액세스 토큰 재발급이 완료되었습니다."),
-                    @ApiResponse(responseCode = "401", description = "리프레시 토큰이 유효하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "해당 유저의 리프레시 토큰이 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-    )
-    SuccessResponse<AccessTokenGetSuccess> refreshToken(
-            @RequestParam final String refreshToken
+            @RequestBody final UserLoginRequest loginRequest,
+            HttpServletResponse response
     );
 
     @Operation(summary = "회원 탈퇴")
@@ -62,15 +52,4 @@ public interface UserControllerSwagger {
             final Principal principal
     );
 
-    @Operation(summary = "로그아웃")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "로그아웃이 완료되었습니다."),
-                    @ApiResponse(responseCode = "404", description = "해당 유저의 리프레시 토큰이 존재하지 않습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-    )
-    SuccessResponse logout(
-            final Principal principal
-    );
 }

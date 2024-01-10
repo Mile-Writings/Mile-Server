@@ -2,12 +2,16 @@ package com.mile.moim.serivce;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
+import com.mile.exception.model.NotFoundException;
+import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
+import com.mile.moim.serivce.dto.MoimInfoResponse;
 import com.mile.topic.serivce.TopicService;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.repository.WriterNameRepository;
+import com.mile.utils.DateUtil;
 import com.mile.writerName.serivce.WriterNameService;
 import com.mile.writerName.serivce.dto.PopularWriterListResponse;
 import java.util.Collections;
@@ -27,7 +31,6 @@ public class MoimService {
     private final WriterNameRepository writerNameRepository;
 
     private static final int NUMBER_OF_MOST_CURIOUS_WRITERS = 2;
-
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -91,5 +94,27 @@ public class MoimService {
             // throw new Exception(ErrorMessage.ERROR);
         }
         return writersOfMoim.subList(0, NUMBER_OF_MOST_CURIOUS_WRITERS);
+    }
+
+    public MoimInfoResponse getMoimInfo(
+            final Long moimId
+    ) {
+        Moim moim = findById(moimId);
+        return MoimInfoResponse.of(
+                moim.getImageUrl(),
+                moim.getName(),
+                writerNameService.getOwnerNameOfMoimId(moimId),
+                moim.getInformation(),
+                writerNameService.findNumbersOfWritersByMoimId(moimId),
+                DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
+        );
+    }
+
+    private Moim findById(
+            final Long moimId
+    ) {
+        return moimRepository.findById(moimId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MOIM_NOT_FOUND)
+        );
     }
 }

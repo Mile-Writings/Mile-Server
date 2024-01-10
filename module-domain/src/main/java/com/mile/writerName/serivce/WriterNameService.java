@@ -2,9 +2,6 @@ package com.mile.writerName.serivce;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
-import com.mile.moim.domain.Moim;
-import com.mile.post.domain.Post;
-import com.mile.user.domain.User;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.repository.WriterNameRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,18 @@ public class WriterNameService {
                 .orElseThrow(
                         () -> new NotFoundException(ErrorMessage.USER_AUTHENTICATE_ERROR)
                 );
+    }
+
+    public int findNumbersOfWritersByMoimId(
+            final Long moimId
+    ) {
+        return writerNameRepository.findByMoimId(moimId).size();
+    }
+
+    public String getOwnerNameOfMoimId(
+            final Long moimId
+    ) {
+        return writerNameRepository.getOwnerWriterNameByMoimId(moimId);
     }
 
 }

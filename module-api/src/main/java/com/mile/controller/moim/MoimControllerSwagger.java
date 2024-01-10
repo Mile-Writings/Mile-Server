@@ -4,6 +4,7 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.writerName.serivce.dto.PopularWriterListResponse;
+import com.mile.moim.serivce.dto.MoimInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,6 +50,7 @@ public interface MoimControllerSwagger {
             final Principal principal
     );
 
+
     @Operation(summary = "궁금해요 TOP 2 작가 조회")
     @ApiResponses(
             value = {
@@ -59,5 +61,20 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
             @PathVariable final Long moimId
+    );
+
+
+    @Operation(summary = "글모임 뷰 - 글모임 정보 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 글모임이 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<MoimInfoResponse> getMoimInfo(
+            final Long moimId
     );
 }
