@@ -4,6 +4,7 @@ import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.external.client.dto.UserLoginRequest;
 import com.mile.user.service.UserService;
+import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,6 @@ import java.security.Principal;
 public class UserController implements UserControllerSwagger {
 
     private final UserService userService;
-    private final TokenService tokenService;
     private final static int COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
     private final static String REFRESH_TOKEN = "refreshToken";
 
@@ -49,7 +49,7 @@ public class UserController implements UserControllerSwagger {
     }
 
 
-    @DeleteMapping(" /delete")
+    @DeleteMapping("/delete")
     @Override
     public SuccessResponse deleteUser(
             final Principal principal
