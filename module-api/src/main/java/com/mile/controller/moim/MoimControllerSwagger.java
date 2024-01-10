@@ -61,7 +61,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<MoimTopicResponse> getTopicFromTopic(
+    SuccessResponse<MoimTopicResponse> getTopicFromMoim(
             @PathVariable Long moimId
     );
 }

@@ -20,8 +20,8 @@ public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
 
-    @GetMapping("/{moimId}")
     @Override
+    @GetMapping("/{moimId}")
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @PathVariable final Long moimId,
             final Principal principal
@@ -29,8 +29,8 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.TOPIC_SEARCH_SUCCESS, moimService.getContentsFromMoim(moimId, Long.valueOf(principal.getName())));
     }
 
-    @GetMapping("/{moimId}/authenticate")
     @Override
+    @GetMapping("/{moimId}/authenticate")
     public SuccessResponse getAuthenticationOfMoim(
             final Long moimId,
             final Principal principal
@@ -38,9 +38,10 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS, moimService.getAuthenticateUserOfMoim(moimId, Long.valueOf(principal.getName())));
     }
 
-    @GetMapping("/{moimId}/topic")
+
     @Override
-    public SuccessResponse<MoimTopicResponse> getTopicFromTopic(
+    @GetMapping("/{moimId}/topic")
+    public SuccessResponse<MoimTopicResponse> getTopicFromMoim(
             @PathVariable Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOPIC_GET_SUCCESS, moimService.getTopicFromMoim(moimId));
