@@ -5,10 +5,11 @@ import java.util.List;
 
 public record PopularWriterListResponse(List<PopularWriterResponse> popularWriters) {
 
-    public static PopularWriterListResponse of(final WriterName writer1, final WriterName writer2) {
+    public static PopularWriterListResponse of(final List<WriterName> writers) {
         List<PopularWriterResponse> popularWriters = new ArrayList<>();
-        popularWriters.add(PopularWriterResponse.of(writer1));
-        popularWriters.add(PopularWriterResponse.of(writer2));
+        for (WriterName writer : writers) {
+            popularWriters.add(PopularWriterResponse.of(writer));
+        }
         return new PopularWriterListResponse(popularWriters);
     }
 

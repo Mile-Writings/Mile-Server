@@ -2,6 +2,7 @@ package com.mile.moim.serivce;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
+import com.mile.exception.model.UnauthorizedException;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
@@ -28,6 +29,8 @@ public class MoimService {
     private final TopicService topicService;
     private final MoimRepository moimRepository;
     private final WriterNameRepository writerNameRepository;
+
+    private static final int NUMBER_OF_MOST_CURIOUS_WRITERS = 2;
 
 
     public ContentListResponse getContentsFromMoim(
@@ -59,11 +62,9 @@ public class MoimService {
     ) {
         List<WriterName> writersOfMoim = writerNameRepository.findByMoimId(moimId);
         Map<WriterName, Integer> curiousMap = getWritersAndCuriousCount(writersOfMoim, moimId);
-        Map<WriterName, Integer> sortedCuriousMap = sortWritersByCuriousCount(writersOfMoim, curiousMap);
-
-        WriterName firstPlace = writersOfMoim.get(0);
-        WriterName secondPlace = writersOfMoim.get(1);
-        return PopularWriterListResponse.of(firstPlace, secondPlace);
+        List<WriterName> sortedWritersOfMoim = sortWritersByCuriousCount(writersOfMoim, curiousMap);
+        List<WriterName> writers = getWriters(sortedWritersOfMoim);
+        return PopularWriterListResponse.of(writers);
     }
 
     public Map<WriterName, Integer> getWritersAndCuriousCount(
@@ -71,21 +72,26 @@ public class MoimService {
             final Long moimId
     ) {
         Map<WriterName, Integer> curiousCountMap = new HashMap<>();
-
         for (WriterName writerName : writersOfMoim) {
             int curiousCount = writerName.getTotalCuriousCount();
             curiousCountMap.put(writerName, curiousCount);
         }
-
         return curiousCountMap;
     }
 
-    public Map<WriterName, Integer> sortWritersByCuriousCount(
+    public List<WriterName> sortWritersByCuriousCount(
             final List<WriterName> writersOfMoim,
             final Map<WriterName, Integer> curiousCountMap
     ) {
         Collections.sort(writersOfMoim, (writer1, writer2) -> // 오름차순 정렬
                 curiousCountMap.get(writer2).compareTo(curiousCountMap.get(writer1)));
-        return curiousCountMap;
+        return writersOfMoim;
+    }
+
+    public List<WriterName> getWriters(
+            List<WriterName> writersOfMoim
+    ) {
+
+        return writersOfMoim.subList(0, NUMBER_OF_MOST_CURIOUS_WRITERS);
     }
 }
