@@ -38,12 +38,12 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS, moimService.getAuthenticateUserOfMoim(moimId, Long.valueOf(principal.getName())));
     }
 
-    @GetMapping("/{moimId}/popularWriter")
+    @GetMapping("/{moimId}/mostCuriousWriters")
     @Override
-    public SuccessResponse<PopularWriterListResponse> getPopularWritersOfMoim(
+    public SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
             @PathVariable final Long moimId
     ) {
-        return SuccessResponse.of(SuccessMessage.MOIM_POPULAR_WRITER_SEARCH_SUCCESS, moimService.getPopularWriters(moimId));
+        return SuccessResponse.of(SuccessMessage.MOIM_POPULAR_WRITER_SEARCH_SUCCESS, moimService.getMostCuriousWriters(moimId));
     }
 
 }

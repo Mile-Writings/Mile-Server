@@ -57,7 +57,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<PopularWriterListResponse> getPopularWritersOfMoim(
+    SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
             @PathVariable final Long moimId
     );
 }
