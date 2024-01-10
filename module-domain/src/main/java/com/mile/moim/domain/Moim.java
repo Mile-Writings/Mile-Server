@@ -1,17 +1,17 @@
 package com.mile.moim.domain;
 
+import com.mile.config.BaseTimeEntity;
 import com.mile.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Moim {
+public class Moim extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

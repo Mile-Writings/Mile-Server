@@ -84,12 +84,12 @@ public class S3Service {
             String url = preSigner.presignPutObject(preSignedUrlRequest).url().toString();
             return PreSignedUrlResponse.of(fileName, url);
         } catch (RuntimeException e) {
-            throw new MileException(ErrorMessage.IMAGE_UPLOAD_ERROR);
+            throw new MileException(ErrorMessage.PRESIGNED_URL_GET_ERROR);
         }
     }
 
     // S3 버킷에 업로드된 이미지 삭제
-    public void deleteImage(final String key) throws IOException {
+    public void deleteImage(final String key) {
         try {
             final S3Client s3Client = awsConfig.getS3Client();
 
