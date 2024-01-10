@@ -10,4 +10,12 @@
             <appender-ref ref="ASYNC_DISCORD" />
         </root>
     </springProfile>
+    <springProfile name="dev">
+        <include resource="console-appender.xml"/>
+        <include resource="discord-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_DISCORD" />
+        </root>
+    </springProfile>
 </configuration>
