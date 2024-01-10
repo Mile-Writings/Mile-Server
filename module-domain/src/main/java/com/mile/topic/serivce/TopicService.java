@@ -52,4 +52,13 @@ public class TopicService {
                 .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt))
                 .collect(Collectors.toList());
     }
+
+    public Topic findById(
+            final Long topicId
+    ) {
+        return topicRepository.findById(topicId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.TOPIC_NOT_FOUND)
+                );
+    }
 }
