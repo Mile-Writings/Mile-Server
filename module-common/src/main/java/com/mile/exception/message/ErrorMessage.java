@@ -59,7 +59,8 @@ public enum ErrorMessage {
     /*
     Internal Server Error
      */
-    IMAGE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷에 이미지를 업로드하는 데 실패했습니다."),
+    IMAGE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷에 이미지를 업로드에 실패했습니다."),
+    PRESIGNED_URL_GET_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 PRESIGNED URL을 받아오기에 실패했습니다."),
     IMAGE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷으로부터 이미지를 삭제하는 데 실패했습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다.");
 
