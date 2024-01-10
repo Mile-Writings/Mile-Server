@@ -9,6 +9,7 @@ import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
+@Slf4j
 public class PostController implements PostControllerSwagger {
 
     private final PostService postService;
@@ -100,5 +102,15 @@ public class PostController implements PostControllerSwagger {
     ) {
         postService.updatePost(postId, Long.valueOf(principal.getName()), putRequest);
         return SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS);
+    }
+
+    @DeleteMapping("/{postId}")
+    @Override
+    public SuccessResponse deletePost(
+            @PathVariable final Long postId,
+            final Principal principal
+    ) {
+        postService.deletePost(postId, Long.valueOf(principal.getName()));
+        return SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS);
     }
 }
