@@ -8,8 +8,10 @@ import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
 import com.mile.post.domain.Post;
 import com.mile.topic.serivce.TopicService;
 import com.mile.writerName.domain.WriterName;
+import com.mile.writerName.repository.WriterNameRepository;
 import com.mile.writerName.serivce.WriterNameService;
 import com.mile.writerName.serivce.dto.PopularWriterListResponse;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class MoimService {
     private final WriterNameService writerNameService;
     private final TopicService topicService;
     private final MoimRepository moimRepository;
+    private final WriterNameRepository writerNameRepository;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -50,27 +53,24 @@ public class MoimService {
         return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
     }
 
-    public PopularWriterListResponse getPopularWriters(
+    public PopularWriterListResponse getMostCuriousWriters(
             final Long moimId
     ) {
-        List<Post> posts = moimRepository.getPostsById(moimId);
+        List<WriterName> writersOfMoim = writerNameRepository.findByMoimId(moimId);
         Map<WriterName, Integer> curiousCountMap = new HashMap<>();
-        for (Post post : posts) {
-            int curiousCount = post.getCuriousCount();
-            WriterName writer = post.getWriterName();
-            if (curiousCountMap.containsKey(writer)) {
-                curiousCountMap.replace(writer, curiousCountMap.get(writer) + curiousCount);
-            } else {
-                curiousCountMap.put(writer, curiousCount);
-            }
+
+        for (WriterName writerName : writersOfMoim) {
+            int curiousCount = writerName.getTotalCuriousCount();
+            curiousCountMap.put(writerName, curiousCount);
         }
 
-        List<WriterName> writerNames = new ArrayList<>(curiousCountMap.keySet());
-        Collections.sort(writerNames, (writer1, writer2) ->
+//        List<WriterName> writerNames = new ArrayList<>(curiousCountMap.keySet()); -> 잘 돌아가면 지우면 됨.
+        Collections.sort(writersOfMoim, (writer1, writer2) -> // 오름차순 정렬
                 curiousCountMap.get(writer2).compareTo(curiousCountMap.get(writer1)));
 
-        WriterName firstPlace = writerNames.get(0);
-        WriterName secondPlace = writerNames.get(1);
+        WriterName firstPlace = writersOfMoim.get(0);
+        WriterName secondPlace = writersOfMoim.get(1);
         return PopularWriterListResponse.of(firstPlace, secondPlace);
+
     }
 }

@@ -8,6 +8,9 @@ import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
+import com.mile.writerName.domain.WriterName;
+import com.mile.writerName.repository.WriterNameRepository;
+import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +19,14 @@ import org.springframework.stereotype.Service;
 public class CuriousService {
 
     private final CuriousRepository curiousRepository;
-
+    private final WriterNameRepository writerNameRepository;
 
     public void deleteCurious(final Post post, final User user) {
         checkCuriousNotExists(post, user);
         curiousRepository.delete(curiousRepository.findByPostAndUser(post, user));
         post.decreaseCuriousCount();
+        WriterName writerName = writerNameRepository.findByUserId(user.getId());
+        writerName.decreaseTotalCuriousCount();
     }
 
     public void checkCuriousNotExists(final Post post, final User user) {
@@ -34,6 +39,8 @@ public class CuriousService {
         checkCuriousExists(post, user);
         curiousRepository.save(Curious.create(post, user));
         post.increaseCuriousCount();
+        WriterName writerName = writerNameRepository.findByUserId(user.getId());
+        writerName.increaseTotalCuriousCount();
     }
 
     public void checkCuriousExists(final Post post, final User user) {
