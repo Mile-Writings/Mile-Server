@@ -82,7 +82,7 @@ public class MoimService {
             final List<WriterName> writersOfMoim,
             final Map<WriterName, Integer> curiousCountMap
     ) {
-        Collections.sort(writersOfMoim, (writer1, writer2) -> // 오름차순 정렬
+        Collections.sort(writersOfMoim, (writer1, writer2) -> // 내림차순
                 curiousCountMap.get(writer2).compareTo(curiousCountMap.get(writer1)));
         return writersOfMoim;
     }
