@@ -3,6 +3,7 @@ package com.mile.controller.moim;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
+import com.mile.moim.serivce.dto.MoimTopicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +38,8 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "사용자의 권한이 확인되었습니다."),
-                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 안습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 안습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
                     ),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
@@ -46,5 +48,20 @@ public interface MoimControllerSwagger {
     SuccessResponse getAuthenticationOfMoim(
             final Long moimId,
             final Principal principal
+    );
+
+
+    @Operation(summary = "글모임 최근 글감 ")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글감 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "1. 해당 글모임이 존재하지 않습니다.\n 2.해당 모임의 주제가 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<MoimTopicResponse> getTopicFromTopic(
+            @PathVariable Long moimId
     );
 }

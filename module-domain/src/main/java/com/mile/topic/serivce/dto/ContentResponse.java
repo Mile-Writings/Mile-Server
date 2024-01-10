@@ -9,6 +9,6 @@ public record ContentResponse(
     public static ContentResponse of(
             final Topic topic
     ) {
-        return new ContentResponse(topic.getId(), topic.getTopic());
+        return new ContentResponse(topic.getId(), topic.getContent());
     }
 }
