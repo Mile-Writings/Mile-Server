@@ -1,14 +1,12 @@
+version: '3.7'
 services:
   redis:
-    image: redis:latest
-    container_name: redis
-    hostname: redis
-    ports:
-       - 6379:6379
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: redis_boot
+    hostname: redis_boot
     labels:
       - "name=redis"
       - "mode=standalone"
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    networks:
-      - app-tier
+    ports:
+      - 6379:6379
