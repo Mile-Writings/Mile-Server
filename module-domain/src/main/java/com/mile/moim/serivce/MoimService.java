@@ -29,6 +29,7 @@ public class MoimService {
     private final MoimRepository moimRepository;
     private final WriterNameRepository writerNameRepository;
 
+
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
             final Long userId
@@ -57,6 +58,18 @@ public class MoimService {
             final Long moimId
     ) {
         List<WriterName> writersOfMoim = writerNameRepository.findByMoimId(moimId);
+        Map<WriterName, Integer> curiousMap = getWritersAndCuriousCount(writersOfMoim, moimId);
+        Map<WriterName, Integer> sortedCuriousMap = sortWritersByCuriousCount(writersOfMoim, curiousMap);
+
+        WriterName firstPlace = writersOfMoim.get(0);
+        WriterName secondPlace = writersOfMoim.get(1);
+        return PopularWriterListResponse.of(firstPlace, secondPlace);
+    }
+
+    public Map<WriterName, Integer> getWritersAndCuriousCount(
+            final List<WriterName> writersOfMoim,
+            final Long moimId
+    ) {
         Map<WriterName, Integer> curiousCountMap = new HashMap<>();
 
         for (WriterName writerName : writersOfMoim) {
@@ -64,13 +77,15 @@ public class MoimService {
             curiousCountMap.put(writerName, curiousCount);
         }
 
-//        List<WriterName> writerNames = new ArrayList<>(curiousCountMap.keySet()); -> 잘 돌아가면 지우면 됨.
+        return curiousCountMap;
+    }
+
+    public Map<WriterName, Integer> sortWritersByCuriousCount(
+            final List<WriterName> writersOfMoim,
+            final Map<WriterName, Integer> curiousCountMap
+    ) {
         Collections.sort(writersOfMoim, (writer1, writer2) -> // 오름차순 정렬
                 curiousCountMap.get(writer2).compareTo(curiousCountMap.get(writer1)));
-
-        WriterName firstPlace = writersOfMoim.get(0);
-        WriterName secondPlace = writersOfMoim.get(1);
-        return PopularWriterListResponse.of(firstPlace, secondPlace);
-
+        return curiousCountMap;
     }
 }
