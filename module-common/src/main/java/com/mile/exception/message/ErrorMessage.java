@@ -37,6 +37,7 @@ public enum ErrorMessage {
     INVALID_BUCKET_PREFIX(HttpStatus.BAD_REQUEST.value(), "유효하지 않는 S3 버킷 디렉터리 이름입니다."),
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청 값이 유효하지 않습니다."),
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
+    POST_NOT_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장글이 아닙니다."),
 
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
     IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),

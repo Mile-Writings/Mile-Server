@@ -2,12 +2,13 @@ package com.mile.controller.moim;
 
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.moim.service.MoimService;
-import com.mile.moim.dto.CategoryListResponse;
-import com.mile.moim.dto.ContentListResponse;
-import com.mile.moim.dto.MoimInfoResponse;
-import com.mile.moim.dto.MoimTopicResponse;
-import com.mile.writerName.service.dto.PopularWriterListResponse;
+import com.mile.moim.serivce.MoimService;
+import com.mile.moim.serivce.dto.CategoryListResponse;
+import com.mile.moim.serivce.dto.ContentListResponse;
+import com.mile.writerName.serivce.dto.PopularWriterListResponse;
+import com.mile.moim.serivce.dto.MoimCuriousPostListResponse;
+import com.mile.moim.serivce.dto.MoimInfoResponse;
+import com.mile.moim.serivce.dto.MoimTopicResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/authenticate")
     public SuccessResponse getAuthenticationOfMoim(
-            final Long moimId,
+            @PathVariable final Long moimId,
             final Principal principal
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS, moimService.getAuthenticateUserOfMoim(moimId, Long.valueOf(principal.getName())));
@@ -61,7 +62,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/info")
     @Override
     public SuccessResponse<MoimInfoResponse> getMoimInfo(
-            final Long moimId
+            @PathVariable final Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimInfo(moimId));
     }
@@ -73,5 +74,12 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable final Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.CATEGORY_LIST_SEARCH_SUCCESS, moimService.getCategoryList(moimId));
+    }
+
+    @GetMapping("/{moimId}/mostCuriousPost")
+    public SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
+            @PathVariable final Long moimId
+    ) {
+        return SuccessResponse.of(SuccessMessage.MOIM_TOP_2_POST_GET_SUCCESS, moimService.getMostCuriousPostFromMoim(moimId));
     }
 }

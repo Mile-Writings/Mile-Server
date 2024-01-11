@@ -5,12 +5,16 @@ import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
@@ -19,6 +23,7 @@ import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -140,17 +145,45 @@ public class PostService {
     }
 
     private void deleteRelatedData(
-           final Post post
+            final Post post
     ) {
-        if(post.isContainPhoto()) {
+        if (post.isContainPhoto()) {
             deleteS3File(post.getImageUrl());
         }
         curiousService.deleteAllByPost(post);
         commentService.deleteAllByPost(post);
     }
+
     private void deleteS3File(
             final String key
     ) {
         s3Service.deleteImage(key);
+    }
+
+    @Transactional(readOnly = true)
+    public TemporaryPostGetResponse getTemporaryPost(
+            final Long postId,
+            final Long userId
+    ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        isPostTemporary(post);
+        return TemporaryPostGetResponse.of(post);
+    }
+
+    private void isPostTemporary(
+            final Post post
+    ) {
+        if (!post.isTemporary()) {
+            throw new BadRequestException(ErrorMessage.POST_NOT_TEMPORARY_ERROR);
+        }
+    }
+
+    public PostGetResponse getPost(
+            final Long postId
+    ) {
+        Post post = findById(postId);
+        Moim moim = post.getTopic().getMoim();
+        return PostGetResponse.of(post, moim);
     }
 }
