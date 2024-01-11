@@ -46,21 +46,21 @@ public class DateUtil {
     private static String getKoreanString(
             final LocalDateTime localDateTime
     ) {
-        return getYearStringValueOfLocalDate(localDateTime) + YEAR
-                + getMonthStringValueOfLocalDate(localDateTime) + MONTH
+        return getYearStringValueOfLocalDate(localDateTime) + YEAR + " "
+                + getMonthStringValueOfLocalDate(localDateTime) + MONTH + " "
                 + getDayOfMonthStringValueOfLocalDate(localDateTime) + DAY;
     }
 
     private static String getYearStringValueOfLocalDate(
             final LocalDateTime localDateTime
     ) {
-        return localDateTime.getMonth().toString();
+        return String.valueOf(localDateTime.getYear());
     }
 
     private static String getMonthStringValueOfLocalDate(
             final LocalDateTime localDateTime
     ) {
-        return localDateTime.getMonth().toString();
+        return String.valueOf(localDateTime.getMonthValue());
     }
 
     private static String getDayOfMonthStringValueOfLocalDate(
