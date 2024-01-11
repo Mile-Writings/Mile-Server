@@ -62,7 +62,10 @@ ex. #123 [feat] 로그인 구현
 
 
 ## 📍 Architecture
-<img src="https://github.com/Mile-Writings/Mile-Server/assets/116873401/f3eaa175-19fc-4ceb-8ab4-49687ddebf0e" width = "900" >
+![image](https://github.com/Mile-Writings/Mile-Server/assets/79795051/3fadfcd5-ae4b-420a-bc5b-313aca7b5b11)
+
+## 🤍 ERD
+<img width="718" alt="image" src="https://github.com/Mile-Writings/Mile-Server/assets/79795051/ce6b8805-0547-46f0-a571-563165ddd372">
 
 ## 👨🏻‍💻 Stack
 | Stack | Version | Content |
