@@ -7,6 +7,7 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
+import com.mile.moim.serivce.dto.MoimTopicResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
 import com.mile.topic.serivce.TopicService;
 import com.mile.utils.DateUtil;
@@ -50,6 +51,13 @@ public class MoimService {
     ) {
         return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
     }
+    private Moim findById(
+            final Long moimId
+    ) {
+        return moimRepository.findById(moimId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MOIM_NOT_FOUND)
+        );
+    }
 
     public PopularWriterListResponse getMostCuriousWriters(
             final Long moimId
@@ -67,6 +75,12 @@ public class MoimService {
         }
     }
 
+    public MoimTopicResponse getTopicFromMoim(
+            final Long moimId
+    ) {
+        return MoimTopicResponse.of(topicService.findLatestTopicByMoim(findById(moimId)));
+    }
+
     public MoimInfoResponse getMoimInfo(
             final Long moimId
     ) {
@@ -78,14 +92,6 @@ public class MoimService {
                 moim.getInformation(),
                 writerNameService.findNumbersOfWritersByMoimId(moimId),
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
-        );
-    }
-
-    private Moim findById(
-            final Long moimId
-    ) {
-        return moimRepository.findById(moimId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MOIM_NOT_FOUND)
         );
     }
 }
