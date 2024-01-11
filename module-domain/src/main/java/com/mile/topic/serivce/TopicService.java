@@ -3,11 +3,15 @@ package com.mile.topic.serivce;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
-import com.mile.topic.serivce.dto.CategoryResponse;
 import com.mile.moim.domain.Moim;
+import com.mile.post.service.PostGetService;
+import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
+import com.mile.topic.serivce.dto.CategoryResponse;
 import com.mile.topic.serivce.dto.ContentResponse;
+import com.mile.topic.serivce.dto.PostListInTopicResponse;
+import com.mile.topic.serivce.dto.TopicOfMoimResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +24,7 @@ import java.util.stream.Collectors;
 public class TopicService {
 
     private final TopicRepository topicRepository;
-
+    private final PostGetService postGetService;
 
     public List<ContentResponse> getContentsFromMoim(
             final Long moimId
@@ -83,9 +87,6 @@ public class TopicService {
         }
     }
 
-
-
-
     public String findLatestTopicByMoim(
             final Moim moim
     ) {
@@ -93,5 +94,13 @@ public class TopicService {
                 .orElseThrow(
                         () -> new NotFoundException(ErrorMessage.MOIM_TOPIC_NOT_FOUND)
                 );
+    }
+
+    public PostListInTopicResponse getPostListByTopic(
+            final Long topicId
+    ) {
+        Topic topic = findById(topicId);
+        return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
+                postGetService.findByTopic(topic).stream().map(PostListResponse::of).collect(Collectors.toList()));
     }
 }
