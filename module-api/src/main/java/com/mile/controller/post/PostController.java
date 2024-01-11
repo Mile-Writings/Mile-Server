@@ -8,6 +8,7 @@ import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostGetResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +117,15 @@ public class PostController implements PostControllerSwagger {
     }
 
     @Override
+    @GetMapping("/temporary/{postId}")
+    public SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
+            @PathVariable final Long postId,
+            final Principal principal
+    ) {
+        return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_GET_SUCCESS,
+                postService.getTemporaryPost(postId, Long.valueOf(principal.getName())));
+    }
+
     @GetMapping("/{postId}")
     public SuccessResponse<PostGetResponse> getPost(
             @PathVariable final Long postId

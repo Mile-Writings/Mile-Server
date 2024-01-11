@@ -5,6 +5,7 @@ import com.mile.comment.service.CommentService;
 import com.mile.curious.serivce.CuriousService;
 import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
@@ -13,11 +14,11 @@ import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.serivce.TopicService;
 import com.mile.user.service.UserService;
-import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -160,6 +161,24 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public TemporaryPostGetResponse getTemporaryPost(
+            final Long postId,
+            final Long userId
+    ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        isPostTemporary(post);
+        return TemporaryPostGetResponse.of(post);
+    }
+
+    private void isPostTemporary(
+            final Post post
+    ) {
+        if (!post.isTemporary()) {
+            throw new BadRequestException(ErrorMessage.POST_NOT_TEMPORARY_ERROR);
+        }
+    }
+
     public PostGetResponse getPost(
             final Long postId
     ) {
