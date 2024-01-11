@@ -2,11 +2,11 @@ package com.mile.controller.moim;
 
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
-import com.mile.moim.service.dto.CategoryListResponse;
-import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.dto.CategoryListResponse;
+import com.mile.moim.dto.ContentListResponse;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
-import com.mile.moim.service.dto.MoimTopicResponse;
-import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.dto.MoimTopicResponse;
+import com.mile.moim.dto.MoimInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

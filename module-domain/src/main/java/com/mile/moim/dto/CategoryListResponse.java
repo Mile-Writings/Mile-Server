@@ -1,4 +1,4 @@
-package com.mile.moim.service.dto;
+package com.mile.moim.dto;
 
 import com.mile.topic.service.dto.CategoryResponse;
 import java.util.List;

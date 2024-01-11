@@ -1,4 +1,4 @@
-package com.mile.moim.service.dto;
+package com.mile.moim.dto;
 
 public record MoimAuthenticateResponse(
         boolean isMember
