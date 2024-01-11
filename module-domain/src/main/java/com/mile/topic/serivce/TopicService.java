@@ -3,6 +3,7 @@ package com.mile.topic.serivce;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
+import com.mile.topic.serivce.dto.CategoryResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.topic.serivce.dto.ContentResponse;
@@ -61,4 +62,16 @@ public class TopicService {
                         () -> new NotFoundException(ErrorMessage.TOPIC_NOT_FOUND)
                 );
     }
+
+    public List<CategoryResponse> getKeywordsFromMoim(
+            final Long moimId
+    ) {
+        List<Topic> topicList = findByMoimId(moimId);
+        return topicList
+                .stream()
+                .map(CategoryResponse::of)
+                .collect(Collectors.toList());
+    }
+
+
 }
