@@ -23,6 +23,8 @@ public enum SuccessMessage {
     RECOMMENDATION_GET_SUCCESS(HttpStatus.OK.value(), "추천 글감이 조회되었습니다."),
     PRESIGNED_URL_GET_SUCCESS(HttpStatus.OK.value(), "이미지를 업로드할 url이 발행되었습니다."),
     POST_DELETE_SUCCESS(HttpStatus.OK.value(), "글 삭제가 완료되었습니다."),
+    MOIM_TOPIC_GET_SUCCESS(HttpStatus.OK.value(), "글감 조회가 완료되었습니다."),
+
     /*
     201 CREATED
      */
