@@ -19,9 +19,19 @@ public class WriterName {
     @ManyToOne
     private Moim moim;
 
-    private String penName;
+    private String name;
     private String information;
 
     @ManyToOne
     private User writer;
+
+    private Integer totalCuriousCount;
+
+    public void increaseTotalCuriousCount() {
+        totalCuriousCount++;
+    }
+
+    public void decreaseTotalCuriousCount() {
+        totalCuriousCount--;
+    }
 }

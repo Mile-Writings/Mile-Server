@@ -1,9 +1,9 @@
 package com.mile.controller.moim;
-
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.serivce.MoimService;
 import com.mile.moim.serivce.dto.ContentListResponse;
+import com.mile.writerName.serivce.dto.PopularWriterListResponse;
 import com.mile.moim.serivce.dto.MoimTopicResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.security.Principal;
 
 @RestController
@@ -39,6 +38,13 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS, moimService.getAuthenticateUserOfMoim(moimId, Long.valueOf(principal.getName())));
     }
 
+    @Override
+    @GetMapping("/{moimId}/mostCuriousWriters")
+    public SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
+            @PathVariable final Long moimId
+    ) {
+        return SuccessResponse.of(SuccessMessage.MOIM_POPULAR_WRITER_SEARCH_SUCCESS, moimService.getMostCuriousWriters(moimId));
+    }
 
     @Override
     @GetMapping("/{moimId}/topic")
@@ -48,7 +54,7 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.MOIM_TOPIC_GET_SUCCESS, moimService.getTopicFromMoim(moimId));
       
     }
-  
+
     @GetMapping("/{moimId}/info")
     @Override
     public SuccessResponse<MoimInfoResponse> getMoimInfo(
@@ -56,4 +62,5 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimInfo(moimId));
     }
+
 }
