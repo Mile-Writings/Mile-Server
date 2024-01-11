@@ -1,4 +1,4 @@
-package com.mile.writerName.serivce;
+package com.mile.writerName.service;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;

@@ -1,4 +1,4 @@
-package com.mile.writerName.serivce.dto;
+package com.mile.writerName.service.dto;
 
 import com.mile.writerName.domain.WriterName;
 

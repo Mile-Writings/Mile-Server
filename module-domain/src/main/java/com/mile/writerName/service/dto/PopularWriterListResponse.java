@@ -1,6 +1,6 @@
-package com.mile.writerName.serivce.dto;
+package com.mile.writerName.service.dto;
 import com.mile.writerName.domain.WriterName;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

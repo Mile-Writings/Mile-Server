@@ -1,4 +1,4 @@
-package com.mile.curious.serivce.dto;
+package com.mile.curious.service.dto;
 
 public record CuriousInfoResponse(boolean isCurious, Integer curiousCount) {
     public static CuriousInfoResponse of(

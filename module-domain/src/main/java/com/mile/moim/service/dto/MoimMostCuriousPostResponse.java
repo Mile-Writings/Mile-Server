@@ -1,6 +1,4 @@
-package com.mile.moim.serivce.dto;
-
-import com.mile.post.domain.Post;
+package com.mile.moim.service.dto;
 
 public record MoimMostCuriousPostResponse(
         String imageUrl,

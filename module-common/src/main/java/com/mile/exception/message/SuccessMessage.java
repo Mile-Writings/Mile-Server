@@ -29,6 +29,7 @@ public enum SuccessMessage {
     TEMPORARY_POST_GET_SUCCESS(HttpStatus.OK.value(), "임시저장글 조회가 완료되었습니다."),
     MOIM_TOP_2_POST_GET_SUCCESS(HttpStatus.OK.value(), "궁금해요 상위 2개의 글이 조회 완료되었습니다."),
     POST_GET_SUCCESS(HttpStatus.OK.value(), "글 조회가 완료되었습니다."),
+    MOIM_POST_GET_SUCCESS(HttpStatus.OK.value(), "카테고리별 글 리스트 조회가 완료되었습니다."),
     /*
     201 CREATED
      */
