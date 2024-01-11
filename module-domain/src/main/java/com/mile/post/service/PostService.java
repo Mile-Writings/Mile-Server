@@ -14,11 +14,13 @@ import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.serivce.TopicService;
 import com.mile.user.service.UserService;
+import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -119,7 +121,6 @@ public class PostService {
         post.updatePost(topic, putRequest);
     }
 
-
     public WriterAuthenticateResponse getAuthenticateWriter(
             final Long postId,
             final Long userId
@@ -185,5 +186,22 @@ public class PostService {
         Post post = findById(postId);
         Moim moim = post.getTopic().getMoim();
         return PostGetResponse.of(post, moim);
+    }
+
+    public void createTemporaryPost(
+            final Long userId,
+            final TemporaryPostCreateRequest temporaryPostCreateRequest
+    ) {
+        postAuthenticateService.authenticateWriterOfMoim(userId, temporaryPostCreateRequest.moimId());
+        Post temporaryPost = Post.create(
+                topicService.findById(temporaryPostCreateRequest.topicId()),  // Topic
+                writerNameService.findByMoimAndUser(temporaryPostCreateRequest.moimId(), userId), // WriterName
+                temporaryPostCreateRequest.title(),
+                temporaryPostCreateRequest.content(),
+                temporaryPostCreateRequest.imageUrl(),
+                temporaryPostCreateRequest.anonymous(),
+                true // isTemporary
+        );
+        postRepository.save(temporaryPost);
     }
 }
