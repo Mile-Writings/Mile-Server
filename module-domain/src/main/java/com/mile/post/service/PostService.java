@@ -6,15 +6,18 @@ import com.mile.curious.serivce.CuriousService;
 import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.serivce.TopicService;
 import com.mile.user.service.UserService;
+import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.serivce.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -154,5 +157,14 @@ public class PostService {
             final String key
     ) {
         s3Service.deleteImage(key);
+    }
+
+    @Transactional(readOnly = true)
+    public PostGetResponse getPost(
+            final Long postId
+    ) {
+        Post post = findById(postId);
+        Moim moim = post.getTopic().getMoim();
+        return PostGetResponse.of(post, moim);
     }
 }
