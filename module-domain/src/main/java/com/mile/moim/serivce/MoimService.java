@@ -5,6 +5,7 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
+import com.mile.moim.serivce.dto.CategoryListResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
 import com.mile.moim.serivce.dto.MoimTopicResponse;
@@ -51,6 +52,7 @@ public class MoimService {
     ) {
         return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
     }
+
     private Moim findById(
             final Long moimId
     ) {
@@ -94,4 +96,11 @@ public class MoimService {
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
         );
     }
+
+    public CategoryListResponse getCategoryList(
+            final Long moimId
+    ) {
+        return CategoryListResponse.of(topicService.getKeywordsFromMoim(moimId));
+    }
+
 }
