@@ -1,4 +1,4 @@
-package com.mile.moim.dto;
+package com.mile.moim.service.dto;
 
 import com.mile.topic.service.dto.ContentResponse;
 
