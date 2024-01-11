@@ -52,7 +52,10 @@ public class WriterNameService {
     public WriterName findByWriterId(
             final Long writerId
     ) {
-        return writerNameRepository.findByWriterId(writerId);
+        return writerNameRepository.findByWriterId(writerId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                );
     }
 
     public void decreaseTotalCuriousCountByWriterId(

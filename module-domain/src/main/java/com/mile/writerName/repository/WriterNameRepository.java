@@ -9,7 +9,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long>, W
 
     Optional<WriterName> findByMoimIdAndWriterId(final Long moimId, final Long userId);
     List<WriterName> findByMoimId(final Long moimId);
-    WriterName findByWriterId(final Long userId);
+    Optional<WriterName> findByWriterId(final Long userId);
     List<WriterName> findTop2ByMoimIdOrderByTotalCuriousCountDesc(final Long moimid);
 
 }
