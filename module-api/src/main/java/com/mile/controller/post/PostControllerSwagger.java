@@ -6,6 +6,7 @@ import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostGetResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -160,5 +161,19 @@ public interface PostControllerSwagger {
     SuccessResponse deletePost(
             @PathVariable final Long postId,
             final Principal principal
+    );
+
+    @Operation(summary = "임시저장글 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "임시저장글 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 글은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
+            @PathVariable final Long postId
     );
 }
