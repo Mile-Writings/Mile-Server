@@ -22,6 +22,7 @@ public enum ErrorMessage {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 댓글이 존재하지 않습니다."),
     CURIOUS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 궁금해요는 존재하지 않습니다."),
     TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 주제가 존재하지 않습니다."),
+    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글모임의 글감 키워드가 존재하지 않습니다."),
     /*
     Bad Request
      */

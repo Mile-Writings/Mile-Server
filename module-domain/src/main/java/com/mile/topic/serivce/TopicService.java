@@ -67,11 +67,22 @@ public class TopicService {
             final Long moimId
     ) {
         List<Topic> topicList = findByMoimId(moimId);
+        isKeywordsEmpty(topicList);
         return topicList
                 .stream()
                 .map(CategoryResponse::of)
                 .collect(Collectors.toList());
     }
+
+    private void isKeywordsEmpty(
+            final List<Topic> topicList
+    ) {
+        if (topicList.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.KEYWORD_NOT_FOUND);
+        }
+    }
+
+
 
 
 }
