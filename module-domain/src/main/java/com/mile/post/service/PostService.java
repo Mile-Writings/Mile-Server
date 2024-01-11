@@ -5,6 +5,7 @@ import com.mile.comment.service.CommentService;
 import com.mile.curious.serivce.CuriousService;
 import com.mile.curious.serivce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
@@ -160,6 +161,15 @@ public class PostService {
             final Long postId
     ) {
         Post post = findById(postId);
+        checkIsPostTemporary(post);
         return TemporaryPostGetResponse.of(post);
+    }
+
+    private void checkIsPostTemporary(
+            final Post post
+    ) {
+        if (!post.isTemporary()) {
+            throw new BadRequestException(ErrorMessage.POST_NOT_TEMPORARY_ERROR);
+        }
     }
 }
