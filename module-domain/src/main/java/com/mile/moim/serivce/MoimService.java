@@ -68,7 +68,7 @@ public class MoimService {
     }
 
     public void checkSizeOfWriters(
-            List<WriterName> writersOfMoim
+            final List<WriterName> writersOfMoim
     ) {
         if (writersOfMoim.size() < NUMBER_OF_MOST_CURIOUS_WRITERS) {
             throw new NotFoundException(ErrorMessage.WRITERS_NOT_FOUND);
