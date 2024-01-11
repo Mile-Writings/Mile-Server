@@ -46,7 +46,13 @@ public class WriterNameService {
     public List<WriterName> findWriterNamesByMoimId(
             final Long moimId
     ) {
-        writerNameRepository.findByMoimId(moimId);
+        return writerNameRepository.findByMoimId(moimId);
+    }
+
+    public WriterName findByWriterId(
+            final Long writerId
+    ) {
+        return writerNameRepository.findByWriterId(writerId);
     }
 
 }
