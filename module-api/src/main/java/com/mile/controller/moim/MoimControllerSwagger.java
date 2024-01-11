@@ -38,7 +38,7 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "사용자의 권한이 확인되었습니다."),
-                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 안습니다.",
+                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 않습니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))
                     ),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
