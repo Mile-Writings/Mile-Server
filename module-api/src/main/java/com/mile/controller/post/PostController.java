@@ -6,6 +6,7 @@ import com.mile.exception.message.SuccessMessage;
 import com.mile.post.service.PostService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -112,5 +113,13 @@ public class PostController implements PostControllerSwagger {
     ) {
         postService.deletePost(postId, Long.valueOf(principal.getName()));
         return SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS);
+    }
+
+    @Override
+    @GetMapping("/{postId}")
+    public SuccessResponse<PostGetResponse> getPost(
+            @PathVariable final Long postId
+    ) {
+        return SuccessResponse.of(SuccessMessage.POST_GET_SUCCESS, postService.getPost(postId));
     }
 }
