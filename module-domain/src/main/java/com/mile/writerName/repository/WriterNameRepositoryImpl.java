@@ -13,7 +13,7 @@ public class WriterNameRepositoryImpl implements WriterNameRepositoryCustom {
     @Override
     public String getOwnerWriterNameByMoimId(final Long moimId) {
         return jpaQueryFactory.selectFrom(writerName)
-                .select(writerName.penName)
+                .select(writerName.name)
                 .leftJoin(moim)
                 .on(writerName.writer.eq(moim.owner))
                 .fetchOne();
