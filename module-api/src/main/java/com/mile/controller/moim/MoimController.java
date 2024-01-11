@@ -5,6 +5,7 @@ import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.serivce.MoimService;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimTopicResponse;
+import com.mile.moim.serivce.dto.MoimInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,5 +46,14 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOPIC_GET_SUCCESS, moimService.getTopicFromMoim(moimId));
+      
+    }
+  
+    @GetMapping("/{moimId}/info")
+    @Override
+    public SuccessResponse<MoimInfoResponse> getMoimInfo(
+            final Long moimId
+    ) {
+        return SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimInfo(moimId));
     }
 }

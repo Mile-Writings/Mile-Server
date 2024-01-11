@@ -2,8 +2,6 @@ bootJar { enabled = false }
 jar { enabled = true }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE'
-
     //Auth Module
     implementation project(':module-common')
 
@@ -13,9 +11,6 @@ dependencies {
     //Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
-
-    //Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.1'
 }
 
 ext {
