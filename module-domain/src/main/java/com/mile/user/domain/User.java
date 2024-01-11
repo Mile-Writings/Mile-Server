@@ -38,4 +38,6 @@ public class User {
                 .socialType(socialType)
                 .build();
     }
+
+
 }

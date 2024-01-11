@@ -4,6 +4,7 @@ import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.topic.serivce.dto.CategoryResponse;
+import com.mile.moim.domain.Moim;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.topic.serivce.dto.ContentResponse;
@@ -85,4 +86,12 @@ public class TopicService {
 
 
 
+    public String findLatestTopicByMoim(
+            final Moim moim
+    ) {
+        return topicRepository.findLatestTopicByMoim(moim)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.MOIM_TOPIC_NOT_FOUND)
+                );
+    }
 }

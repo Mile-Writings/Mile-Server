@@ -4,6 +4,8 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.serivce.dto.CategoryListResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
+import com.mile.writerName.serivce.dto.PopularWriterListResponse;
+import com.mile.moim.serivce.dto.MoimTopicResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,7 +41,8 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "사용자의 권한이 확인되었습니다."),
-                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 안습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    @ApiResponse(responseCode = "403", description = "사용자 검증 토큰이 유효하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
                     ),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
@@ -48,6 +51,33 @@ public interface MoimControllerSwagger {
     SuccessResponse getAuthenticationOfMoim(
             final Long moimId,
             final Principal principal
+    );
+
+
+    @Operation(summary = "궁금해요 TOP 2 작가 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "궁금해요 TOP 2 작가가 조회되었습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
+            @PathVariable final Long moimId
+    );
+
+    @Operation(summary = "글모임 최근 글감 ")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글감 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "1. 해당 글모임이 존재하지 않습니다.\n 2.해당 모임의 주제가 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<MoimTopicResponse> getTopicFromMoim(
+            @PathVariable Long moimId
     );
 
     @Operation(summary = "글모임 뷰 - 글모임 정보 조회")
