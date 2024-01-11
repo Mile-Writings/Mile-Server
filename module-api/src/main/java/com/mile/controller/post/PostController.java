@@ -118,8 +118,9 @@ public class PostController implements PostControllerSwagger {
     @Override
     @GetMapping("/temporary/{postId}")
     public SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
-            @PathVariable final Long postId
+            @PathVariable final Long postId,
+            final Principal principal
     ) {
-        return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_GET_SUCCESS, postService.getTemporaryPost(postId));
+        return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_GET_SUCCESS, postService.getTemporaryPost(postId, Long.valueOf(principal.getName())));
     }
 }

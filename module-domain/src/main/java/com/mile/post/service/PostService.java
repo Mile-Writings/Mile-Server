@@ -158,9 +158,11 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public TemporaryPostGetResponse getTemporaryPost(
-            final Long postId
+            final Long postId,
+            final Long userId
     ) {
         Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
         checkIsPostTemporary(post);
         return TemporaryPostGetResponse.of(post);
     }

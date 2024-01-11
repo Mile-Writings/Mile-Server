@@ -174,6 +174,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
-            @PathVariable final Long postId
+            @PathVariable final Long postId,
+            final Principal principal
     );
 }
