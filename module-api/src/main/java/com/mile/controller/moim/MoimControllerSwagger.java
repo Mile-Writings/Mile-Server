@@ -73,6 +73,6 @@ public interface MoimControllerSwagger {
             }
     )
     public SuccessResponse<CategoryListResponse> getCategoryList(
-            final Long moimId
+            @PathVariable final Long moimId
     );
 }

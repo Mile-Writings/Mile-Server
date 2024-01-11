@@ -50,7 +50,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/categoryList")
     @Override
     public SuccessResponse<CategoryListResponse> getCategoryList(
-            final Long moimId
+            @PathVariable final Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.CATEGORY_LIST_SEARCH_SUCCESS, moimService.getCategoryList(moimId));
     }
