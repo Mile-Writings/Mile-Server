@@ -3,6 +3,7 @@ package com.mile.controller.moim;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.serivce.MoimService;
+import com.mile.moim.serivce.dto.CategoryListResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,13 @@ public class MoimController implements MoimControllerSwagger {
             final Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimInfo(moimId));
+    }
+
+    @GetMapping("/{moimId}/categoryList")
+    @Override
+    public SuccessResponse<CategoryListResponse> getCategoryList(
+            final Long moimId
+    ) {
+        return SuccessResponse.of(SuccessMessage.CATEGORY_LIST_SEARCH_SUCCESS, moimService.getCategoryList(moimId));
     }
 }

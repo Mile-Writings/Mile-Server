@@ -2,6 +2,7 @@ package com.mile.controller.moim;
 
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
+import com.mile.moim.serivce.dto.CategoryListResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,6 +61,18 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimInfoResponse> getMoimInfo(
+            final Long moimId
+    );
+
+    @Operation(summary = "카테고리 리스트 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "카테고리 리스트 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    public SuccessResponse<CategoryListResponse> getCategoryList(
             final Long moimId
     );
 }
