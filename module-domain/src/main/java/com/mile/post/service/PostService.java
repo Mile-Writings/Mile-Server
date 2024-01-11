@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -140,14 +141,15 @@ public class PostService {
     }
 
     private void deleteRelatedData(
-           final Post post
+            final Post post
     ) {
-        if(post.isContainPhoto()) {
+        if (post.isContainPhoto()) {
             deleteS3File(post.getImageUrl());
         }
         curiousService.deleteAllByPost(post);
         commentService.deleteAllByPost(post);
     }
+
     private void deleteS3File(
             final String key
     ) {

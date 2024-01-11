@@ -7,8 +7,10 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
-import com.mile.moim.serivce.dto.MoimTopicResponse;
+import com.mile.moim.serivce.dto.MoimCuriousPostListResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
+import com.mile.moim.serivce.dto.MoimTopicResponse;
+import com.mile.post.service.PostCuriousService;
 import com.mile.topic.serivce.TopicService;
 import com.mile.utils.DateUtil;
 import com.mile.writerName.serivce.WriterNameService;
@@ -21,6 +23,7 @@ public class MoimService {
     private final WriterNameService writerNameService;
     private final TopicService topicService;
     private final MoimRepository moimRepository;
+    private final PostCuriousService postCuriousService;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -45,6 +48,7 @@ public class MoimService {
     ) {
         return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
     }
+
     private Moim findById(
             final Long moimId
     ) {
@@ -58,7 +62,7 @@ public class MoimService {
     ) {
         return MoimTopicResponse.of(topicService.findLatestTopicByMoim(findById(moimId)));
     }
-  
+
     public MoimInfoResponse getMoimInfo(
             final Long moimId
     ) {
@@ -71,5 +75,9 @@ public class MoimService {
                 writerNameService.findNumbersOfWritersByMoimId(moimId),
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
         );
+    }
+
+    public MoimCuriousPostListResponse getMostCuriousPostFromMoim(final Long moimId) {
+        return postCuriousService.getMostCuriousPostByMoim(findById(moimId));
     }
 }
