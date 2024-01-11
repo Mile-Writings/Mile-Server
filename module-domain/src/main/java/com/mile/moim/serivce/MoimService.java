@@ -73,7 +73,6 @@ public class MoimService {
     public CategoryListResponse getCategoryList(
             final Long moimId
     ) {
-        List<CategoryResponse> categoryList =  topicService.getKeywordsFromMoim(moimId);
-        return CategoryListResponse.of(categoryList);
+        return CategoryListResponse.of(topicService.getKeywordsFromMoim(moimId));
     }
 }
