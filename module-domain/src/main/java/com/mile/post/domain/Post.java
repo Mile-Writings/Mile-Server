@@ -4,6 +4,7 @@ import com.mile.config.BaseTimeEntity;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.writerName.domain.WriterName;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Post extends BaseTimeEntity {
     @ManyToOne
     private Topic topic;
     private String title;
+    @Column(length = 50000)
     private String content;
     private String imageUrl;
     @ManyToOne
