@@ -9,15 +9,11 @@ import com.mile.moim.serivce.dto.ContentListResponse;
 import com.mile.moim.serivce.dto.MoimAuthenticateResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
 import com.mile.topic.serivce.TopicService;
-import com.mile.writerName.domain.WriterName;
-import com.mile.writerName.repository.WriterNameRepository;
 import com.mile.utils.DateUtil;
+import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.serivce.WriterNameService;
 import com.mile.writerName.serivce.dto.PopularWriterListResponse;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -59,9 +55,17 @@ public class MoimService {
             final Long moimId
     ) {
         List<WriterName> writers = writerNameService.findTop2ByCuriousCount(moimId);
+        checkSizeOfWriters(writers);
         return PopularWriterListResponse.of(writers);
     }
 
+    public void checkSizeOfWriters(
+            List<WriterName> writersOfMoim
+    ) {
+        if (writersOfMoim.size() < NUMBER_OF_MOST_CURIOUS_WRITERS) {
+            throw new NotFoundException(ErrorMessage.WRITERS_NOT_FOUND);
+        }
+    }
 
     public MoimInfoResponse getMoimInfo(
             final Long moimId
