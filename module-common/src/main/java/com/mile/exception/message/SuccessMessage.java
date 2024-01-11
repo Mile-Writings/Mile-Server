@@ -22,6 +22,7 @@ public enum SuccessMessage {
     MOIM_INFO_SUCCESS(HttpStatus.OK.value(), "글모임 조회가 완료되었습니다."),
     PRESIGNED_URL_GET_SUCCESS(HttpStatus.OK.value(), "이미지를 업로드할 url이 발행되었습니다."),
     POST_DELETE_SUCCESS(HttpStatus.OK.value(), "글 삭제가 완료되었습니다."),
+    CATEGORY_LIST_SEARCH_SUCCESS(HttpStatus.OK.value(), "카테고리 리스트 조회가 완료되었습니다."),
     /*
     201 CREATED
      */
