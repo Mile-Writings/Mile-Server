@@ -72,12 +72,4 @@ public class MoimService {
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
         );
     }
-
-    private Moim findById(
-            final Long moimId
-    ) {
-        return moimRepository.findById(moimId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MOIM_NOT_FOUND)
-        );
-    }
 }
