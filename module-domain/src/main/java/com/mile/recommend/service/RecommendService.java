@@ -18,16 +18,22 @@ public class RecommendService {
     public RecommendResponse getRandomRecommendation() {
         return RecommendResponse.of(getRandomContentDaily());
     }
+
     @Scheduled(cron = "0 0 0 * * *")
     private String getRandomContentDaily() {
-        return recommendRepository.findById(GROUND_ID + INDEX).orElseGet(() -> {
+        return recommendRepository.findById(increaseId()).orElseGet(() -> {
             resetGroundId();
-            return recommendRepository.findById(GROUND_ID + INDEX).orElseThrow(
+            return recommendRepository.findById(increaseId()).orElseThrow(
                     () -> new NotFoundException(ErrorMessage.RECCOMEND_NOT_FOUND)
             );
         }).getContent();
     }
 
+    private Long increaseId() {
+        GROUND_ID += INDEX;
+        return GROUND_ID;
+    }
+    
     private void resetGroundId() {
         GROUND_ID = 0L;
     }
