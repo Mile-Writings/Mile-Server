@@ -99,7 +99,7 @@ public class PostController implements PostControllerSwagger {
     @Override
     public SuccessResponse putPost(
             @PathVariable final Long postId,
-            @RequestBody final PostPutRequest putRequest,
+            @Valid @RequestBody final PostPutRequest putRequest,
             final Principal principal
     ) {
         postService.updatePost(postId, Long.valueOf(principal.getName()), putRequest);
