@@ -4,6 +4,7 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.repository.WriterNameRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,12 @@ public class WriterNameService {
             final Long moimId
     ) {
         return writerNameRepository.getOwnerWriterNameByMoimId(moimId);
+    }
+
+    public List<WriterName> findWriterNamesByMoimId(
+            final Long moimId
+    ) {
+        writerNameRepository.findByMoimId(moimId);
     }
 
 }

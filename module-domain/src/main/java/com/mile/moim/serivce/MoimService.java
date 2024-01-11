@@ -28,7 +28,6 @@ public class MoimService {
     private final WriterNameService writerNameService;
     private final TopicService topicService;
     private final MoimRepository moimRepository;
-    private final WriterNameRepository writerNameRepository;
 
     private static final int NUMBER_OF_MOST_CURIOUS_WRITERS = 2;
 
@@ -59,7 +58,7 @@ public class MoimService {
     public PopularWriterListResponse getMostCuriousWriters(
             final Long moimId
     ) {
-        List<WriterName> writersOfMoim = writerNameRepository.findByMoimId(moimId);
+        List<WriterName> writersOfMoim = writerNameService.findWriterNamesByMoimId(moimId);
         Map<WriterName, Integer> curiousMap = getWritersAndCuriousCount(writersOfMoim, moimId);
         List<WriterName> sortedWritersOfMoim = sortWritersByCuriousCount(writersOfMoim, curiousMap);
         List<WriterName> writers = getWriters(sortedWritersOfMoim);
