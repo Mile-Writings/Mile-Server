@@ -11,6 +11,7 @@ import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.serivce.TopicService;
@@ -152,5 +153,13 @@ public class PostService {
             final String key
     ) {
         s3Service.deleteImage(key);
+    }
+
+    @Transactional(readOnly = true)
+    public TemporaryPostGetResponse getTemporaryPost(
+            final Long postId
+    ) {
+        Post post = findById(postId);
+        return TemporaryPostGetResponse.of(post);
     }
 }

@@ -12,7 +12,7 @@ public record TemporaryPostGetResponse(
         String imageUrl,
         boolean anonymous
 ) {
-    public static TemporaryPostGetResponse of(Post post, Moim moim) {
+    public static TemporaryPostGetResponse of(Post post) {
 
         return new TemporaryPostGetResponse(
                 TemporaryPostTopicGetResponse.of(post.getTopic()),
