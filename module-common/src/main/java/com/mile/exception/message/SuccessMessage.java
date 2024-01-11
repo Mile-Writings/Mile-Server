@@ -26,6 +26,7 @@ public enum SuccessMessage {
     POST_DELETE_SUCCESS(HttpStatus.OK.value(), "글 삭제가 완료되었습니다."),
     CATEGORY_LIST_SEARCH_SUCCESS(HttpStatus.OK.value(), "카테고리 리스트 조회가 완료되었습니다."),
     MOIM_TOPIC_GET_SUCCESS(HttpStatus.OK.value(), "글감 조회가 완료되었습니다."),
+    MOIM_POST_GET_SUCCESS(HttpStatus.OK.value(), "카테고리별 글 리스트 조회가 완료되었습니다."),
     /*
     201 CREATED
      */
