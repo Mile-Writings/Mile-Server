@@ -24,6 +24,7 @@ public enum ErrorMessage {
     TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 주제가 존재하지 않습니다."),
     RECCOMEND_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "추천 글감을 받아오는데 실패했습니다."),
     MOIM_TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
+    MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
     /*
     Bad Request
      */

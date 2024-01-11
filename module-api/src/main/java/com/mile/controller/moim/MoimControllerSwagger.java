@@ -3,8 +3,9 @@ package com.mile.controller.moim;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.serivce.dto.ContentListResponse;
-import com.mile.moim.serivce.dto.MoimTopicResponse;
+import com.mile.moim.serivce.dto.MoimCuriousPostListResponse;
 import com.mile.moim.serivce.dto.MoimInfoResponse;
+import com.mile.moim.serivce.dto.MoimTopicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -56,7 +57,7 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글감 조회가 완료되었습니다."),
-                    @ApiResponse(responseCode = "404", description = "1. 해당 글모임이 존재하지 않습니다.\n 2.해당 모임의 주제가 존재하지 않습니다.",     
+                    @ApiResponse(responseCode = "404", description = "1. 해당 글모임이 존재하지 않습니다.\n 2.해당 모임의 주제가 존재하지 않습니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
@@ -78,5 +79,20 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<MoimInfoResponse> getMoimInfo(
             final Long moimId
+    );
+
+
+    @Operation(summary = "글모임 뷰 - 궁금해요 상위 게시글 2개")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "궁금해요 상위 2개의 글이 조회 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 글모임이 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
+            @PathVariable final Long moimId
     );
 }

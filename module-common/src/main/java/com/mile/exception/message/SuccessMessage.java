@@ -24,7 +24,7 @@ public enum SuccessMessage {
     PRESIGNED_URL_GET_SUCCESS(HttpStatus.OK.value(), "이미지를 업로드할 url이 발행되었습니다."),
     POST_DELETE_SUCCESS(HttpStatus.OK.value(), "글 삭제가 완료되었습니다."),
     MOIM_TOPIC_GET_SUCCESS(HttpStatus.OK.value(), "글감 조회가 완료되었습니다."),
-
+    MOIM_TOP_2_POST_GET_SUCCESS(HttpStatus.OK.value(), "궁금해요 상위 2개의 글이 조회 완료되었습니다."),
     /*
     201 CREATED
      */
