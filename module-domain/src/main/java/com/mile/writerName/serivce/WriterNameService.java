@@ -55,4 +55,18 @@ public class WriterNameService {
         return writerNameRepository.findByWriterId(writerId);
     }
 
+    public void decreaseTotalCuriousCountByWriterId(
+            final Long writerId
+    ) {
+        WriterName writerName = findByWriterId(writerId);
+        writerName.decreaseTotalCuriousCount();
+    }
+
+    public void increaseTotalCuriousCountByWriterId(
+            final Long writerId
+    ) {
+        WriterName writerName = findByWriterId(writerId);
+        writerName.increaseTotalCuriousCount();
+    }
+
 }
