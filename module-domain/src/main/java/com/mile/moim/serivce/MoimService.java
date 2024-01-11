@@ -58,42 +58,10 @@ public class MoimService {
     public PopularWriterListResponse getMostCuriousWriters(
             final Long moimId
     ) {
-        List<WriterName> writersOfMoim = writerNameService.findWriterNamesByMoimId(moimId);
-        Map<WriterName, Integer> curiousMap = getWritersAndCuriousCount(writersOfMoim, moimId);
-        List<WriterName> sortedWritersOfMoim = sortWritersByCuriousCount(writersOfMoim, curiousMap);
-        List<WriterName> writers = getWriters(sortedWritersOfMoim);
+        List<WriterName> writers = writerNameService.findTop2ByCuriousCount(moimId);
         return PopularWriterListResponse.of(writers);
     }
 
-    public Map<WriterName, Integer> getWritersAndCuriousCount(
-            final List<WriterName> writersOfMoim,
-            final Long moimId
-    ) {
-        Map<WriterName, Integer> curiousCountMap = new HashMap<>();
-        for (WriterName writerName : writersOfMoim) {
-            int curiousCount = writerName.getTotalCuriousCount();
-            curiousCountMap.put(writerName, curiousCount);
-        }
-        return curiousCountMap;
-    }
-
-    public List<WriterName> sortWritersByCuriousCount(
-            final List<WriterName> writersOfMoim,
-            final Map<WriterName, Integer> curiousCountMap
-    ) {
-        Collections.sort(writersOfMoim, (writer1, writer2) -> // 내림차순
-                curiousCountMap.get(writer2).compareTo(curiousCountMap.get(writer1)));
-        return writersOfMoim;
-    }
-
-    public List<WriterName> getWriters(
-            List<WriterName> writersOfMoim
-    ) {
-        if (writersOfMoim.size() < NUMBER_OF_MOST_CURIOUS_WRITERS) {
-            throw new NotFoundException(ErrorMessage.WRITER_NOT_FOUND);
-        }
-        return writersOfMoim.subList(0, NUMBER_OF_MOST_CURIOUS_WRITERS);
-    }
 
     public MoimInfoResponse getMoimInfo(
             final Long moimId

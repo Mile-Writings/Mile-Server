@@ -69,4 +69,7 @@ public class WriterNameService {
         writerName.increaseTotalCuriousCount();
     }
 
+    public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
+        return writerNameRepository.findTop2ByMoimIdOrderByTotalCuriousCountDesc(moimid);
+    }
 }
