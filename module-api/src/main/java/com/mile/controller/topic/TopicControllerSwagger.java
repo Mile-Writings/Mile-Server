@@ -3,7 +3,7 @@ package com.mile.controller.topic;
 
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
-import com.mile.topic.serivce.dto.PostListInTopicResponse;
+import com.mile.topic.service.dto.PostListInTopicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

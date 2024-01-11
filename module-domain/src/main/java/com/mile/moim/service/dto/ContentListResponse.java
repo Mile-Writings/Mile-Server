@@ -1,6 +1,6 @@
-package com.mile.moim.serivce.dto;
+package com.mile.moim.service.dto;
 
-import com.mile.topic.serivce.dto.ContentResponse;
+import com.mile.topic.service.dto.ContentResponse;
 
 import java.util.List;
 

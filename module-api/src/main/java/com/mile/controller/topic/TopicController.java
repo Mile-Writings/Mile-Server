@@ -2,8 +2,8 @@ package com.mile.controller.topic;
 
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.topic.serivce.TopicService;
-import com.mile.topic.serivce.dto.PostListInTopicResponse;
+import com.mile.topic.service.TopicService;
+import com.mile.topic.service.dto.PostListInTopicResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -2,12 +2,12 @@ package com.mile.controller.moim;
 
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.moim.serivce.MoimService;
-import com.mile.moim.serivce.dto.CategoryListResponse;
-import com.mile.moim.serivce.dto.ContentListResponse;
-import com.mile.moim.serivce.dto.MoimInfoResponse;
-import com.mile.moim.serivce.dto.MoimTopicResponse;
-import com.mile.writerName.serivce.dto.PopularWriterListResponse;
+import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.CategoryListResponse;
+import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.writerName.service.dto.PopularWriterListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

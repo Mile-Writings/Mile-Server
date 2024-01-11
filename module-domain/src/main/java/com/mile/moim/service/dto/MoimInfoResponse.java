@@ -1,4 +1,4 @@
-package com.mile.moim.serivce.dto;
+package com.mile.moim.service.dto;
 
 public record MoimInfoResponse(
 

@@ -2,8 +2,8 @@ package com.mile.post.service;
 
 import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
-import com.mile.curious.serivce.CuriousService;
-import com.mile.curious.serivce.dto.CuriousInfoResponse;
+import com.mile.curious.servIce.CuriousService;
+import com.mile.curious.servIce.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
@@ -13,14 +13,12 @@ import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
-import com.mile.topic.serivce.TopicService;
+import com.mile.topic.service.TopicService;
 import com.mile.user.service.UserService;
-import com.mile.writerName.serivce.WriterNameService;
+import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

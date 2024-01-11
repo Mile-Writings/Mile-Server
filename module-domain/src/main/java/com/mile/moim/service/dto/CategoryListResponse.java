@@ -1,6 +1,6 @@
-package com.mile.moim.serivce.dto;
+package com.mile.moim.service.dto;
 
-import com.mile.topic.serivce.dto.CategoryResponse;
+import com.mile.topic.service.dto.CategoryResponse;
 import java.util.List;
 
 public record CategoryListResponse(List<CategoryResponse> categoryList) {

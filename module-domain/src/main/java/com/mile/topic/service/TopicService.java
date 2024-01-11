@@ -1,4 +1,4 @@
-package com.mile.topic.serivce;
+package com.mile.topic.service;
 
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
@@ -8,10 +8,10 @@ import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
-import com.mile.topic.serivce.dto.CategoryResponse;
-import com.mile.topic.serivce.dto.ContentResponse;
-import com.mile.topic.serivce.dto.PostListInTopicResponse;
-import com.mile.topic.serivce.dto.TopicOfMoimResponse;
+import com.mile.topic.service.dto.CategoryResponse;
+import com.mile.topic.service.dto.ContentResponse;
+import com.mile.topic.service.dto.PostListInTopicResponse;
+import com.mile.topic.service.dto.TopicOfMoimResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

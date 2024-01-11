@@ -1,6 +1,6 @@
 package com.mile.controller.post;
 
-import com.mile.curious.serivce.dto.CuriousInfoResponse;
+import com.mile.curious.servIce.dto.CuriousInfoResponse;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
