@@ -2,8 +2,8 @@ package com.mile.post.service;
 
 import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
-import com.mile.curious.servIce.CuriousService;
-import com.mile.curious.servIce.dto.CuriousInfoResponse;
+import com.mile.curious.service.CuriousService;
+import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;

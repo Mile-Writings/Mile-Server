@@ -1,8 +1,8 @@
-package com.mile.curious.servIce;
+package com.mile.curious.service;
 
 import com.mile.curious.domain.Curious;
 import com.mile.curious.repository.CuriousRepository;
-import com.mile.curious.servIce.dto.CuriousInfoResponse;
+import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
