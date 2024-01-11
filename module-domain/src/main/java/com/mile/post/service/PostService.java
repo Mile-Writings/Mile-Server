@@ -163,11 +163,11 @@ public class PostService {
     ) {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        checkIsPostTemporary(post);
+        isPostTemporary(post);
         return TemporaryPostGetResponse.of(post);
     }
 
-    private void checkIsPostTemporary(
+    private void isPostTemporary(
             final Post post
     ) {
         if (!post.isTemporary()) {
