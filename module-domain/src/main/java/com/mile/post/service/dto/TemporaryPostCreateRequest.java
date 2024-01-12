@@ -1,12 +1,16 @@
 package com.mile.post.service.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record TemporaryPostCreateRequest(
+        @NotNull(message = "모임 Id가 입력되지 않았습니다.")
         @Schema(description = "모임 Id", example = "1")
         Long moimId,
 
+        @NotNull(message = "글감 Id가 입력되지 않았습니다.")
         @Schema(description = "글감 Id", example = "1")
         Long topicId,
 
