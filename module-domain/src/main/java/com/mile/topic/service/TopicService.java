@@ -9,6 +9,7 @@ import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.topic.service.dto.ContentResponse;
+import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
 import com.mile.topic.service.dto.TopicResponse;
@@ -36,6 +37,20 @@ public class TopicService {
                 .map(ContentResponse::of)
                 .collect(Collectors.toList());
     }
+
+    public List<ContentWithIsSelectedResponse> getContentsWithIsSelectedFromMoim(
+            final Long moimId,
+            final Long selectedTopicId
+    ) {
+        List<Topic> topicList = sortByCreatedAt(findByMoimId(moimId));
+        isContentsEmpty(topicList);
+
+        return topicList.stream()
+                .map(topic -> ContentWithIsSelectedResponse.of(topic, topic.getId().equals(selectedTopicId)))
+                .collect(Collectors.toList());
+    }
+
+
 
     private void isContentsEmpty(
             final List<Topic> topicList

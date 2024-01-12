@@ -8,6 +8,8 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
@@ -20,6 +22,7 @@ import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
+import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.user.service.UserService;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
@@ -175,7 +178,9 @@ public class PostService {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         isPostTemporary(post);
-        return TemporaryPostGetResponse.of(post);
+
+        List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(post.getTopic().getMoim().getId(), post.getTopic().getId());
+        return TemporaryPostGetResponse.of(post, contentResponse);
     }
 
     private void isPostTemporary(
