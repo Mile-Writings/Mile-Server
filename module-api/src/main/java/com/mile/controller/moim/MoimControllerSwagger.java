@@ -3,12 +3,12 @@ package com.mile.controller.moim;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.service.dto.BestMoimListResponse;
-import com.mile.moim.service.dto.CategoryListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -112,15 +112,15 @@ public interface MoimControllerSwagger {
             @PathVariable final Long moimId
     );
 
-    @Operation(summary = "카테고리 리스트 조회")
+    @Operation(summary = "글감 리스트 조회")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "카테고리 리스트 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "200", description = "글감 리스트 조회가 완료되었습니다."),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<CategoryListResponse> getCategoryList(
+    SuccessResponse<TopicListResponse> getTopicList(
             @PathVariable final Long moimId
     );
 

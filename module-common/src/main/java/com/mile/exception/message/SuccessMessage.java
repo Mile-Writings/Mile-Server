@@ -24,7 +24,7 @@ public enum SuccessMessage {
     RECOMMENDATION_GET_SUCCESS(HttpStatus.OK.value(), "추천 글감이 조회되었습니다."),
     PRESIGNED_URL_GET_SUCCESS(HttpStatus.OK.value(), "이미지를 업로드할 url이 발행되었습니다."),
     POST_DELETE_SUCCESS(HttpStatus.OK.value(), "글 삭제가 완료되었습니다."),
-    CATEGORY_LIST_SEARCH_SUCCESS(HttpStatus.OK.value(), "카테고리 리스트 조회가 완료되었습니다."),
+    TOPIC_LIST_SEARCH_SUCCESS(HttpStatus.OK.value(), "글감 리스트 조회가 완료되었습니다."),
     MOIM_TOPIC_GET_SUCCESS(HttpStatus.OK.value(), "글감 조회가 완료되었습니다."),
     TEMPORARY_POST_GET_SUCCESS(HttpStatus.OK.value(), "임시저장글 조회가 완료되었습니다."),
     MOIM_TOP_2_POST_GET_SUCCESS(HttpStatus.OK.value(), "궁금해요 상위 2개의 글이 조회 완료되었습니다."),
