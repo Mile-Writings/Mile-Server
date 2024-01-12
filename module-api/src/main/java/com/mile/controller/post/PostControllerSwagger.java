@@ -5,6 +5,7 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
@@ -191,5 +192,18 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostGetResponse> getPost(
             @PathVariable final Long postId
+    );
+
+    @Operation(summary = "글 생성")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글 생성이 완료되었습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse createPost(
+            @Valid @RequestBody final PostCreateRequest postCreateRequest,
+            final Principal principal
     );
 }
