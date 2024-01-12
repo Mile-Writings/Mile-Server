@@ -5,6 +5,7 @@ import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.CategoryListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
@@ -35,7 +36,7 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/authenticate")
-    public SuccessResponse getAuthenticationOfMoim(
+    public SuccessResponse<MoimAuthenticateResponse> getAuthenticationOfMoim(
             @PathVariable final Long moimId,
             final Principal principal
     ) {
@@ -53,7 +54,7 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/topic")
     public SuccessResponse<MoimTopicResponse> getTopicFromMoim(
-            @PathVariable Long moimId
+            @PathVariable final Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOPIC_GET_SUCCESS, moimService.getTopicFromMoim(moimId));
 

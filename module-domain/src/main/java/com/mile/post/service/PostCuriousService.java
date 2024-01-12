@@ -33,7 +33,7 @@ public class PostCuriousService {
         return MoimCuriousPostListResponse.of(postList
                 .stream()
                 .map(p ->
-                        MoimMostCuriousPostResponse.of(p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), getSubStringOfContent(p.getContent()))
+                        MoimMostCuriousPostResponse.of(p.getId(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), getSubStringOfContent(p.getContent()))
                 ).collect(Collectors.toList()));
     }
 
