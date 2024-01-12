@@ -54,7 +54,9 @@ public class UserService {
                 userResponse.email(),
                 userResponse.socialType()
         );
-        return userRepository.save(user).getId();
+        userRepository.saveAndFlush(user);
+        createWriterNameOfUser(user);
+        return user.getId();
     }
 
     private void createWriterNameOfUser(
