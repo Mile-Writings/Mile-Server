@@ -4,13 +4,13 @@ import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.BestMoimListResponse;
-import com.mile.moim.service.dto.CategoryListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -70,12 +70,12 @@ public class MoimController implements MoimControllerSwagger {
     }
 
 
-    @GetMapping("/{moimId}/categoryList")
+    @GetMapping("/{moimId}/topicList")
     @Override
-    public SuccessResponse<CategoryListResponse> getCategoryList(
+    public SuccessResponse<TopicListResponse> getTopicList(
             @PathVariable final Long moimId
     ) {
-        return SuccessResponse.of(SuccessMessage.CATEGORY_LIST_SEARCH_SUCCESS, moimService.getCategoryList(moimId));
+        return SuccessResponse.of(SuccessMessage.TOPIC_LIST_SEARCH_SUCCESS, moimService.getTopicList(moimId));
     }
 
     @Override

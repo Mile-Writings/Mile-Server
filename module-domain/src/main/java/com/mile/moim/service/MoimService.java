@@ -6,13 +6,13 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
-import com.mile.moim.service.dto.CategoryListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostCuriousService;
@@ -118,10 +118,10 @@ public class MoimService {
         return postCuriousService.getMostCuriousPostByMoim(findById(moimId));
     }
 
-    public CategoryListResponse getCategoryList(
+    public TopicListResponse getTopicList(
             final Long moimId
     ) {
-        return CategoryListResponse.of(topicService.getKeywordsFromMoim(moimId));
+        return TopicListResponse.of(topicService.getKeywordsFromMoim(moimId));
     }
 
     public List<Moim> getBestMoimByPostNumber() {

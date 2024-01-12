@@ -8,10 +8,10 @@ import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
-import com.mile.topic.service.dto.CategoryResponse;
 import com.mile.topic.service.dto.ContentResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
+import com.mile.topic.service.dto.TopicResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,14 +68,14 @@ public class TopicService {
                 );
     }
 
-    public List<CategoryResponse> getKeywordsFromMoim(
+    public List<TopicResponse> getKeywordsFromMoim(
             final Long moimId
     ) {
         List<Topic> topicList = findByMoimId(moimId);
         isKeywordsEmpty(topicList);
         return topicList
                 .stream()
-                .map(CategoryResponse::of)
+                .map(TopicResponse::of)
                 .collect(Collectors.toList());
     }
 
