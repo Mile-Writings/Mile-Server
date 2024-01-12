@@ -29,6 +29,7 @@ public enum ErrorMessage {
     MOIM_TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글감이 존재하지 않습니다."),
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
+    RANDOM_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "랜덤 글 이름을 생성하는데 실패했습니다."),
     /*
     Bad Request
      */
