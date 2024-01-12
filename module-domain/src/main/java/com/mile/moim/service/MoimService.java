@@ -16,6 +16,7 @@ import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostCuriousService;
+import com.mile.post.service.PostGetService;
 import com.mile.post.service.PostService;
 import com.mile.post.service.PostTemporaryService;
 import com.mile.topic.service.TopicService;
@@ -38,9 +39,9 @@ public class MoimService {
     private final TopicService topicService;
     private final MoimRepository moimRepository;
     private final PostCuriousService postCuriousService;
-    private final PostService postService;
     private final PostAuthenticateService postAuthenticateService;
     private final PostTemporaryService postTemporaryService;
+    private final PostGetService postGetService;
 
     private static final int NUMBER_OF_MOST_CURIOUS_WRITERS = 2;
 
@@ -133,7 +134,7 @@ public class MoimService {
         Map<Moim, List<Post>> BestMoimAndPost = new HashMap<>();
         List<Moim> bestMoimsByPostNumber = getBestMoimByPostNumber();
         for (Moim moim : bestMoimsByPostNumber) {
-            List<Post> latestPosts = postService.getLatestPostsByMoim(moim);
+            List<Post> latestPosts = postGetService.getLatestPostsByMoim(moim);
             BestMoimAndPost.put(moim, latestPosts);
         }
         return BestMoimListResponse.of(BestMoimAndPost);

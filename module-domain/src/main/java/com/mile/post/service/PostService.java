@@ -237,10 +237,6 @@ public class PostService {
     }
 
 
-    public List<Post> getLatestPostsByMoim(Moim moim) {
-        return postRepository.findLatest4PostsByMoim(moim);
-    }
-
     @Transactional
     public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
         postAuthenticateService.authenticateWriterWithPost(postId, userId);
