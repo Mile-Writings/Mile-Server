@@ -26,6 +26,11 @@ public record PostListResponse(
     }
 
     private static String getSubString(final Post post) {
-        return Jsoup.clean(post.getContent(), Whitelist.none()).substring(SUBSTRING_START, SUBSTRING_END);
+        String cleanContent = Jsoup.clean(post.getContent(), Whitelist.none());
+        if (cleanContent.length() >= SUBSTRING_END) {
+            return cleanContent.substring(SUBSTRING_START, SUBSTRING_END);
+        } else {
+            return cleanContent;
+        }
     }
 }
