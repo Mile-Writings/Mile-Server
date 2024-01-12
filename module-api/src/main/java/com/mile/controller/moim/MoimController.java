@@ -9,6 +9,7 @@ import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,10 +78,20 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.CATEGORY_LIST_SEARCH_SUCCESS, moimService.getCategoryList(moimId));
     }
 
+    @Override
     @GetMapping("/{moimId}/mostCuriousPost")
     public SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
             @PathVariable final Long moimId
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOP_2_POST_GET_SUCCESS, moimService.getMostCuriousPostFromMoim(moimId));
+    }
+
+    @Override
+    @GetMapping("/{moimId}/temporary")
+    public SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
+            @PathVariable final Long moimId,
+            final Principal principal
+    ) {
+        return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, Long.valueOf(principal.getName())));
     }
 }
