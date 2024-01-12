@@ -6,6 +6,7 @@ import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostCreateRequest;
+import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
@@ -57,7 +58,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse postCurious(
+    SuccessResponse<PostCuriousResponse> postCurious(
             @PathVariable final Long postId,
             final Principal principal
     );
@@ -106,7 +107,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse deleteCurious(
+    SuccessResponse<PostCuriousResponse> deleteCurious(
             @PathVariable final Long postId,
             final Principal principal
     );

@@ -7,6 +7,7 @@ import com.mile.post.service.PostService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostCreateRequest;
+import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
@@ -52,12 +53,11 @@ public class PostController implements PostControllerSwagger {
 
     @PostMapping("/{postId}/curious")
     @Override
-    public SuccessResponse postCurious(
+    public SuccessResponse<PostCuriousResponse> postCurious(
             @PathVariable final Long postId,
             final Principal principal
     ) {
-        postService.createCuriousOnPost(postId, Long.valueOf(principal.getName()));
-        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS);
+        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, Long.valueOf(principal.getName())));
     }
 
     @GetMapping("/{postId}/comment")
@@ -81,12 +81,11 @@ public class PostController implements PostControllerSwagger {
 
     @DeleteMapping("/{postId}/curious")
     @Override
-    public SuccessResponse deleteCurious(
+    public SuccessResponse<PostCuriousResponse> deleteCurious(
             @PathVariable final Long postId,
             final Principal principal
     ) {
-        postService.deleteCuriousOnPost(postId, Long.valueOf(principal.getName()));
-        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS);
+        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, Long.valueOf(principal.getName())));
     }
 
     @GetMapping("/{postId}/authenticate")

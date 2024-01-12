@@ -13,6 +13,7 @@ import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostCreateRequest;
+import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
@@ -61,13 +62,14 @@ public class PostService {
 
 
     @Transactional
-    public void createCuriousOnPost(
+    public PostCuriousResponse createCuriousOnPost(
             final Long postId,
             final Long userId
     ) {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.createCurious(post, userService.findById(userId));
+        return PostCuriousResponse.of(true);
     }
 
     public CommentListResponse getComments(
@@ -98,13 +100,14 @@ public class PostService {
     }
 
     @Transactional
-    public void deleteCuriousOnPost(
+    public PostCuriousResponse deleteCuriousOnPost(
             final Long postId,
             final Long userId
     ) {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.deleteCurious(post, userService.findById(userId));
+        return PostCuriousResponse.of(false);
     }
 
     @Transactional
