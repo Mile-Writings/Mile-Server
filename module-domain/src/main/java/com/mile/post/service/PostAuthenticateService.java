@@ -6,6 +6,7 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.moim.service.MoimService;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class PostAuthenticateService {
     private final MoimService moimService;
     private final PostRepository postRepository;
+    private final WriterNameService writerNameService;
 
     public void authenticateUserWithPostId(
             final Long postId,
@@ -52,6 +54,16 @@ public class PostAuthenticateService {
             final Long userId
     ) {
         if (!authenticateWriterWithPost(postId, userId)) {
+            throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
+        }
+    }
+
+
+    public void authenticateWriterOfMoim(
+            final Long userId,
+            final Long moimId
+    ) {
+        if (!writerNameService.isUserInMoim(moimId, userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
     }

@@ -4,6 +4,7 @@ import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
+import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
@@ -12,6 +13,7 @@ import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
@@ -20,9 +22,12 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.service.UserService;
 import com.mile.writerName.service.WriterNameService;
+import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Service
@@ -186,4 +191,23 @@ public class PostService {
         Moim moim = post.getTopic().getMoim();
         return PostGetResponse.of(post, moim);
     }
+
+    @Transactional
+    public void createPost(
+            final Long userId,
+            final PostCreateRequest postCreateRequest
+    ) {
+        postAuthenticateService.authenticateWriterOfMoim(userId, postCreateRequest.moimId());
+        postRepository.save(Post.create(
+                topicService.findById(postCreateRequest.topicId()), // Topic
+                writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId), // WriterName
+                postCreateRequest.title(),
+                postCreateRequest.content(),
+                postCreateRequest.imageUrl(),
+                postCreateRequest.anonymous(),
+                false // isTemporary
+        ));
+    }
+
+
 }
