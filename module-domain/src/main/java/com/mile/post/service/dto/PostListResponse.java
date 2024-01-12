@@ -2,6 +2,8 @@ package com.mile.post.service.dto;
 
 import com.mile.post.domain.Post;
 import com.mile.utils.DateUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 public record PostListResponse(
         Long postId,
@@ -13,8 +15,7 @@ public record PostListResponse(
         String imageUrl
 ) {
     private static final int SUBSTRING_START = 0;
-    private static final int SUBSTRING_END_WITH_IMAGE = 104;
-    private static final int SUBSTRING_END_WITHOUT_IMAGE = 166;
+    private static final int SUBSTRING_END = 200;
 
     public static PostListResponse of(final Post post) {
         return new PostListResponse(post.getId(), post.getTitle(), getSubString(post),
@@ -25,10 +26,6 @@ public record PostListResponse(
     }
 
     private static String getSubString(final Post post) {
-        if (post.getImageUrl().isEmpty()) {
-            return post.getContent().substring(SUBSTRING_START, SUBSTRING_END_WITHOUT_IMAGE);
-        } else {
-            return post.getContent().substring(SUBSTRING_START, SUBSTRING_END_WITH_IMAGE);
-        }
+        return Jsoup.clean(post.getContent(), Whitelist.none()).substring(SUBSTRING_START, SUBSTRING_END);
     }
 }

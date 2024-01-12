@@ -8,6 +8,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -132,4 +133,21 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<BestMoimListResponse> getBestMoimAndPostList();
+
+
+    @Operation(summary = "임시 저장 글 존재 여부 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "임시저장 글 존재 여부 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "1. 해당 글모임이 존재하지 않습니다.\n" +
+                            "2. 해당 작가는 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
+            @PathVariable final Long moimId,
+            final Principal principal
+    );
 }

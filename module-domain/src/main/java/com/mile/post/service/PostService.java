@@ -21,8 +21,10 @@ import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.service.UserService;
+import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
 import java.util.List;
+import com.mile.writerName.service.dto.WriterNameResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -194,14 +196,15 @@ public class PostService {
 
 
     @Transactional
-    public void createPost(
+    public WriterNameResponse createPost(
             final Long userId,
             final PostCreateRequest postCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, postCreateRequest.moimId());
+        WriterName writerName = writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId);
         postRepository.save(Post.create(
                 topicService.findById(postCreateRequest.topicId()), // Topic
-                writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId), // WriterName
+                writerName, // WriterName
                 postCreateRequest.title(),
                 postCreateRequest.content(),
                 postCreateRequest.imageUrl(),
@@ -209,6 +212,7 @@ public class PostService {
                 postCreateRequest.anonymous(),
                 TEMPRORARY_FALSE
         ));
+        return WriterNameResponse.of(writerName.getName());
     }
 
     public void createTemporaryPost(
@@ -237,4 +241,12 @@ public class PostService {
         return postRepository.findLatest4PostsByMoim(moim);
     }
 
+    @Transactional
+    public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
+        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        Post post = findById(postId);
+        isPostTemporary(post);
+        post.updatePost(topicService.findById(request.topicId()), request);
+        return WriterNameResponse.of(post.getWriterName().getName());
+    }
 }

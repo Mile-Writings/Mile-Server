@@ -17,6 +17,14 @@ public class PostGetService {
     private final PostRepository postRepository;
 
 
+    public Post findById(
+            final Long postId
+    ) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
+        );
+    }
+
     public List<Post> findByTopic(
             final Topic topic
     ) {
@@ -28,7 +36,7 @@ public class PostGetService {
     private void isPostListEmpty(
             List<Post> postList
     ) {
-        if(postList.isEmpty()) {
+        if (postList.isEmpty()) {
             throw new NotFoundException(ErrorMessage.MOIM_TOPIC_NOT_FOUND);
         }
     }

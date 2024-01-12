@@ -10,6 +10,7 @@ import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
+import com.mile.writerName.service.dto.WriterNameResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -134,7 +135,16 @@ public interface PostControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글 수정이 완료되었습니다."),
-                    @ApiResponse(responseCode = "404", description = "해당 글은 존재하지 않습니다.",
+                    @ApiResponse(
+                            responseCode = "400", description = "1. 글감 id가 입력되지 않았습니다.\n" +
+                            "2. 제목을 입력해주세요.\n" +
+                            "3. 제목 최대 글자를 초과했습니다\n" +
+                            "4. 내용을 입력해주세요.\n" +
+                            "5. 내용 최대 글자를 초과했습니다.\n" +
+                            "6. 이미지 url을 입력해주세요.\n" +
+                            "7. 익명 여부를 입력해주세요."
+                    ),
+                    @ApiResponse(responseCode = "404", description = "1. 해당 글은 존재하지 않습니다.\n" + "2. 해당 글감이 존재하지 않습니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "해당 사용자는 글 수정/삭제 권한이 없습니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -237,4 +247,18 @@ public interface PostControllerSwagger {
             @Valid @RequestBody final PostCreateRequest postCreateRequest,
             final Principal principal
     );
+
+    @Operation(summary = "임시 저장된 글 작성")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글 작성이 완료되었습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
+            }
+    )
+    SuccessResponse<WriterNameResponse> putFixedPost(@PathVariable final Long postId, final Principal principal,
+                                                     @RequestBody final PostPutRequest request);
 }
