@@ -52,10 +52,10 @@ public class Post extends BaseTimeEntity {
             final String title,
             final String content,
             final String imageUrl,
+            final boolean containPhoto,
             final boolean anonymous,
             final boolean isTemporary
     ) {
-        final boolean containPhoto = imageUrl != null && !imageUrl.isEmpty();
         return Post
                 .builder()
                 .topic(topic)
