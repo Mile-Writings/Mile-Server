@@ -7,7 +7,7 @@ import com.mile.moim.service.MoimService;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.writerName.domain.WriterName;
-import com.mile.writerName.serivce.WriterNameService;
+import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
