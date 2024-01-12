@@ -193,15 +193,17 @@ public class PostService {
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, temporaryPostCreateRequest.moimId());
-        Post temporaryPost = Post.create(
-                topicService.findById(temporaryPostCreateRequest.topicId()),  // Topic
+        postRepository.save(Post.create(
+                topicService.findById(temporaryPostCreateRequest.topicId()), // Topic
                 writerNameService.findByMoimAndUser(temporaryPostCreateRequest.moimId(), userId), // WriterName
                 temporaryPostCreateRequest.title(),
                 temporaryPostCreateRequest.content(),
                 temporaryPostCreateRequest.imageUrl(),
                 temporaryPostCreateRequest.anonymous(),
                 true // isTemporary
-        );
-        postRepository.save(temporaryPost);
+        ));
     }
+
+
+
 }

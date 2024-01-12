@@ -136,7 +136,7 @@ public class PostController implements PostControllerSwagger {
 
     @PostMapping("/temporary")
     public SuccessResponse createTemporaryPost(
-            @Valid @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest,
+            @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest,
             final Principal principal
     ) {
         postService.createTemporaryPost(
