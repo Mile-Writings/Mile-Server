@@ -8,6 +8,7 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.comment.service.dto.CommentResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
+import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.writerName.domain.WriterName;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class CommentService {
     private static boolean ANONYMOUS_TRUE = true;
     private final PostAuthenticateService postAuthenticateService;
     private final CommentRepository commentRepository;
+    private final PostGetService postGetService;
 
     @Transactional
     public void deleteComment(
@@ -49,14 +51,16 @@ public class CommentService {
                         () -> new NotFoundException(ErrorMessage.COMMENT_NOT_FOUND)
                 );
     }
+
     private void authenticateUser(
             final Comment comment,
             final Long userId
     ) {
-        if(!commentRepository.findUserIdByComment(comment).equals(userId))  {
+        if (!commentRepository.findUserIdByComment(comment).equals(userId)) {
             throw new ForbiddenException(ErrorMessage.COMMENT_ACCESS_ERROR);
         }
     }
+
     public void createComment(
             final Post post,
             final WriterName writerName,
@@ -73,7 +77,15 @@ public class CommentService {
         List<Comment> commentList = findByPostId(postId);
         throwIfCommentIsNull(commentList);
         return commentList.stream()
-                .map(comment -> CommentResponse.of(comment, userId)).collect(Collectors.toList());
+                .map(comment -> CommentResponse.of(comment, userId, isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
+    }
+
+    private boolean isCommentWriterEqualWriterOfPost(
+            final Comment comment,
+            final Long postId
+    ) {
+        Post post = postGetService.findById(postId);
+        return post.getWriterName().equals(comment.getWriterName());
     }
 
     private List<Comment> findByPostId(
