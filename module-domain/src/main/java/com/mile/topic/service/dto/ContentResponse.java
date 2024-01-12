@@ -1,4 +1,4 @@
-package com.mile.topic.serivce.dto;
+package com.mile.topic.service.dto;
 
 import com.mile.topic.domain.Topic;
 
