@@ -207,11 +207,7 @@ public class PostService {
     }
 
     private boolean checkContainPhoto(String imageUrl) {
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return imageUrl != null && !imageUrl.isEmpty();
     }
 
 }
