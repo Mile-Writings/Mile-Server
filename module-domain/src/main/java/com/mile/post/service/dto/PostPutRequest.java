@@ -3,11 +3,12 @@ package com.mile.post.service.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record PostPutRequest(
 
-        @NotEmpty(message = "글감 id가 입력되지 않았습니다.")
+        @NotNull(message = "글감 id가 입력되지 않았습니다.")
         @Schema(description = "글감 Id", example = "1")
         Long topicId,
 

@@ -11,6 +11,7 @@ import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
+import com.mile.writerName.service.dto.WriterNameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -128,6 +129,7 @@ public class PostController implements PostControllerSwagger {
                 postService.getTemporaryPost(postId, Long.valueOf(principal.getName())));
     }
 
+    @Override
     @GetMapping("/{postId}")
     public SuccessResponse<PostGetResponse> getPost(
             @PathVariable final Long postId
@@ -136,16 +138,16 @@ public class PostController implements PostControllerSwagger {
     }
 
 
+    @Override
     @PostMapping
-    public SuccessResponse createPost(
+    public SuccessResponse<WriterNameResponse> createPost(
             @Valid @RequestBody final PostCreateRequest postCreateRequest,
             final Principal principal
     ) {
-        postService.createPost(
+        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.createPost(
                 Long.valueOf(principal.getName()),
                 postCreateRequest
-        );
-        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS);
+        ));
     }
 
     @PostMapping("/temporary")
@@ -158,5 +160,15 @@ public class PostController implements PostControllerSwagger {
                 temporaryPostCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_CREATE_SUCCESS);
+    }
+
+    @PutMapping("/temporary/{postId}")
+    public SuccessResponse<WriterNameResponse> putFixedPost(@PathVariable final Long postId, final Principal principal,
+                                                            @RequestBody final PostPutRequest request) {
+        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putFixedPost(
+                Long.valueOf(principal.getName()),
+                request,
+                postId
+        ));
     }
 }
