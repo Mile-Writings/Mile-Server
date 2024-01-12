@@ -209,7 +209,7 @@ public class PostService {
                 postCreateRequest.imageUrl(),
                 checkContainPhoto(postCreateRequest.imageUrl()),
                 postCreateRequest.anonymous(),
-                isTemporaryPost
+                !isTemporaryPost
         ));
     }
 
