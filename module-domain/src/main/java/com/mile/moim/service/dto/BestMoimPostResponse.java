@@ -21,12 +21,11 @@ public record BestMoimPostResponse(String topicName, String imageUrl, String pos
     private static String getSubStringOfCleanContent(
             String content
     ) {
-        return Jsoup.clean(content, Whitelist.none()).substring(SUBSTRING_START, SUBSTRING_END);
+        String cleanContent = Jsoup.clean(content, Whitelist.none());
+        if (cleanContent.length() >= SUBSTRING_END) {
+            return cleanContent.substring(SUBSTRING_START, SUBSTRING_END);
+        } else {
+            return cleanContent;
+        }
     }
 }
-
-/*
-    private static String getSubString(final Post post) {
-        return Jsoup.clean(post.getContent(), Whitelist.none()).substring(SUBSTRING_START, SUBSTRING_END);
- */
-
