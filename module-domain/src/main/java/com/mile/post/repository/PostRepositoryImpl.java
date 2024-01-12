@@ -27,7 +27,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     public List<Post> findLatest4PostsByMoim(Moim moim) {
-        QPost post = QPost.post;
 
         List<Post> result = jpaQueryFactory
                 .select(post)

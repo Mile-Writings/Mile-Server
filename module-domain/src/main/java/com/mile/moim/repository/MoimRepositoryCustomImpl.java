@@ -1,8 +1,9 @@
 package com.mile.moim.repository;
 
+import static com.mile.moim.domain.QMoim.moim;
+import static com.mile.post.domain.QPost.post;
+
 import com.mile.moim.domain.Moim;
-import com.mile.moim.domain.QMoim;
-import com.mile.post.domain.QPost;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,8 +14,6 @@ public class MoimRepositoryCustomImpl implements MoimRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     public List<Moim> findTop3MoimsByPostCount() {
-        QMoim moim = QMoim.moim;
-        QPost post = QPost.post;
 
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
 
