@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
     List<Post> findTop2ByMoimOrderByCuriousCountDesc(final Moim requestMoim);
+    List<Post> findLatest4PostsByMoim(Moim moim);
 }
+
