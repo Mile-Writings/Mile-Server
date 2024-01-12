@@ -46,6 +46,8 @@ public class PostService {
 
     public static final boolean TEMPRORARY_FALSE = false;
     public static final boolean TEMPORARY_TRUE = true;
+    public static final boolean CURIOUS_FALSE = false;
+    public static final boolean CURIOUS_TRUE = true;
 
     @Transactional
     public void createCommentOnPost(
@@ -69,7 +71,7 @@ public class PostService {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.createCurious(post, userService.findById(userId));
-        return PostCuriousResponse.of(true);
+        return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
     public CommentListResponse getComments(
@@ -107,7 +109,7 @@ public class PostService {
         Post post = findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.deleteCurious(post, userService.findById(userId));
-        return PostCuriousResponse.of(false);
+        return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
     @Transactional
