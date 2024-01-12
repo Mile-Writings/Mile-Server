@@ -7,6 +7,7 @@ import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -192,4 +193,26 @@ public interface PostControllerSwagger {
     SuccessResponse<PostGetResponse> getPost(
             @PathVariable final Long postId
     );
+
+    @Operation(summary = "글 임시저장")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글 임시저장이 완료되었습니다."),
+                    @ApiResponse(responseCode = "400",
+                            description = "1. 제목 최대 글자(29)를 초과했습니다.\n" +
+                                       "2. 내용 최대 글자(2500)를 초과했습니다.\n" +
+                                        "3. 모임 ID가 없습니다.\n" +
+                                        "4. 글감 ID가 없습니다.\n",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "해당 사용자는 모임에 접근 권한이 없습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse createTemporaryPost(
+            @Valid @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest,
+            final Principal principal
+    );
+
 }

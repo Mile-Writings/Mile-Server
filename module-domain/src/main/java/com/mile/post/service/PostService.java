@@ -14,6 +14,7 @@ import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
@@ -37,6 +38,8 @@ public class PostService {
     private final UserService userService;
     private final TopicService topicService;
     private final S3Service s3Service;
+
+    public static final boolean isTemporaryPost = true;
 
     @Transactional
     public void createCommentOnPost(
@@ -119,7 +122,6 @@ public class PostService {
         post.updatePost(topic, putRequest);
     }
 
-
     public WriterAuthenticateResponse getAuthenticateWriter(
             final Long postId,
             final Long userId
@@ -186,4 +188,26 @@ public class PostService {
         Moim moim = post.getTopic().getMoim();
         return PostGetResponse.of(post, moim);
     }
+
+    public void createTemporaryPost(
+            final Long userId,
+            final TemporaryPostCreateRequest temporaryPostCreateRequest
+    ) {
+        postAuthenticateService.authenticateWriterOfMoim(userId, temporaryPostCreateRequest.moimId());
+        postRepository.save(Post.create(
+                topicService.findById(temporaryPostCreateRequest.topicId()), // Topic
+                writerNameService.findByMoimAndUser(temporaryPostCreateRequest.moimId(), userId), // WriterName
+                temporaryPostCreateRequest.title(),
+                temporaryPostCreateRequest.content(),
+                temporaryPostCreateRequest.imageUrl(),
+                checkContainPhoto(temporaryPostCreateRequest.imageUrl()),
+                temporaryPostCreateRequest.anonymous(),
+                isTemporaryPost
+        ));
+    }
+
+    private boolean checkContainPhoto(String imageUrl) {
+        return imageUrl != null && !imageUrl.isEmpty();
+    }
+
 }

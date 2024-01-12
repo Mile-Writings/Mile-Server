@@ -58,7 +58,7 @@ public enum ErrorMessage {
     Forbidden
      */
     USER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 모임에 접근 권한이 없습니다."),
-    WRITER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 글 수정/삭제 권한이 없습니다."),
+    WRITER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
     /*
     Forbidden
      */
