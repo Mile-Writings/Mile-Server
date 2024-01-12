@@ -4,7 +4,6 @@ import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
-import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
@@ -22,13 +21,12 @@ import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.service.UserService;
+import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
-import jakarta.validation.Valid;
-import java.security.Principal;
+import com.mile.writerName.service.dto.WriterNameResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Service
@@ -197,14 +195,15 @@ public class PostService {
 
 
     @Transactional
-    public void createPost(
+    public WriterNameResponse createPost(
             final Long userId,
             final PostCreateRequest postCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, postCreateRequest.moimId());
+        WriterName writerName = writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId);
         postRepository.save(Post.create(
                 topicService.findById(postCreateRequest.topicId()), // Topic
-                writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId), // WriterName
+                writerName, // WriterName
                 postCreateRequest.title(),
                 postCreateRequest.content(),
                 postCreateRequest.imageUrl(),
@@ -212,6 +211,7 @@ public class PostService {
                 postCreateRequest.anonymous(),
                 TEMPRORARY_FALSE
         ));
+        return WriterNameResponse.of(writerName.getName());
     }
 
     public void createTemporaryPost(
@@ -235,4 +235,12 @@ public class PostService {
         return imageUrl != null && !imageUrl.isEmpty();
     }
 
+    @Transactional
+    public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
+        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        Post post = findById(postId);
+        isPostTemporary(post);
+        post.updatePost(topicService.findById(request.topicId()), request);
+        return WriterNameResponse.of(post.getWriterName().getName());
+    }
 }
