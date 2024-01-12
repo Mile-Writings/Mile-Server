@@ -11,10 +11,16 @@ import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.post.service.PostCuriousService;
+import com.mile.post.service.PostService;
+import com.mile.post.service.PostTemporaryService;
 import com.mile.topic.service.TopicService;
 import com.mile.utils.DateUtil;
 import com.mile.writerName.domain.WriterName;
+
+import java.util.List;
+
 import com.mile.writerName.service.WriterNameService;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +36,7 @@ public class MoimService {
     private final TopicService topicService;
     private final MoimRepository moimRepository;
     private final PostCuriousService postCuriousService;
+    private final PostTemporaryService postTemporaryService;
 
     private static final int NUMBER_OF_MOST_CURIOUS_WRITERS = 2;
 
@@ -110,5 +117,12 @@ public class MoimService {
             final Long moimId
     ) {
         return CategoryListResponse.of(topicService.getKeywordsFromMoim(moimId));
+    }
+    public TemporaryPostExistResponse getTemporaryPost(
+            final Long moimId,
+            final Long userId
+    ) {
+        Long postId = postTemporaryService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
+        return TemporaryPostExistResponse.of(!postId.equals(0L), postId);
     }
 }
