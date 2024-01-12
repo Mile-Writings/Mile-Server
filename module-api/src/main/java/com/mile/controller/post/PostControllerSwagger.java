@@ -221,6 +221,14 @@ public interface PostControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글 생성이 완료되었습니다."),
+                    @ApiResponse(responseCode = "400",
+                            description = "1. 제목 최대 글자(29)를 초과했습니다.\n" +
+                                    "2. 내용 최대 글자(2500)를 초과했습니다.\n" +
+                                    "3. 제목의 내용이 없습니다.\n" +
+                                    "4. 내용의 내용이 없습니다.\n" +
+                                    "5. 모임 ID가 없습니다.\n" +
+                                    "6. 글감 ID가 없습니다.\n",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
