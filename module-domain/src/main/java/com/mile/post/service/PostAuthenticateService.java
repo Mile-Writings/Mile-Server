@@ -3,10 +3,8 @@ package com.mile.post.service;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
-import com.mile.moim.service.MoimService;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
-import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PostAuthenticateService {
-    private final MoimService moimService;
     private final PostRepository postRepository;
     private final WriterNameService writerNameService;
 
@@ -31,7 +28,16 @@ public class PostAuthenticateService {
             final Long userId
     ) {
         Long moimId = post.getTopic().getMoim().getId();
-        moimService.authenticateUserOfMoim(moimId, userId);
+        authenticateUserOfMoim(moimId, userId);
+    }
+
+    public void authenticateUserOfMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        if (!writerNameService.isUserInMoim(moimId, userId)) {
+            throw new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR);
+        }
     }
 
     private Post findById(

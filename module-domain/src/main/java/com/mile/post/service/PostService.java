@@ -4,7 +4,6 @@ import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
-import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
@@ -23,12 +22,10 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.service.UserService;
 import com.mile.writerName.service.WriterNameService;
-import jakarta.validation.Valid;
-import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Service
@@ -233,6 +230,11 @@ public class PostService {
 
     private boolean checkContainPhoto(String imageUrl) {
         return imageUrl != null && !imageUrl.isEmpty();
+    }
+
+
+    public List<Post> getLatestPostsByMoim(Moim moim) {
+        return postRepository.findLatest4PostsByMoim(moim);
     }
 
 }
