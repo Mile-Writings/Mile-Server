@@ -59,6 +59,7 @@ public class PostAuthenticateService {
         }
     }
 
+
     public void authenticateWriterOfMoim(
             final Long userId,
             final Long moimId

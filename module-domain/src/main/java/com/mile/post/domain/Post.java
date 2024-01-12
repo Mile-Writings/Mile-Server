@@ -46,6 +46,7 @@ public class Post extends BaseTimeEntity {
         this.curiousCount--;
     }
 
+
     public static Post create(
             final Topic topic,
             final WriterName writerName,
@@ -56,6 +57,7 @@ public class Post extends BaseTimeEntity {
             final boolean anonymous,
             final boolean isTemporary
     ) {
+
         return Post
                 .builder()
                 .topic(topic)

@@ -6,6 +6,7 @@ import com.mile.exception.message.SuccessMessage;
 import com.mile.post.service.PostService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
@@ -132,6 +133,19 @@ public class PostController implements PostControllerSwagger {
             @PathVariable final Long postId
     ) {
         return SuccessResponse.of(SuccessMessage.POST_GET_SUCCESS, postService.getPost(postId));
+    }
+
+
+    @PostMapping
+    public SuccessResponse createPost(
+            @Valid @RequestBody final PostCreateRequest postCreateRequest,
+            final Principal principal
+    ) {
+        postService.createPost(
+                Long.valueOf(principal.getName()),
+                postCreateRequest
+        );
+        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS);
     }
 
     @PostMapping("/temporary")
