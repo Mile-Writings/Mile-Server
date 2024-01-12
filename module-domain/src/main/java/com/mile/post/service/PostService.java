@@ -39,6 +39,8 @@ public class PostService {
     private final TopicService topicService;
     private final S3Service s3Service;
 
+    public static final boolean isTemporaryPost = true;
+
     @Transactional
     public void createCommentOnPost(
             final Long postId,
@@ -200,7 +202,7 @@ public class PostService {
                 temporaryPostCreateRequest.imageUrl(),
                 checkContainPhoto(temporaryPostCreateRequest.imageUrl()),
                 temporaryPostCreateRequest.anonymous(),
-                true // isTemporary
+                isTemporaryPost
         ));
     }
 
