@@ -42,11 +42,13 @@ public class WriterName {
     private WriterName(
             final Moim moim,
             final String name,
-            final User user
+            final User user,
+            final int curiousCount
     ) {
         this.moim = moim;
         this.name = name;
         this.writer = user;
+        this.totalCuriousCount = curiousCount;
     }
 
     public static WriterName of(
@@ -57,6 +59,8 @@ public class WriterName {
         return WriterName.builder()
                 .moim(moim)
                 .name(name)
-                .user(user).build();
+                .user(user)
+                .curiousCount(0)
+                .build();
     }
 }
