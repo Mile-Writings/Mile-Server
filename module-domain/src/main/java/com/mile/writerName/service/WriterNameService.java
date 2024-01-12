@@ -2,17 +2,22 @@ package com.mile.writerName.service;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.domain.Moim;
+import com.mile.user.domain.User;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.repository.WriterNameRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
+    private final RandomWriterNameService randomWriterNameService;
 
     public boolean isUserInMoim(
             final Long moimId,
@@ -74,5 +79,12 @@ public class WriterNameService {
 
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
         return writerNameRepository.findTop2ByMoimIdOrderByTotalCuriousCountDesc(moimid);
+    }
+
+    @Transactional
+    public void createWriterNameInMile(final User user, final Moim moim) {
+        writerNameRepository.save(
+                WriterName.of(moim, randomWriterNameService.generateRandomWriterName(), user)
+        );
     }
 }

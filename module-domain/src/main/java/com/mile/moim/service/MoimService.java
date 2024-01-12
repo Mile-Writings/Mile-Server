@@ -4,10 +4,10 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.CategoryListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
-import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
@@ -25,6 +25,8 @@ import com.mile.writerName.service.WriterNameService;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +48,7 @@ public class MoimService {
         return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
     }
 
+
     public void authenticateUserOfMoim(
             final Long moimId,
             final Long userId
@@ -62,7 +65,7 @@ public class MoimService {
         return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
     }
 
-    private Moim findById(
+    public Moim findById(
             final Long moimId
     ) {
         return moimRepository.findById(moimId).orElseThrow(
@@ -115,7 +118,6 @@ public class MoimService {
     ) {
         return CategoryListResponse.of(topicService.getKeywordsFromMoim(moimId));
     }
-
     public TemporaryPostExistResponse getTemporaryPost(
             final Long moimId,
             final Long userId
