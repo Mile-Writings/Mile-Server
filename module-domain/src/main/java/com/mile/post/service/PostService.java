@@ -23,6 +23,7 @@ import com.mile.topic.service.TopicService;
 import com.mile.user.service.UserService;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
+import java.util.List;
 import com.mile.writerName.service.dto.WriterNameResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -234,6 +235,7 @@ public class PostService {
     private boolean checkContainPhoto(String imageUrl) {
         return imageUrl != null && !imageUrl.isEmpty();
     }
+
 
     @Transactional
     public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {

@@ -1,26 +1,21 @@
 package com.mile.moim.service.dto;
 
+import com.mile.post.domain.Post;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-public record MoimMostCuriousPostResponse(
-        Long postId,
-        String imageUrl,
-        String topic,
-        String title,
-        String content
-) {
+public record BestMoimPostResponse(String topicName, String imageUrl, String postTitle, String postContent) {
     private static final int SUBSTRING_START = 0;
     private static final int SUBSTRING_END = 200;
 
-    public static MoimMostCuriousPostResponse of(
-            Long postId,
-            String imageUrl,
-            String topic,
-            String title,
-            String content
-    ) {
-        return new MoimMostCuriousPostResponse(postId, imageUrl, topic, title, getSubStringOfCleanContent(content));
+    public static BestMoimPostResponse of(Post post) {
+
+        return new BestMoimPostResponse(
+                post.getTopic().getContent(),
+                post.getImageUrl(),
+                post.getTitle(),
+                getSubStringOfCleanContent(post.getContent())
+        );
     }
 
     private static String getSubStringOfCleanContent(
