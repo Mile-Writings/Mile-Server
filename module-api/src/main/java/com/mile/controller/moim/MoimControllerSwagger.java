@@ -2,6 +2,7 @@ package com.mile.controller.moim;
 
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
+import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.CategoryListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
@@ -121,4 +122,14 @@ public interface MoimControllerSwagger {
     SuccessResponse<CategoryListResponse> getCategoryList(
             @PathVariable final Long moimId
     );
+
+    @Operation(summary = "베스트 활동 모임 및 글 리스트 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "베스트 활동 모임과 글 리스트 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<BestMoimListResponse> getBestMoimAndPostList();
 }
