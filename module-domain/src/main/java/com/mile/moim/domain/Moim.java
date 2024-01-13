@@ -2,6 +2,7 @@ package com.mile.moim.domain;
 
 import com.mile.config.BaseTimeEntity;
 import com.mile.user.domain.User;
+import com.mile.writerName.domain.WriterName;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,7 @@ public class Moim extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private User owner;
+    private WriterName owner;
     private String name;
     private String imageUrl;
     private String information;
