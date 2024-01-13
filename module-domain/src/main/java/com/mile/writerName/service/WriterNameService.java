@@ -42,11 +42,6 @@ public class WriterNameService {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
-    public String getOwnerNameOfMoimId(
-            final Long moimId
-    ) {
-        return writerNameRepository.getOwnerWriterNameByMoimId(moimId);
-    }
 
     public List<WriterName> findWriterNamesByMoimId(
             final Long moimId

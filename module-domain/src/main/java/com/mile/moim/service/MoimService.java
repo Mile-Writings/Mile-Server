@@ -17,19 +17,19 @@ import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostCuriousService;
 import com.mile.post.service.PostGetService;
-import com.mile.post.service.PostService;
 import com.mile.post.service.PostTemporaryService;
 import com.mile.topic.service.TopicService;
 import com.mile.utils.DateUtil;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -107,7 +107,7 @@ public class MoimService {
         return MoimInfoResponse.of(
                 moim.getImageUrl(),
                 moim.getName(),
-                writerNameService.getOwnerNameOfMoimId(moimId),
+                moim.getOwner().getName(),
                 moim.getInformation(),
                 writerNameService.findNumbersOfWritersByMoimId(moimId),
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
