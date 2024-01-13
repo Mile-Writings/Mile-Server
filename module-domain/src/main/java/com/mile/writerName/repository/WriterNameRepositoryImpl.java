@@ -15,7 +15,8 @@ public class WriterNameRepositoryImpl implements WriterNameRepositoryCustom {
         return jpaQueryFactory.selectFrom(writerName)
                 .select(writerName.name)
                 .leftJoin(moim)
-                .on(writerName.writer.eq(moim.owner))
+                .on(writerName.moim.id.eq(moimId))
+                .where(writerName.eq(moim.owner))
                 .fetchOne();
     }
 }
