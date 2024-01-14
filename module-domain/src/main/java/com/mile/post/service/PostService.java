@@ -212,7 +212,13 @@ public class PostService {
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, postCreateRequest.moimId());
         WriterName writerName = writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId);
-        postRepository.save(Post.create(
+        Post post = createPost(postCreateRequest, writerName);
+        postRepository.saveAndFlush(post);
+        return WriterNameResponse.of(post.getId(), writerName.getName());
+    }
+
+    private Post createPost(final PostCreateRequest postCreateRequest, final WriterName writerName) {
+        return Post.create(
                 topicService.findById(postCreateRequest.topicId()), // Topic
                 writerName, // WriterName
                 postCreateRequest.title(),
@@ -221,10 +227,8 @@ public class PostService {
                 checkContainPhoto(postCreateRequest.imageUrl()),
                 postCreateRequest.anonymous(),
                 TEMPRORARY_FALSE
-        ));
-        return WriterNameResponse.of(writerName.getName());
+        );
     }
-
     public void createTemporaryPost(
             final Long userId,
             final TemporaryPostCreateRequest temporaryPostCreateRequest
@@ -253,6 +257,6 @@ public class PostService {
         Post post = findById(postId);
         isPostTemporary(post);
         post.updatePost(topicService.findById(request.topicId()), request);
-        return WriterNameResponse.of(post.getWriterName().getName());
+        return WriterNameResponse.of(post.getId(), post.getWriterName().getName());
     }
 }
