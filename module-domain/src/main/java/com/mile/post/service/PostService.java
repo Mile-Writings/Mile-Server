@@ -212,7 +212,13 @@ public class PostService {
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, postCreateRequest.moimId());
         WriterName writerName = writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId);
-        Post post = Post.create(
+        Post post = createPost(postCreateRequest, writerName);
+        postRepository.saveAndFlush(post);
+        return WriterNameResponse.of(post.getId(), writerName.getName());
+    }
+
+    private Post createPost(final PostCreateRequest postCreateRequest, final WriterName writerName) {
+        return Post.create(
                 topicService.findById(postCreateRequest.topicId()), // Topic
                 writerName, // WriterName
                 postCreateRequest.title(),
@@ -222,10 +228,7 @@ public class PostService {
                 postCreateRequest.anonymous(),
                 TEMPRORARY_FALSE
         );
-        postRepository.saveAndFlush(post);
-        return WriterNameResponse.of(post.getId(), writerName.getName());
     }
-
     public void createTemporaryPost(
             final Long userId,
             final TemporaryPostCreateRequest temporaryPostCreateRequest
