@@ -1,22 +1,21 @@
 package com.mile.moim.service.dto;
 
 public record MoimInfoResponse(
-
         String imageUrl,
         String moimName,
         String ownerName,
-        String startDate,
+        String description,
         int writerCount,
-        String description
+        String startDate
 ) {
     public static MoimInfoResponse of(
             final String imageUrl,
             final String moimName,
             final String ownerName,
-            final String startDate,
+            final String description,
             final int writerCount,
-            final String description
+            final String startDate
     ) {
-        return new MoimInfoResponse(imageUrl, moimName, ownerName, startDate, writerCount, description);
+        return new MoimInfoResponse(imageUrl, moimName, ownerName, description, writerCount, startDate);
     }
 }
