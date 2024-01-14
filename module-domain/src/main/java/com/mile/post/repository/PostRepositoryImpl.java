@@ -1,24 +1,19 @@
 package com.mile.post.repository;
 
+import com.mile.moim.domain.Moim;
+import com.mile.post.domain.Post;
+import com.mile.writerName.domain.WriterName;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import static com.mile.moim.domain.QMoim.moim;
 import static com.mile.post.domain.QPost.post;
 import static com.mile.topic.domain.QTopic.topic;
 import static com.mile.writerName.domain.QWriterName.writerName;
 
-import com.mile.moim.domain.Moim;
-import com.mile.post.domain.Post;
-import com.mile.post.domain.QPost;
-import com.mile.writerName.domain.WriterName;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @RequiredArgsConstructor
-@Slf4j
 public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -28,7 +23,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .selectFrom(post)
                 .join(topic).on(post.topic.eq(topic))
                 .join(moim).on(topic.moim.eq(moim))
-                .where(moim.eq(moim))
+                .where(moim.eq(requestMoim))
                 .orderBy(post.curiousCount.desc())
                 .limit(2)
                 .fetch();

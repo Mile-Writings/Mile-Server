@@ -44,8 +44,14 @@ public class Post extends BaseTimeEntity {
 
     public void decreaseCuriousCount() {
         this.curiousCount--;
+        setCuriousCountZero();
     }
 
+    private void setCuriousCountZero() {
+        if( this.curiousCount < 0 ) {
+            this.curiousCount = 0;
+        }
+    }
 
     public static Post create(
             final Topic topic,

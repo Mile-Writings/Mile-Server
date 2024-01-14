@@ -73,7 +73,14 @@ public class WriterNameService {
     }
 
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
-        return writerNameRepository.findTop2ByMoimIdOrderByTotalCuriousCountDesc(moimid);
+        return getWriterNamesHaveCuriousCount(writerNameRepository.findTop2ByMoimIdOrderByTotalCuriousCountDesc(moimid));
+    }
+
+    private List<WriterName> getWriterNamesHaveCuriousCount(
+            List<WriterName> writerNameList
+    ) {
+        writerNameList.removeIf(writerName -> writerName.getTotalCuriousCount() <= 0);
+        return writerNameList;
     }
 
     @Transactional

@@ -36,6 +36,13 @@ public class WriterName {
 
     public void decreaseTotalCuriousCount() {
         totalCuriousCount--;
+        setTotalCuriousCountZero();
+    }
+
+    private void setTotalCuriousCountZero() {
+        if( this.totalCuriousCount < 0 ) {
+            this.totalCuriousCount = 0;
+        }
     }
 
     @Builder

@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 public class PostCuriousService {
 
     private final PostRepository postRepository;
-    private static final int SUBSTRING_START = 0;
-    private static final int SUBSTRING_FINAL = 72;
 
     private void isMostCuriousPostEmpty(final List<Post> postList) {
         if (postList.isEmpty()) {
@@ -27,18 +25,21 @@ public class PostCuriousService {
         }
     }
 
+    private List<Post> getPostHaveCuriousCount(
+            final List<Post> postList
+    ) {
+        postList.removeIf(post -> post.getCuriousCount() <= 0);
+        return postList;
+    }
+
     public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
-        List<Post> postList = postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim);
+        List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
         isMostCuriousPostEmpty(postList);
         return MoimCuriousPostListResponse.of(postList
                 .stream()
                 .map(p ->
-                        MoimMostCuriousPostResponse.of(p.getId(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), getSubStringOfContent(p.getContent()))
+                        MoimMostCuriousPostResponse.of(p.getId(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), p.getContent())
                 ).collect(Collectors.toList()));
-    }
-
-    private String getSubStringOfContent(final String content) {
-        return content.substring(SUBSTRING_START, SUBSTRING_FINAL);
     }
 
 }

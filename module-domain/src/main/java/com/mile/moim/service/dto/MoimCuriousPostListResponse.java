@@ -7,7 +7,7 @@ public record MoimCuriousPostListResponse(
         List<MoimMostCuriousPostResponse> postList
 ) {
     public static MoimCuriousPostListResponse of(
-            List<MoimMostCuriousPostResponse> postList
+            final List<MoimMostCuriousPostResponse> postList
     ) {
         return new MoimCuriousPostListResponse(postList);
     }
