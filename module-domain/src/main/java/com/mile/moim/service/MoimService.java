@@ -85,11 +85,10 @@ public class MoimService {
         checkSizeOfWriters(writers);
         return PopularWriterListResponse.of(writers);
     }
-
-    public void checkSizeOfWriters(
+    private void checkSizeOfWriters(
             final List<WriterName> writersOfMoim
     ) {
-        if (writersOfMoim.size() < NUMBER_OF_MOST_CURIOUS_WRITERS) {
+        if (writersOfMoim.isEmpty()) {
             throw new NotFoundException(ErrorMessage.WRITERS_NOT_FOUND);
         }
     }
