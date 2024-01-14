@@ -222,7 +222,7 @@ public class PostService {
                 postCreateRequest.anonymous(),
                 TEMPRORARY_FALSE
         );
-        postRepository.save(post);
+        postRepository.saveAndFlush(post);
         return WriterNameResponse.of(post.getId(), writerName.getName());
     }
 
