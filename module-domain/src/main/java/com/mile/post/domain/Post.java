@@ -57,20 +57,20 @@ public class Post extends BaseTimeEntity {
             final boolean anonymous,
             final boolean isTemporary
     ) {
-
         return Post
                 .builder()
                 .topic(topic)
                 .writerName(writerName)
                 .title(title)
                 .content(content)
-                .imageUrl(imageUrl)
+                .imageUrl(returnImageUrl(imageUrl, containPhoto))
                 .curiousCount(0)
                 .containPhoto(containPhoto)
                 .anonymous(anonymous)
                 .isTemporary(isTemporary)
                 .build();
     }
+
 
     public void updatePost(
             final Topic topic,
@@ -83,4 +83,15 @@ public class Post extends BaseTimeEntity {
         this.anonymous = putRequest.anonymous();
     }
 
+    private static String returnImageUrl(
+           final String imageUrl,
+           final boolean containPhoto
+    ) {
+        final String DEFAULT_IMAGE = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/post/KakaoTalk_Photo_2024-01-14-15-52-49.png";
+        if(!containPhoto) {
+            return DEFAULT_IMAGE;
+        } else {
+            return imageUrl;
+        }
+    }
 }
