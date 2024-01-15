@@ -42,9 +42,10 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse postComment(
-            @PathVariable final Long postId,
+            final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
-            final Principal principal
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
 
@@ -59,8 +60,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<PostCuriousResponse> postCurious(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
     @Operation(summary = "댓글 리스트 조회")
@@ -76,8 +78,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<CommentListResponse> getComments(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
 
@@ -92,8 +95,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<CuriousInfoResponse> getCuriousInfo(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
 
@@ -108,8 +112,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<PostCuriousResponse> deleteCurious(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
 
@@ -127,8 +132,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse getAuthenticateWrite(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
 
@@ -155,9 +161,10 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse putPost(
-            @PathVariable final Long postId,
+            final Long postId,
             @RequestBody final PostPutRequest putRequest,
-            final Principal principal
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
     @Operation(summary = "글 삭제")
@@ -173,8 +180,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse deletePost(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
     @Operation(summary = "임시저장글 조회")
@@ -188,8 +196,9 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
-            @PathVariable final Long postId,
-            final Principal principal
+            final Long postId,
+            final Principal principal,
+            @PathVariable("postId") final String postUrl
     );
 
     @Operation(summary = "글 조회")
@@ -203,7 +212,8 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<PostGetResponse> getPost(
-            @PathVariable final Long postId
+            final Long postId,
+            @PathVariable("postId") final String postUrl
     );
 
     @Operation(summary = "글 임시저장")
@@ -260,6 +270,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse<WriterNameResponse> putFixedPost(@PathVariable final Long postId, final Principal principal,
-                                                     @RequestBody final PostPutRequest request);
+    SuccessResponse<WriterNameResponse> putFixedPost(final Long postId, final Principal principal,
+                                                     @RequestBody final PostPutRequest request,
+                                                     @PathVariable("postId") final String postUrl);
 }

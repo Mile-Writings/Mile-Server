@@ -27,6 +27,7 @@ public interface TopicControllerSwagger {
             }
     )
     SuccessResponse<PostListInTopicResponse> getPostListByTopic(
-            @PathVariable Long topicId
+            final Long topicId,
+            @PathVariable("topicId") final String topicUrl
     );
 }

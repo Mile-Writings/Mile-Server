@@ -2,6 +2,7 @@ package com.mile.controller.topic;
 
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
+import com.mile.resolver.topic.TopicIdPathVariable;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ public class TopicController implements TopicControllerSwagger {
     @Override
     @GetMapping("/{topicId}")
     public SuccessResponse<PostListInTopicResponse> getPostListByTopic(
-            @PathVariable Long topicId
+            @TopicIdPathVariable Long topicId,
+            @PathVariable("topicId") final String topicUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_POST_GET_SUCCESS, topicService.getPostListByTopic(topicId));
     }
