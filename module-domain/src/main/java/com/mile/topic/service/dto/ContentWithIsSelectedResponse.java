@@ -3,7 +3,7 @@ package com.mile.topic.service.dto;
 import com.mile.topic.domain.Topic;
 
 public record ContentWithIsSelectedResponse(
-        String topicid,
+        String topicId,
         String topicName,
         boolean isSelected
 ) {

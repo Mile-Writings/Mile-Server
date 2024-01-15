@@ -244,10 +244,10 @@ public class PostService {
             final Long userId,
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
-        postAuthenticateService.authenticateWriterOfMoim(userId, temporaryPostCreateRequest.moimId());
+        postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(temporaryPostCreateRequest.moimId()));
         Post post = postRepository.saveAndFlush(Post.create(
-                topicService.findById(temporaryPostCreateRequest.topicId()), // Topic
-                writerNameService.findByMoimAndUser(temporaryPostCreateRequest.moimId(), userId), // WriterName
+                topicService.findById(decodeUrlToLong(temporaryPostCreateRequest.topicId())), // Topic
+                writerNameService.findByMoimAndUser(decodeUrlToLong(temporaryPostCreateRequest.moimId()), userId), // WriterName
                 temporaryPostCreateRequest.title(),
                 temporaryPostCreateRequest.content(),
                 temporaryPostCreateRequest.imageUrl(),
