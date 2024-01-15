@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,12 +62,23 @@ public class CommentService {
         }
     }
 
+    @Transactional
     public void createComment(
             final Post post,
             final WriterName writerName,
             final CommentCreateRequest commentCreateRequest
     ) {
-        commentRepository.save(Comment.create(post, writerName, commentCreateRequest, ANONYMOUS_TRUE));
+        Comment comment = create(post, writerName, commentCreateRequest);
+        comment.setIdUrl(Base64.getEncoder().encodeToString(comment.getId().toString().getBytes()));
+    }
+
+    private Comment create(
+            final Post post,
+            final WriterName writerName,
+            final CommentCreateRequest commentCreateRequest
+    ) {
+        return commentRepository.saveAndFlush(Comment.create(post, writerName, commentCreateRequest, ANONYMOUS_TRUE));
+
     }
 
     public List<CommentResponse> getCommentResponse(

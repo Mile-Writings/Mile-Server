@@ -6,7 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 public record PostListResponse(
-        Long postId,
+        String postId,
         String postTitle,
         String postContent,
         String writerName,
@@ -18,7 +18,7 @@ public record PostListResponse(
     private static final int SUBSTRING_END = 200;
 
     public static PostListResponse of(final Post post) {
-        return new PostListResponse(post.getId(), post.getTitle(), getSubString(post),
+        return new PostListResponse(post.getIdUrl(), post.getTitle(), getSubString(post),
                 post.getWriterName().getName(),
                 DateUtil.getStringWithTimeOfLocalDate(post.getCreatedAt()),
                 post.getCuriousCount(),

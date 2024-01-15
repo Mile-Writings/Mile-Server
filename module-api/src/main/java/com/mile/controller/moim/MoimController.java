@@ -11,8 +11,11 @@ import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
+import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
+
 import java.security.Principal;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +32,9 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}")
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
-            @PathVariable final Long moimId,
-            final Principal principal
+            @MoimIdPathVariable final Long moimId,
+            final Principal principal,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TOPIC_SEARCH_SUCCESS, moimService.getContentsFromMoim(moimId, Long.valueOf(principal.getName())));
     }
@@ -38,8 +42,9 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/authenticate")
     public SuccessResponse<MoimAuthenticateResponse> getAuthenticationOfMoim(
-            @PathVariable final Long moimId,
-            final Principal principal
+            @MoimIdPathVariable final Long moimId,
+            final Principal principal,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS, moimService.getAuthenticateUserOfMoim(moimId, Long.valueOf(principal.getName())));
     }
@@ -47,7 +52,8 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/mostCuriousWriters")
     public SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
-            @PathVariable final Long moimId
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_POPULAR_WRITER_SEARCH_SUCCESS, moimService.getMostCuriousWriters(moimId));
     }
@@ -55,7 +61,8 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/topic")
     public SuccessResponse<MoimTopicResponse> getTopicFromMoim(
-            @PathVariable final Long moimId
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOPIC_GET_SUCCESS, moimService.getTopicFromMoim(moimId));
 
@@ -64,7 +71,8 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/info")
     @Override
     public SuccessResponse<MoimInfoResponse> getMoimInfo(
-            @PathVariable final Long moimId
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimInfo(moimId));
     }
@@ -73,7 +81,8 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/topicList")
     @Override
     public SuccessResponse<TopicListResponse> getTopicList(
-            @PathVariable final Long moimId
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TOPIC_LIST_SEARCH_SUCCESS, moimService.getTopicList(moimId));
     }
@@ -81,7 +90,8 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/mostCuriousPost")
     public SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
-            @PathVariable final Long moimId
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOP_2_POST_GET_SUCCESS, moimService.getMostCuriousPostFromMoim(moimId));
     }
@@ -94,8 +104,9 @@ public class MoimController implements MoimControllerSwagger {
     @Override
     @GetMapping("/{moimId}/temporary")
     public SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
-            @PathVariable final Long moimId,
-            final Principal principal
+            @MoimIdPathVariable final Long moimId,
+            final Principal principal,
+            @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, Long.valueOf(principal.getName())));
     }

@@ -11,6 +11,8 @@ import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,8 +37,9 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<ContentListResponse> getTopicsFromMoim(
-            @PathVariable final Long moimId,
-            final Principal principal
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            final Principal principal,
+            @PathVariable("moimId") final String moimUrl
     );
 
 
@@ -53,7 +56,8 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse getAuthenticationOfMoim(
             final Long moimId,
-            final Principal principal
+            final Principal principal,
+            @PathVariable("moimId") final String moimUrl
     );
 
 
@@ -66,7 +70,8 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
-            @PathVariable final Long moimId
+            final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     );
 
     @Operation(summary = "글모임 최근 글감 ")
@@ -80,7 +85,8 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimTopicResponse> getTopicFromMoim(
-            @PathVariable Long moimId
+            final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     );
 
     @Operation(summary = "글모임 뷰 - 글모임 정보 조회")
@@ -94,7 +100,8 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimInfoResponse> getMoimInfo(
-            final Long moimId
+            final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     );
 
 
@@ -109,7 +116,8 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
-            @PathVariable final Long moimId
+            final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     );
 
     @Operation(summary = "글감 리스트 조회")
@@ -121,7 +129,8 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<TopicListResponse> getTopicList(
-            @PathVariable final Long moimId
+            final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     );
 
     @Operation(summary = "베스트 활동 모임 및 글 리스트 조회")
@@ -147,7 +156,8 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
-            @PathVariable final Long moimId,
-            final Principal principal
+            final Long moimId,
+            final Principal principal,
+            @PathVariable("moimId") final String moimUrl
     );
 }
