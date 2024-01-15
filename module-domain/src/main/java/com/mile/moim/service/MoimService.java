@@ -82,16 +82,9 @@ public class MoimService {
             final Long moimId
     ) {
         List<WriterName> writers = writerNameService.findTop2ByCuriousCount(moimId);
-        checkSizeOfWriters(writers);
         return PopularWriterListResponse.of(writers);
     }
-    private void checkSizeOfWriters(
-            final List<WriterName> writersOfMoim
-    ) {
-        if (writersOfMoim.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.WRITERS_NOT_FOUND);
-        }
-    }
+
 
     public MoimTopicResponse getTopicFromMoim(
             final Long moimId
