@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Size;
 public record TemporaryPostCreateRequest(
         @NotNull(message = "모임 Id가 입력되지 않았습니다.")
         @Schema(description = "모임 Id", example = "1")
-        Long moimId,
+        String moimId,
 
         @NotNull(message = "글감 Id가 입력되지 않았습니다.")
         @Schema(description = "글감 Id", example = "1")
-        Long topicId,
+        String topicId,
 
         @Size(max = 29, message = "제목 최대 글자를 초과했습니다.")
         @Schema(description = "글 제목", example = "편안한 글쓰기")
