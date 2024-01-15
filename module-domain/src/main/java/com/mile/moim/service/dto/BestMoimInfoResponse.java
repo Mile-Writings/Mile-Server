@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record BestMoimInfoResponse(String moimId, String moimName, List<BestMoimPostResponse> moimPosts) {
-    public static BestMoimInfoResponse of(final Moim moim, final List<Post> posts) {
+    public static BestMoimInfoResponse of(Moim moim, final List<Post> posts) {
         return new BestMoimInfoResponse(
                 moim.getIdUrl(),
                 moim.getName(),
