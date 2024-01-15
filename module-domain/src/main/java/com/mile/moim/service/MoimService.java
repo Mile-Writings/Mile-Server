@@ -43,8 +43,6 @@ public class MoimService {
     private final PostTemporaryService postTemporaryService;
     private final PostGetService postGetService;
 
-    private static final int NUMBER_OF_MOST_CURIOUS_WRITERS = 2;
-
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
             final Long userId
@@ -143,7 +141,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        Long postId = postTemporaryService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
+        String postId = postTemporaryService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
         return TemporaryPostExistResponse.of(!postId.equals(0L), postId);
     }
 }

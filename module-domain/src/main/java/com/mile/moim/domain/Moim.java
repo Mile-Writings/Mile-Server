@@ -23,5 +23,6 @@ public class Moim extends BaseTimeEntity {
     private String imageUrl;
     @Column(length = 500)
     private String information;
+    private String idUrl;
     private boolean isPublic;
 }

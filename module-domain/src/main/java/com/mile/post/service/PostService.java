@@ -27,7 +27,10 @@ import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.user.service.UserService;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
+
+import java.util.Base64;
 import java.util.List;
+
 import com.mile.writerName.service.dto.WriterNameResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -123,7 +126,7 @@ public class PostService {
     ) {
         Post post = findById(postId);
         postAuthenticateService.authenticateWriter(postId, userId);
-        Topic topic = topicService.findById(putRequest.topicId());
+        Topic topic = topicService.findById(decodeUrlToLong(putRequest.topicId()));
         update(post, topic, putRequest);
     }
 
@@ -205,21 +208,28 @@ public class PostService {
     }
 
 
+    private Long decodeUrlToLong(
+            final String url
+    ) {
+        return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
+    }
+
     @Transactional
     public WriterNameResponse createPost(
             final Long userId,
             final PostCreateRequest postCreateRequest
     ) {
-        postAuthenticateService.authenticateWriterOfMoim(userId, postCreateRequest.moimId());
-        WriterName writerName = writerNameService.findByMoimAndUser(postCreateRequest.moimId(), userId);
+        postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(postCreateRequest.moimId()));
+        WriterName writerName = writerNameService.findByMoimAndUser(decodeUrlToLong(postCreateRequest.moimId()), userId);
         Post post = createPost(postCreateRequest, writerName);
         postRepository.saveAndFlush(post);
-        return WriterNameResponse.of(post.getId(), writerName.getName());
+        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
+        return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 
     private Post createPost(final PostCreateRequest postCreateRequest, final WriterName writerName) {
         return Post.create(
-                topicService.findById(postCreateRequest.topicId()), // Topic
+                topicService.findById(decodeUrlToLong(postCreateRequest.topicId())), // Topic
                 writerName, // WriterName
                 postCreateRequest.title(),
                 postCreateRequest.content(),
@@ -229,12 +239,13 @@ public class PostService {
                 TEMPRORARY_FALSE
         );
     }
+
     public void createTemporaryPost(
             final Long userId,
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, temporaryPostCreateRequest.moimId());
-        postRepository.save(Post.create(
+        Post post = postRepository.saveAndFlush(Post.create(
                 topicService.findById(temporaryPostCreateRequest.topicId()), // Topic
                 writerNameService.findByMoimAndUser(temporaryPostCreateRequest.moimId(), userId), // WriterName
                 temporaryPostCreateRequest.title(),
@@ -244,6 +255,7 @@ public class PostService {
                 temporaryPostCreateRequest.anonymous(),
                 TEMPORARY_TRUE
         ));
+        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
     }
 
     private boolean checkContainPhoto(String imageUrl) {
@@ -256,7 +268,7 @@ public class PostService {
         postAuthenticateService.authenticateWriterWithPost(postId, userId);
         Post post = findById(postId);
         isPostTemporary(post);
-        post.updatePost(topicService.findById(request.topicId()), request);
-        return WriterNameResponse.of(post.getId(), post.getWriterName().getName());
+        post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request);
+        return WriterNameResponse.of(post.getIdUrl(), post.getWriterName().getName());
     }
 }

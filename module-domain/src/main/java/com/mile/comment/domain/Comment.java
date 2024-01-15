@@ -28,7 +28,7 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     private Post post;
-
+    private String idUrl;
     private String content;
     private boolean anonymous;
 
@@ -48,5 +48,11 @@ public class Comment extends BaseTimeEntity {
                 .writerName(writerName)
                 .anonymous(anonymous)
                 .build();
+    }
+
+    public void setIdUrl(
+            final String idUrl
+    ) {
+        this.idUrl = idUrl;
     }
 }

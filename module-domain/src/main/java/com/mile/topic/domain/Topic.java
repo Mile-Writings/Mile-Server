@@ -17,6 +17,7 @@ public class Topic extends BaseTimeEntity {
     private Long id;
     @ManyToOne
     private Moim moim;
+    private String idUrl;
     private String keyword;
     private String content;
     private String description;
