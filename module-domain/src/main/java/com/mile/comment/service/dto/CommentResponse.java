@@ -4,7 +4,7 @@ import com.mile.comment.domain.Comment;
 import com.mile.writerName.domain.WriterName;
 
 public record CommentResponse(
-        Long commentId,
+        String commentId,
         String name,
         String moimName,
         String content,
@@ -24,7 +24,7 @@ public record CommentResponse(
             name = AUTHOR;
         }
         return new CommentResponse(
-                comment.getId(),
+                comment.getIdUrl(),
                 name,
                 writerName.getMoim().getName(),
                 comment.getContent(),

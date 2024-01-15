@@ -4,7 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 public record MoimMostCuriousPostResponse(
-        Long postId,
+        String postId,
         String imageUrl,
         String topic,
         String title,
@@ -14,7 +14,7 @@ public record MoimMostCuriousPostResponse(
     private static final int SUBSTRING_END = 200;
 
     public static MoimMostCuriousPostResponse of(
-            Long postId,
+            String postId,
             String imageUrl,
             String topic,
             String title,

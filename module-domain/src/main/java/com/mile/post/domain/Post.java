@@ -3,6 +3,7 @@ package com.mile.post.domain;
 import com.mile.config.BaseTimeEntity;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.topic.domain.Topic;
+import com.mile.utils.SecureUrlUtil;
 import com.mile.writerName.domain.WriterName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,7 @@ public class Post extends BaseTimeEntity {
     @Column(length = 50000)
     private String content;
     private String imageUrl;
+    private String idUrl;
     private int curiousCount;
     private boolean containPhoto;
     private boolean anonymous;
@@ -48,7 +50,7 @@ public class Post extends BaseTimeEntity {
     }
 
     private void setCuriousCountZero() {
-        if( this.curiousCount < 0 ) {
+        if (this.curiousCount < 0) {
             this.curiousCount = 0;
         }
     }
@@ -89,12 +91,18 @@ public class Post extends BaseTimeEntity {
         this.anonymous = putRequest.anonymous();
     }
 
+    public void setIdUrl(
+            final String idUrl
+    ) {
+        this.idUrl = idUrl;
+    }
+
     private static String returnImageUrl(
-           final String imageUrl,
-           final boolean containPhoto
+            final String imageUrl,
+            final boolean containPhoto
     ) {
         final String DEFAULT_IMAGE = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/post/KakaoTalk_Photo_2024-01-14-15-52-49.png";
-        if(!containPhoto) {
+        if (!containPhoto) {
             return DEFAULT_IMAGE;
         } else {
             return imageUrl;
