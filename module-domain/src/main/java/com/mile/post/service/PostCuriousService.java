@@ -19,12 +19,6 @@ public class PostCuriousService {
 
     private final PostRepository postRepository;
 
-    private void isMostCuriousPostEmpty(final List<Post> postList) {
-        if (postList.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.MOIM_POST_NOT_FOUND);
-        }
-    }
-
     private List<Post> getPostHaveCuriousCount(
             final List<Post> postList
     ) {
@@ -34,7 +28,6 @@ public class PostCuriousService {
 
     public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
-        isMostCuriousPostEmpty(postList);
         return MoimCuriousPostListResponse.of(postList
                 .stream()
                 .map(p ->
