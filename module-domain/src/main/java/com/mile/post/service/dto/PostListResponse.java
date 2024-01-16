@@ -12,6 +12,7 @@ public record PostListResponse(
         String writerName,
         String createdAt,
         int curiousCount,
+        Boolean isImageContained,
         String imageUrl
 ) {
     private static final int SUBSTRING_START = 0;
@@ -22,6 +23,7 @@ public record PostListResponse(
                 post.getWriterName().getName(),
                 DateUtil.getStringWithTimeOfLocalDate(post.getCreatedAt()),
                 post.getCuriousCount(),
+                post.getContainPhoto(),
                 post.getImageUrl());
     }
 
