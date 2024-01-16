@@ -27,7 +27,7 @@ public record PostPutRequest(
         @Schema(description = "이미지 url", example = "String https://")
         String imageUrl,
 
-        @NotEmpty(message = "익명 여부를 입력해주세요.")
+        @NotNull(message = "익명 여부를 입력해주세요.")
         @Schema(description = "익명 여부", example = "true")
         boolean anonymous
 ) {
