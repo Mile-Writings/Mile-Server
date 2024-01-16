@@ -4,7 +4,7 @@ import com.mile.topic.domain.Topic;
 
 public record TopicOfMoimResponse(
         String topic,
-        String topicDecription
+        String topicDescription
 ) {
     public static TopicOfMoimResponse of(
             Topic topic
