@@ -8,7 +8,8 @@ public record MoimMostCuriousPostResponse(
         String imageUrl,
         String topic,
         String title,
-        String content
+        String content,
+        boolean isContainPhoto
 ) {
     private static final int SUBSTRING_START = 0;
     private static final int SUBSTRING_END = 200;
@@ -18,9 +19,10 @@ public record MoimMostCuriousPostResponse(
             String imageUrl,
             String topic,
             String title,
-            String content
+            String content,
+            boolean isContainPhoto
     ) {
-        return new MoimMostCuriousPostResponse(postId, imageUrl, topic, title, getSubStringOfCleanContent(content));
+        return new MoimMostCuriousPostResponse(postId, imageUrl, topic, title, getSubStringOfCleanContent(content), isContainPhoto);
     }
 
     private static String getSubStringOfCleanContent(
