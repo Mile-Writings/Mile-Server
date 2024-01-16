@@ -13,33 +13,25 @@ import org.springframework.stereotype.Service;
 public class RecommendService {
     private final RecommendRepository recommendRepository;
     private static Long GROUND_ID = 0L;
-    private static final int INDEX = 1;
-    private static String recommendContent = "우정과 사랑";
+    private static final Long INDEX = 1L;
 
     public RecommendResponse getRandomRecommendation() {
-        return RecommendResponse.of(getRandomContentDaily());
-    }
-
-    private String getRandomContentDaily() {
-        return recommendContent;
+        return RecommendResponse.of(
+                recommendRepository.findById(GROUND_ID).orElseGet(() -> {
+                    resetGroundId();
+                    return recommendRepository.findById(GROUND_ID).orElseThrow(
+                            () -> new NotFoundException(ErrorMessage.RECOMMEND_NOT_FOUND)
+                    );
+                }
+        ).getContent());
     }
 
     @Scheduled(cron = "0 0 0 * * *")
-    private void setRandomContentDaily() {
-        recommendContent = recommendRepository.findById(increaseId()).orElseGet(() -> {
-            resetGroundId();
-            return recommendRepository.findById(increaseId()).orElseThrow(
-                    () -> new NotFoundException(ErrorMessage.RECCOMEND_NOT_FOUND)
-            );
-        }).getContent();
-    }
-
-    private Long increaseId() {
+    private void increaseId() {
         GROUND_ID += INDEX;
-        return GROUND_ID;
     }
 
     private void resetGroundId() {
-        GROUND_ID = 0L;
+        GROUND_ID = 1L;
     }
 }
