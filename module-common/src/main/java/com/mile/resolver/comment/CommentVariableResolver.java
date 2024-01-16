@@ -2,7 +2,6 @@ package com.mile.resolver.comment;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.resolver.post.PostIdPathVariable;
 import com.mile.utils.SecureUrlUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class CommentVariableResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(PostIdPathVariable.class);
+        return parameter.hasParameterAnnotation(CommentIdPathVariable.class);
     }
 
     @Override
@@ -33,9 +32,9 @@ public class CommentVariableResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        final String meetingId = pathVariables.get(COMMENT_PATH_VARIABLE);
+        final String id = pathVariables.get(COMMENT_PATH_VARIABLE);
         try {
-            return secureUrlUtil.decodeUrl(meetingId);
+            return secureUrlUtil.decodeUrl(id);
         } catch (NumberFormatException e) {
             throw new BadRequestException(ErrorMessage.INVALID_URL_EXCEPTION);
         }
