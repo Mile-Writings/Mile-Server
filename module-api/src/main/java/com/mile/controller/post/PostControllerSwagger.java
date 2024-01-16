@@ -13,6 +13,8 @@ import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.writerName.service.dto.WriterNameResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,7 +44,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse postComment(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
             @PathVariable("postId") final String postUrl
     );
@@ -59,7 +61,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<PostCuriousResponse> postCurious(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -76,7 +78,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<CommentListResponse> getComments(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -92,7 +94,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<CuriousInfoResponse> getCuriousInfo(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -108,7 +110,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<PostCuriousResponse> deleteCurious(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -127,7 +129,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse getAuthenticateWrite(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -155,7 +157,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse putPost(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest putRequest,
             @PathVariable("postId") final String postUrl
     );
@@ -173,7 +175,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse deletePost(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -188,7 +190,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -203,7 +205,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse<PostGetResponse> getPost(
-            final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -259,7 +261,8 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse<WriterNameResponse> putFixedPost(final Long postId,
-                                                     @RequestBody final PostPutRequest request,
-                                                     @PathVariable("postId") final String postUrl);
+    SuccessResponse<WriterNameResponse> putFixedPost(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @RequestBody final PostPutRequest request,
+            @PathVariable("postId") final String postUrl);
 }

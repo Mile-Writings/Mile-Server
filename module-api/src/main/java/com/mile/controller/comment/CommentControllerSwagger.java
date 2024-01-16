@@ -3,6 +3,8 @@ package com.mile.controller.comment;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +30,7 @@ public interface CommentControllerSwagger {
             }
     )
     SuccessResponse deleteComment(
-            final Long commentId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long commentId,
             @PathVariable("commentId") final String commentUrl
     );
 }

@@ -5,6 +5,8 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,7 +29,7 @@ public interface TopicControllerSwagger {
             }
     )
     SuccessResponse<PostListInTopicResponse> getPostListByTopic(
-            final Long topicId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long topicId,
             @PathVariable("topicId") final String topicUrl
     );
 }

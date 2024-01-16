@@ -54,7 +54,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse getAuthenticationOfMoim(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -68,7 +68,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -83,7 +83,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimTopicResponse> getTopicFromMoim(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -98,7 +98,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimInfoResponse> getMoimInfo(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -114,7 +114,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -127,7 +127,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<TopicListResponse> getTopicList(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -154,7 +154,7 @@ public interface MoimControllerSwagger {
             }
     )
     SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
-            final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 }
