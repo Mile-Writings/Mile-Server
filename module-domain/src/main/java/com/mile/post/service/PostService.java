@@ -25,6 +25,7 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.user.service.UserService;
+import com.mile.utils.SecureUrlUtil;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
 
@@ -49,6 +50,7 @@ public class PostService {
     private final UserService userService;
     private final TopicService topicService;
     private final S3Service s3Service;
+    private final SecureUrlUtil secureUrlUtil;
 
     public static final boolean TEMPRORARY_FALSE = false;
     public static final boolean TEMPORARY_TRUE = true;
@@ -223,7 +225,7 @@ public class PostService {
         WriterName writerName = writerNameService.findByMoimAndUser(decodeUrlToLong(postCreateRequest.moimId()), userId);
         Post post = createPost(postCreateRequest, writerName);
         postRepository.saveAndFlush(post);
-        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
+        post.setIdUrl(secureUrlUtil.encodeUrl(post.getId()));
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 

@@ -38,7 +38,6 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            final Principal principal,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -56,7 +55,6 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse getAuthenticationOfMoim(
             final Long moimId,
-            final Principal principal,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -157,7 +155,6 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
             final Long moimId,
-            final Principal principal,
             @PathVariable("moimId") final String moimUrl
     );
 }

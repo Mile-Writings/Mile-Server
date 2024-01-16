@@ -29,7 +29,6 @@ public interface CommentControllerSwagger {
     )
     SuccessResponse deleteComment(
             final Long commentId,
-            final Principal principal,
             @PathVariable("commentId") final String commentUrl
     );
 }

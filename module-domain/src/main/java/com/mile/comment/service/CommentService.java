@@ -2,14 +2,15 @@ package com.mile.comment.service;
 
 import com.mile.comment.domain.Comment;
 import com.mile.comment.repository.CommentRepository;
+import com.mile.comment.service.dto.CommentResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
-import com.mile.comment.service.dto.CommentResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.utils.SecureUrlUtil;
 import com.mile.writerName.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class CommentService {
     private final PostAuthenticateService postAuthenticateService;
     private final CommentRepository commentRepository;
     private final PostGetService postGetService;
+    private final SecureUrlUtil secureUrlUtil;
 
     @Transactional
     public void deleteComment(
@@ -69,7 +71,7 @@ public class CommentService {
             final CommentCreateRequest commentCreateRequest
     ) {
         Comment comment = create(post, writerName, commentCreateRequest);
-        comment.setIdUrl(Base64.getEncoder().encodeToString(comment.getId().toString().getBytes()));
+        comment.setIdUrl(secureUrlUtil.encodeUrl(comment.getId()));
     }
 
     private Comment create(
