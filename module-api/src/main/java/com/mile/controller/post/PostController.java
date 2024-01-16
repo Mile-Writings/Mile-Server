@@ -33,7 +33,6 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
-@Slf4j
 public class PostController implements PostControllerSwagger {
 
     private final PostService postService;
@@ -147,7 +146,6 @@ public class PostController implements PostControllerSwagger {
     public SuccessResponse<WriterNameResponse> createPost(
             @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
-        log.info(principalHandler.getUserIdFromPrincipal().toString());
         return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.createPost(
                 principalHandler.getUserIdFromPrincipal(),
                 postCreateRequest
