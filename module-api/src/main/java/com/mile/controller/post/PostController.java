@@ -147,6 +147,7 @@ public class PostController implements PostControllerSwagger {
     public SuccessResponse<WriterNameResponse> createPost(
             @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
+        log.info(principalHandler.getUserIdFromPrincipal().toString());
         return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.createPost(
                 principalHandler.getUserIdFromPrincipal(),
                 postCreateRequest

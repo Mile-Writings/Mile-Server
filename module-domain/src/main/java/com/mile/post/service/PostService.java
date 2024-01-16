@@ -8,8 +8,6 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
-import com.mile.moim.service.MoimService;
-import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
@@ -28,17 +26,18 @@ import com.mile.user.service.UserService;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
+import com.mile.writerName.service.dto.WriterNameResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.List;
 
-import com.mile.writerName.service.dto.WriterNameResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PostService {
 
@@ -152,7 +151,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        postAuthenticateService.authenticateWriter(postId, userId);
         delete(postId);
     }
 
@@ -221,7 +220,7 @@ public class PostService {
             final Long userId,
             final PostCreateRequest postCreateRequest
     ) {
-        postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(postCreateRequest.moimId()));
+        postAuthenticateService.authenticateUserOfMoim(decodeUrlToLong(postCreateRequest.moimId()), userId);
         WriterName writerName = writerNameService.findByMoimAndUser(decodeUrlToLong(postCreateRequest.moimId()), userId);
         Post post = createPost(postCreateRequest, writerName);
         postRepository.saveAndFlush(post);
@@ -267,7 +266,7 @@ public class PostService {
 
     @Transactional
     public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
-        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        postAuthenticateService.authenticateWriter(postId, userId);
         Post post = findById(postId);
         isPostTemporary(post);
         post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request);

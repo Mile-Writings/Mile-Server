@@ -26,6 +26,11 @@ public class WriterNameService {
         return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId).isPresent();
     }
 
+    public Long getWriterNameIdByUserId(
+            final Long userId
+    ) {
+        return findByWriterId(userId).getId();
+    }
     public WriterName findByMoimAndUser(
             final Long moimId,
             final Long writerId
