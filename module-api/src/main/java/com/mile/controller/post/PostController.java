@@ -1,5 +1,6 @@
 package com.mile.controller.post;
 
+import com.mile.authentication.PrincipalHandler;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
@@ -17,6 +18,7 @@ import com.mile.writerName.service.dto.WriterNameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,18 +37,18 @@ import java.security.Principal;
 public class PostController implements PostControllerSwagger {
 
     private final PostService postService;
+    private final PrincipalHandler principalHandler;
 
     @PostMapping("/{postId}/comment")
     @Override
     public SuccessResponse postComment(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
         postService.createCommentOnPost(
                 postId,
-                Long.valueOf(principal.getName()),
+                principalHandler.getUserIdFromPrincipal(),
                 commentCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.COMMENT_CREATE_SUCCESS);
@@ -57,20 +59,18 @@ public class PostController implements PostControllerSwagger {
     @Override
     public SuccessResponse<PostCuriousResponse> postCurious(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, Long.valueOf(principal.getName())));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
     @GetMapping("/{postId}/comment")
     @Override
     public SuccessResponse<CommentListResponse> getComments(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, Long.valueOf(principal.getName())));
+        return SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
 
@@ -78,30 +78,27 @@ public class PostController implements PostControllerSwagger {
     @Override
     public SuccessResponse<CuriousInfoResponse> getCuriousInfo(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfo(postId, Long.valueOf(principal.getName())));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfo(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
     @DeleteMapping("/{postId}/curious")
     @Override
     public SuccessResponse<PostCuriousResponse> deleteCurious(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, Long.valueOf(principal.getName())));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
     @GetMapping("/{postId}/authenticate")
     @Override
     public SuccessResponse getAuthenticateWrite(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, Long.valueOf(principal.getName())));
+        return SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
     @PutMapping("/{postId}")
@@ -109,10 +106,9 @@ public class PostController implements PostControllerSwagger {
     public SuccessResponse putPost(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final PostPutRequest putRequest,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        postService.updatePost(postId, Long.valueOf(principal.getName()), putRequest);
+        postService.updatePost(postId, principalHandler.getUserIdFromPrincipal(), putRequest);
         return SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS);
     }
 
@@ -120,10 +116,9 @@ public class PostController implements PostControllerSwagger {
     @Override
     public SuccessResponse deletePost(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
-        postService.deletePost(postId, Long.valueOf(principal.getName()));
+        postService.deletePost(postId, principalHandler.getUserIdFromPrincipal());
         return SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS);
     }
 
@@ -131,11 +126,10 @@ public class PostController implements PostControllerSwagger {
     @GetMapping("/temporary/{postId}")
     public SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_GET_SUCCESS,
-                postService.getTemporaryPost(postId, Long.valueOf(principal.getName())));
+                postService.getTemporaryPost(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
     @Override
@@ -151,22 +145,20 @@ public class PostController implements PostControllerSwagger {
     @Override
     @PostMapping
     public SuccessResponse<WriterNameResponse> createPost(
-            @Valid @RequestBody final PostCreateRequest postCreateRequest,
-            final Principal principal
+            @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
         return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.createPost(
-                Long.valueOf(principal.getName()),
+                principalHandler.getUserIdFromPrincipal(),
                 postCreateRequest
         ));
     }
 
     @PostMapping("/temporary")
     public SuccessResponse createTemporaryPost(
-            @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest,
-            final Principal principal
+            @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postService.createTemporaryPost(
-                Long.valueOf(principal.getName()),
+                principalHandler.getUserIdFromPrincipal(),
                 temporaryPostCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_CREATE_SUCCESS);
@@ -175,12 +167,11 @@ public class PostController implements PostControllerSwagger {
     @PutMapping("/temporary/{postId}")
     public SuccessResponse<WriterNameResponse> putFixedPost(
             @PostIdPathVariable final Long postId,
-            final Principal principal,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
     ) {
         return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putFixedPost(
-                Long.valueOf(principal.getName()),
+                principalHandler.getUserIdFromPrincipal(),
                 request,
                 postId
         ));

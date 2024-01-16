@@ -44,7 +44,6 @@ public interface PostControllerSwagger {
     SuccessResponse postComment(
             final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -61,7 +60,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostCuriousResponse> postCurious(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -79,7 +77,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<CommentListResponse> getComments(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -96,7 +93,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<CuriousInfoResponse> getCuriousInfo(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -113,7 +109,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostCuriousResponse> deleteCurious(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -133,7 +128,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse getAuthenticateWrite(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -163,7 +157,6 @@ public interface PostControllerSwagger {
     SuccessResponse putPost(
             final Long postId,
             @RequestBody final PostPutRequest putRequest,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -181,7 +174,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse deletePost(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -197,7 +189,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
             final Long postId,
-            final Principal principal,
             @PathVariable("postId") final String postUrl
     );
 
@@ -233,8 +224,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse createTemporaryPost(
-            @Valid @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest,
-            final Principal principal
+            @Valid @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest
     );
 
 
@@ -255,8 +245,7 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse createPost(
-            @Valid @RequestBody final PostCreateRequest postCreateRequest,
-            final Principal principal
+            @Valid @RequestBody final PostCreateRequest postCreateRequest
     );
 
     @Operation(summary = "임시 저장된 글 작성")
@@ -270,7 +259,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse<WriterNameResponse> putFixedPost(final Long postId, final Principal principal,
+    SuccessResponse<WriterNameResponse> putFixedPost(final Long postId,
                                                      @RequestBody final PostPutRequest request,
                                                      @PathVariable("postId") final String postUrl);
 }
