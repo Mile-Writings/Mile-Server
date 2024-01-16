@@ -36,7 +36,7 @@ public class Post extends BaseTimeEntity {
     private String imageUrl;
     private String idUrl;
     private int curiousCount;
-    private Boolean containPhoto;
+    private boolean containPhoto;
     private boolean anonymous;
     private boolean isTemporary;
 

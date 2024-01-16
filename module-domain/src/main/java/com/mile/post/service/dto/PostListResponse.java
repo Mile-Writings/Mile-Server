@@ -23,7 +23,7 @@ public record PostListResponse(
                 post.getWriterName().getName(),
                 DateUtil.getStringWithTimeOfLocalDate(post.getCreatedAt()),
                 post.getCuriousCount(),
-                post.getContainPhoto(),
+                post.isContainPhoto(),
                 post.getImageUrl());
     }
 
