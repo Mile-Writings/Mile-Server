@@ -33,7 +33,6 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
-@Slf4j
 public class PostController implements PostControllerSwagger {
 
     private final PostService postService;
