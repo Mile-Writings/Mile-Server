@@ -20,6 +20,7 @@ import com.mile.post.service.PostGetService;
 import com.mile.post.service.PostTemporaryService;
 import com.mile.topic.service.TopicService;
 import com.mile.utils.DateUtil;
+import com.mile.utils.SecureUrlUtil;
 import com.mile.writerName.domain.WriterName;
 import com.mile.writerName.service.WriterNameService;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
@@ -42,6 +43,7 @@ public class MoimService {
     private final PostAuthenticateService postAuthenticateService;
     private final PostTemporaryService postTemporaryService;
     private final PostGetService postGetService;
+    private final SecureUrlUtil secureUrlUtil;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -135,6 +137,6 @@ public class MoimService {
             final Long userId
     ) {
         String postId = postTemporaryService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
-        return TemporaryPostExistResponse.of(!postId.equals(0L), postId);
+        return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 }
