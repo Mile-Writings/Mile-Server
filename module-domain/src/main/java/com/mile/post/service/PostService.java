@@ -240,6 +240,7 @@ public class PostService {
         );
     }
 
+    @Transactional
     public void createTemporaryPost(
             final Long userId,
             final TemporaryPostCreateRequest temporaryPostCreateRequest
