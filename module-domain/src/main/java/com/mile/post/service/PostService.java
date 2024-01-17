@@ -84,7 +84,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        return CommentListResponse.of(commentService.getCommentResponse(postId, writerNameService.getWriterNameIdByUserId(userId)));
+        return CommentListResponse.of(commentService.getCommentResponse(postId, userId));
     }
 
 
