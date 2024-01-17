@@ -12,6 +12,7 @@ import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writerName.domain.WriterName;
+import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
+    private final WriterNameService writerNameService;
 
     @Transactional
     public void deleteComment(
@@ -91,7 +93,7 @@ public class CommentService {
         List<Comment> commentList = findByPostId(postId);
         throwIfCommentIsNull(commentList);
         return commentList.stream()
-                .map(comment -> CommentResponse.of(comment, userId, isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
+                .map(comment -> CommentResponse.of(comment, writerNameService.getWriterNameIdByUserId(userId), isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
     }
 
     private boolean isCommentWriterEqualWriterOfPost(
