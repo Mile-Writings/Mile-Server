@@ -15,7 +15,7 @@ public record CommentResponse(
 
     public static CommentResponse of(
             final Comment comment,
-            final Long userId,
+            final Long writerNameId,
             final boolean isWriterOfPost
     ) {
         WriterName writerName = comment.getWriterName();
@@ -28,7 +28,7 @@ public record CommentResponse(
                 name,
                 writerName.getMoim().getName(),
                 comment.getContent(),
-                writerName.getId().equals(userId)
+                writerName.getId().equals(writerNameId)
         );
     }
 }
