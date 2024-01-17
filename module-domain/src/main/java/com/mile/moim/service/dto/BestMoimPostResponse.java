@@ -4,7 +4,7 @@ import com.mile.post.domain.Post;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-public record BestMoimPostResponse(String postId, String topicName, String imageUrl, String postTitle, String postContent) {
+public record BestMoimPostResponse(String postId, String topicName, String imageUrl, String postTitle, String postContent, Boolean isContainPhoto) {
     private static final int SUBSTRING_START = 0;
     private static final int SUBSTRING_END = 200;
 
@@ -15,7 +15,8 @@ public record BestMoimPostResponse(String postId, String topicName, String image
                 post.getTopic().getContent(),
                 post.getImageUrl(),
                 post.getTitle(),
-                getSubStringOfCleanContent(post.getContent())
+                getSubStringOfCleanContent(post.getContent()),
+                post.isContainPhoto()
         );
     }
 
