@@ -15,6 +15,7 @@ import com.mile.user.repository.UserRepository;
 import com.mile.user.service.dto.LoginSuccessResponse;
 import com.mile.writerName.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +63,10 @@ public class UserService {
     private void createWriterNameOfUser(
             final User user
     ) {
-        writerNameService.createWriterNameInMile(user, moimService.findById(STATIC_MOIM_ID));
+        try {
+            writerNameService.createWriterNameInMile(user, moimService.findById(STATIC_MOIM_ID));
+        } catch (DataIntegrityViolationException e) {
+        }
     }
 
     public User getBySocialId(
@@ -108,9 +112,14 @@ public class UserService {
     private LoginSuccessResponse getTokenDto(
             final UserInfoResponse userResponse
     ) {
-        if (isExistingUser(userResponse.socialId(), userResponse.socialType())) {
-            return getTokenByUserId(getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
-        } else {
+        try {
+            if (isExistingUser(userResponse.socialId(), userResponse.socialType())) {
+                return getTokenByUserId(getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
+            } else {
+                Long id = createUser(userResponse);
+                return getTokenByUserId(id);
+            }
+        } catch (DataIntegrityViolationException e) {
             Long id = createUser(userResponse);
             return getTokenByUserId(id);
         }
