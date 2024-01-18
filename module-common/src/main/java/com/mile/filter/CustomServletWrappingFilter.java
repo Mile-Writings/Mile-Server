@@ -1,5 +1,6 @@
 package com.mile.filter;
 
+import com.mile.filter.wrapper.CachedBodyRequestWrapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,12 +17,9 @@ public class CustomServletWrappingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(final HttpServletRequest request,
                                     final HttpServletResponse response,
-                                    final FilterChain chain) throws ServletException, IOException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+                                    final FilterChain filterChain) throws ServletException, IOException {
 
-        chain.doFilter(requestWrapper, responseWrapper);
-
-        responseWrapper.copyBodyToResponse();
+        CachedBodyRequestWrapper cachedBodyRequestWrapper = new CachedBodyRequestWrapper(request);
+        filterChain.doFilter(cachedBodyRequestWrapper, response);
     }
 }
