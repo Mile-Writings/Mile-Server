@@ -53,7 +53,7 @@ public class PostAuthenticateService {
             final Long postId,
             final Long userId
     ) {
-        return postRepository.existsPostByIdAndWriterNameId(postId, userId);
+        return postRepository.existsPostByIdAndWriterNameId(postId, writerNameService.findByWriterId(userId).getId());
     }
 
     public void authenticateWriter(
