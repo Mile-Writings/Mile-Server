@@ -15,16 +15,25 @@ public record PostGetResponse(
         String moimName,
         String writerInfo
 ) {
+    private final static String ANONYMOUS = "작자미상";
+    private final static String ANONYMOUS_INFO = "익명으로 작성한 사용자입니다.";
+
     public static PostGetResponse of(Post post, Moim moim) {
+        String writerName = post.getWriterName().getName();
+        String information = post.getWriterName().getInformation();
+        if (post.isAnonymous()) {
+            writerName = ANONYMOUS;
+            information = ANONYMOUS_INFO;
+        }
         return new PostGetResponse(
                 post.getTopic().getContent(),
                 DateUtil.getKoreanStringOfLocalDate(post.getCreatedAt()),
                 post.getTitle(),
                 post.getContent(),
                 post.getImageUrl(),
-                post.getWriterName().getName(),
+                writerName,
                 moim.getName(),
-                post.getWriterName().getInformation()
+                information
         );
     }
 }
