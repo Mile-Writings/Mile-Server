@@ -91,7 +91,6 @@ public class CommentService {
     ) {
         postAuthenticateService.authenticateUserWithPostId(postId, userId);
         List<Comment> commentList = findByPostId(postId);
-        throwIfCommentIsNull(commentList);
         return commentList.stream()
                 .map(comment -> CommentResponse.of(comment, writerNameService.getWriterNameIdByUserId(userId), isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
     }
@@ -110,13 +109,6 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
-    private void throwIfCommentIsNull(
-            final List<Comment> commentList
-    ) {
-        if (isCommentListNull(commentList)) {
-            throw new NotFoundException(ErrorMessage.COMMENTS_NOT_FOUND);
-        }
-    }
 
     private boolean isCommentListNull(
             final List<Comment> commentList
