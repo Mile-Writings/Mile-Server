@@ -21,9 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class KakaoSocialService implements SocialService {
 
     private static final String AUTH_CODE = "authorization_code";
-    private static final String REDIRECT_URI = "http://localhost:5173/redirect-kakao";
-
-
     @Value("${kakao.clientId}")
     private String clientId;
     private final KakaoApiClient kakaoApiClient;
@@ -39,7 +36,7 @@ public class KakaoSocialService implements SocialService {
         String accessToken;
         try {
             // 인가 코드로 Access Token + Refresh Token 받아오기
-            accessToken = getOAuth2Authentication(authorizationCode);
+            accessToken = getOAuth2Authentication(loginRequest.redirectUri(), authorizationCode);
         } catch (FeignException e) {
             throw new BadRequestException(ErrorMessage.AUTHENTICATION_CODE_EXPIRED);
         }
@@ -48,12 +45,13 @@ public class KakaoSocialService implements SocialService {
     }
 
     private String getOAuth2Authentication(
+            final String redirectUri,
             final String authorizationCode
     ) {
         KakaoAccessTokenResponse response = kakaoAuthApiClient.getOAuth2AccessToken(
                 AUTH_CODE,
                 clientId,
-                REDIRECT_URI,
+                redirectUri,
                 authorizationCode
         );
         return response.accessToken();
