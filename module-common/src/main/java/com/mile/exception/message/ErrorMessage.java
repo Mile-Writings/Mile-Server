@@ -40,6 +40,7 @@ public enum ErrorMessage {
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청 값이 유효하지 않습니다."),
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
     POST_NOT_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장 글이 아닙니다."),
+    POST_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장글입니다."),
     PATH_PARAMETER_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "요청 URI를 다시 확인해주세요."),
     REQUEST_URL_WRONG_ERROR(HttpStatus.BAD_REQUEST.value(), "요청 URL를 다시 확인해주세요"),
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
