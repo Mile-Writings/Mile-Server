@@ -60,7 +60,7 @@ public class PostAuthenticateService {
             final Long postId,
             final Long userId
     ) {
-        if (!authenticateWriterWithPost(postId, writerNameService.getWriterNameIdByUserId(userId))) {
+        if (!authenticateWriterWithPost(postId,userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
     }
