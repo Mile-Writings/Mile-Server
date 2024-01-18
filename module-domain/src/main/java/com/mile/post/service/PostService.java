@@ -12,6 +12,7 @@ import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.ModifyPostGetResponse;
 import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
@@ -271,5 +272,26 @@ public class PostService {
         isPostTemporary(post);
         post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request);
         return WriterNameResponse.of(post.getIdUrl(), post.getWriterName().getName());
+    }
+
+    @Transactional(readOnly = true)
+    public ModifyPostGetResponse getModifyPost(
+            final Long postId,
+            final Long userId
+    ) {
+        Post post = findById(postId);
+        postAuthenticateService.authenticateUserWithPost(post, userId);
+        isPostNotTemporary(post);
+
+        List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(post.getTopic().getMoim().getId(), post.getTopic().getId());
+        return ModifyPostGetResponse.of(post, contentResponse);
+    }
+
+    private void isPostNotTemporary(
+            final Post post
+    ) {
+        if (post.isTemporary()) {
+            throw new BadRequestException(ErrorMessage.POST_TEMPORARY_ERROR);
+        }
     }
 }
