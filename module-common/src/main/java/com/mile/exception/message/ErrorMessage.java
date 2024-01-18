@@ -15,7 +15,6 @@ public enum ErrorMessage {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저는 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저의 리프레시 토큰이 존재하지 않습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글은 존재하지 않습니다."),
-    COMMENTS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글에 대한 댓글이 존재하지 않습니다."),
     MOIM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글모임이 존재하지 않습니다."),
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
