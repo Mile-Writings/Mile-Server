@@ -1,9 +1,6 @@
 <included>
-    <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
-        <webhookUri>${DISCORD_WEBHOOK_URI}</webhookUri>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n</pattern>
-        </layout>
+    <appender name="DISCORD" class="com.mile.log.discord.DiscordAppender">
+        <discordWebhookUrl>${DISCORD_WEBHOOK_URI}</discordWebhookUrl>
         <username>에러났대...</username>
         <avatarUrl>https://www.greenart.co.kr/upimage/new_editor/20212/20210201112021.jpg</avatarUrl>
         <tts>false</tts>
