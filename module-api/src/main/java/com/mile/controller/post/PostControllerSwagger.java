@@ -5,6 +5,7 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.ModifyPostGetResponse;
 import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
@@ -250,6 +251,7 @@ public interface PostControllerSwagger {
             @Valid @RequestBody final PostCreateRequest postCreateRequest
     );
 
+
     @Operation(summary = "임시 저장된 글 작성")
     @ApiResponses(
             value = {
@@ -264,5 +266,21 @@ public interface PostControllerSwagger {
     SuccessResponse<WriterNameResponse> putFixedPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest request,
-            @PathVariable("postId") final String postUrl);
+            @PathVariable("postId") final String postUrl
+    );
+
+    @Operation(summary = "글 수정 시 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글 수정 시 글 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 글은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse<ModifyPostGetResponse> getModifyPost(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @PathVariable("postId") final String postUrl
+    );
 }

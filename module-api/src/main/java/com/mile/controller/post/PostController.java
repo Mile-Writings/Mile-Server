@@ -7,6 +7,7 @@ import com.mile.exception.message.SuccessMessage;
 import com.mile.post.service.PostService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
+import com.mile.post.service.dto.ModifyPostGetResponse;
 import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
@@ -175,4 +176,15 @@ public class PostController implements PostControllerSwagger {
                 postId
         ));
     }
+
+    @Override
+    @GetMapping("/modify/{postId}")
+    public SuccessResponse<ModifyPostGetResponse> getModifyPost(
+            @PostIdPathVariable final Long postId,
+            @PathVariable("postId") final String postUrl
+    ) {
+        return SuccessResponse.of(SuccessMessage.MODIFY_POST_GET_SUCCESS,
+                postService.getModifyPost(postId, principalHandler.getUserIdFromPrincipal()));
+    }
+
 }
