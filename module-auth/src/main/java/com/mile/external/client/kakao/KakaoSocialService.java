@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class KakaoSocialService implements SocialService {
 
     private static final String AUTH_CODE = "authorization_code";
-    private static final String REDIRECT_URI = "https://milewriting.com/redirect-kakao";
+    private static final String REDIRECT_URI = "https://www.milewriting.com/redirect-kakao";
 
 
     @Value("${kakao.clientId}")
