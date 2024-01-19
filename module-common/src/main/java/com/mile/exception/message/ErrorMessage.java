@@ -67,6 +67,10 @@ public enum ErrorMessage {
      */
     COMMENT_ACCESS_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 댓글에 접근 권한이 없습니다."),
     /*
+    Method Not Supported
+     */
+    METHOD_NOT_SUPPORTED(HttpStatus.METHOD_NOT_ALLOWED.value(), "요청을 다시 확인해주세요."),
+    /*
     Internal Server Error
      */
     IMAGE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷에 이미지를 업로드에 실패했습니다."),
