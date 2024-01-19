@@ -1,5 +1,6 @@
 package com.mile.post.service;
 
+import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
@@ -9,7 +10,9 @@ import com.mile.topic.domain.Topic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +34,8 @@ public class PostGetService {
     ) {
         List<Post> postList = postRepository.findByTopic(topic);
         isPostListEmpty(postList);
-        return postList;
+        return postList.stream()
+                .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed()).collect(Collectors.toList());
     }
 
     private void isPostListEmpty(

@@ -6,7 +6,7 @@ import org.jsoup.safety.Whitelist;
 
 public record BestMoimPostResponse(String postId, String topicName, String imageUrl, String postTitle, String postContent, Boolean isContainPhoto) {
     private static final int SUBSTRING_START = 0;
-    private static final int SUBSTRING_END = 300;
+    private static final int SUBSTRING_END = 400;
 
     public static BestMoimPostResponse of(Post post) {
 

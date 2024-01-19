@@ -16,7 +16,7 @@ public record PostListResponse(
         String imageUrl
 ) {
     private static final int SUBSTRING_START = 0;
-    private static final int SUBSTRING_END = 300;
+    private static final int SUBSTRING_END = 400;
 
     public static PostListResponse of(final Post post) {
         return new PostListResponse(post.getIdUrl(), post.getTitle(), getSubString(post),
