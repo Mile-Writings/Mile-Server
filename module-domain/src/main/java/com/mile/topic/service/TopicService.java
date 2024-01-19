@@ -90,6 +90,7 @@ public class TopicService {
         isKeywordsEmpty(topicList);
         return topicList
                 .stream()
+                .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
                 .map(TopicResponse::of)
                 .collect(Collectors.toList());
     }
