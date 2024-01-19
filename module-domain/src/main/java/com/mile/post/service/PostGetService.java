@@ -33,12 +33,13 @@ public class PostGetService {
             final Topic topic
     ) {
         List<Post> postList = postRepository.findByTopic(topic);
+        postList.removeIf(post -> post.isTemporary() == true);
         return postList.stream()
                 .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed()).collect(Collectors.toList());
     }
 
 
     public List<Post> getLatestPostsByMoim(Moim moim) {
-        return postRepository.findLatest4PostsByMoim(moim);
+        return postRepository.findLatest4NonTemporaryPostsByMoim(moim);
     }
 }
