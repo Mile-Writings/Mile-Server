@@ -120,7 +120,7 @@ public class UserService {
                 return getTokenByUserId(id);
             }
         } catch (DataIntegrityViolationException e) {
-            return getTokenByUserId(getBySocialId(userResponse.socialId(), userResponse.socialType()).getId();
+            return getTokenByUserId(getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
         }
     }
 
