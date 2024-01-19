@@ -12,7 +12,7 @@ public record MoimMostCuriousPostResponse(
         boolean isContainPhoto
 ) {
     private static final int SUBSTRING_START = 0;
-    private static final int SUBSTRING_END = 300;
+    private static final int SUBSTRING_END = 400;
 
     public static MoimMostCuriousPostResponse of(
             String postId,
