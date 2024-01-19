@@ -33,18 +33,10 @@ public class PostGetService {
             final Topic topic
     ) {
         List<Post> postList = postRepository.findByTopic(topic);
-        isPostListEmpty(postList);
         return postList.stream()
                 .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed()).collect(Collectors.toList());
     }
 
-    private void isPostListEmpty(
-            List<Post> postList
-    ) {
-        if (postList.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.MOIM_TOPIC_NOT_FOUND);
-        }
-    }
 
     public List<Post> getLatestPostsByMoim(Moim moim) {
         return postRepository.findLatest4PostsByMoim(moim);
