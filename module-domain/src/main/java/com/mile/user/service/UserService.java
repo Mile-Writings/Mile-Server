@@ -120,8 +120,7 @@ public class UserService {
                 return getTokenByUserId(id);
             }
         } catch (DataIntegrityViolationException e) {
-            Long id = createUser(userResponse);
-            return getTokenByUserId(id);
+            return getTokenByUserId(getBySocialId(userResponse.socialId(), userResponse.socialType()).getId();
         }
     }
 
