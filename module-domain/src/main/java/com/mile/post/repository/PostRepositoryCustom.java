@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
     List<Post> findTop2ByMoimOrderByCuriousCountDesc(final Moim requestMoim);
-    List<Post> findLatest4PostsByMoim(Moim moim);
+    List<Post> findLatest4NonTemporaryPostsByMoim(Moim moim);
     List<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim moim, final WriterName writerName);
 }
 

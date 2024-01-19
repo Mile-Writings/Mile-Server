@@ -30,12 +30,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     }
 
-    public List<Post> findLatest4PostsByMoim(Moim moim) {
+    public List<Post> findLatest4NonTemporaryPostsByMoim(Moim moim) {
 
         List<Post> result = jpaQueryFactory
                 .select(post)
                 .from(post)
-                .where(post.topic.moim.eq(moim))
+                .where(post.topic.moim.eq(moim).and(post.isTemporary.eq(false)))
                 .orderBy(post.createdAt.desc())
                 .limit(4)
                 .fetch();
