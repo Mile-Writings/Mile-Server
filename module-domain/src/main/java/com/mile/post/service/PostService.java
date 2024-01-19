@@ -137,7 +137,7 @@ public class PostService {
             final Topic topic,
             final PostPutRequest putRequest
     ) {
-        post.updatePost(topic, putRequest);
+        post.updatePost(topic, putRequest, post.isTemporary());
     }
 
     public WriterAuthenticateResponse getAuthenticateWriter(
@@ -271,7 +271,7 @@ public class PostService {
         postAuthenticateService.authenticateWriter(postId, userId);
         Post post = findById(postId);
         isPostTemporary(post);
-        post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request);
+        post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request, false);
         return WriterNameResponse.of(post.getIdUrl(), post.getWriterName().getName());
     }
 
