@@ -1,4 +1,4 @@
-package com.mile.config.security;
+package com.mile.config;
 
 
 import com.mile.authentication.CustomAccessDeniedHandler;
