@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PostTemporaryService {
+public class PostCreateService {
     private final PostRepository postRepository;
 
     public String getTemporaryPostExist(

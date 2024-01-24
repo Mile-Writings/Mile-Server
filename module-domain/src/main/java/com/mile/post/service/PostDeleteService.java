@@ -1,7 +1,5 @@
 package com.mile.post.service;
 
-import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimMostCuriousPostResponse;
@@ -15,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostCuriousService {
+public class PostDeleteService {
 
     private final PostRepository postRepository;
 
