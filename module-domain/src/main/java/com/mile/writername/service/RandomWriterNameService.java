@@ -1,10 +1,10 @@
-package com.mile.writerName.service;
+package com.mile.writername.service;
 
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
-import com.mile.writerName.repository.RandomWriterNamePrefixRepository;
-import com.mile.writerName.repository.RandomWriterNameSuffixRepository;
+import com.mile.writername.repository.RandomWriterNamePrefixRepository;
+import com.mile.writername.repository.RandomWriterNameSuffixRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

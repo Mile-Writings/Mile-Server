@@ -12,7 +12,7 @@ import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
-import com.mile.writerName.service.dto.WriterNameResponse;
+import com.mile.writername.service.dto.WriterNameResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -24,8 +24,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.security.Principal;
 
 @Tag(name = "Post", description = "게시글 관련 API - 댓글 등록/ 조회 및 궁금해요 등록/삭제 포함")
 public interface PostControllerSwagger {

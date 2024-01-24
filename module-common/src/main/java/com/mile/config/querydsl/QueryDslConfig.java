@@ -1,4 +1,4 @@
-package com.mile.config.queryDsl;
+package com.mile.config.querydsl;
 
 ;
 import com.querydsl.jpa.impl.JPAQueryFactory;

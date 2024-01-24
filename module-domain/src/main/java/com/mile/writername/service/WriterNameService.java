@@ -1,11 +1,11 @@
-package com.mile.writerName.service;
+package com.mile.writername.service;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.user.domain.User;
-import com.mile.writerName.domain.WriterName;
-import com.mile.writerName.repository.WriterNameRepository;
+import com.mile.writername.domain.WriterName;
+import com.mile.writername.repository.WriterNameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

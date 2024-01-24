@@ -13,7 +13,7 @@ import com.mile.moim.service.MoimService;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.user.service.dto.LoginSuccessResponse;
-import com.mile.writerName.service.WriterNameService;
+import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

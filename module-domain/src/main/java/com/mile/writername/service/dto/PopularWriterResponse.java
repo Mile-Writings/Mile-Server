@@ -1,6 +1,6 @@
-package com.mile.writerName.service.dto;
+package com.mile.writername.service.dto;
 
-import com.mile.writerName.domain.WriterName;
+import com.mile.writername.domain.WriterName;
 
 public record PopularWriterResponse(String writerName, String information) {
     public static PopularWriterResponse of(WriterName writer) {

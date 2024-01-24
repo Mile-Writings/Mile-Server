@@ -1,4 +1,4 @@
-package com.mile.writerName.domain;
+package com.mile.writername.domain;
 
 import com.mile.moim.domain.Moim;
 import com.mile.user.domain.User;

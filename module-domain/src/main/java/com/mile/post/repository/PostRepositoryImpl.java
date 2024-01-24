@@ -2,7 +2,7 @@ package com.mile.post.repository;
 
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
-import com.mile.writerName.domain.WriterName;
+import com.mile.writername.domain.WriterName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import static com.mile.moim.domain.QMoim.moim;
 import static com.mile.post.domain.QPost.post;
 import static com.mile.topic.domain.QTopic.topic;
-import static com.mile.writerName.domain.QWriterName.writerName;
+import static com.mile.writername.domain.QWriterName.writerName;
 
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {

@@ -1,4 +1,4 @@
-package com.mile.writerName.service.dto;
+package com.mile.writername.service.dto;
 
 public record WriterNameResponse(
         String postId,
