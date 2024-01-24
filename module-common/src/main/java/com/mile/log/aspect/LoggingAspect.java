@@ -1,4 +1,4 @@
-package com.mile.aspect;
+package com.mile.log.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.filter.wrapper.CachedBodyRequestWrapper;
@@ -30,7 +30,7 @@ public class LoggingAspect {
     }
 
 
-    @Around("com.mile.aspect.LoggingAspect.controllerErrorLevelExecute()")
+    @Around("com.mile.log.aspect.LoggingAspect.controllerErrorLevelExecute()")
     public Object requestErrorLevelLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         final CachedBodyRequestWrapper cachedBodyRequestWrapper = new CachedBodyRequestWrapper(request);

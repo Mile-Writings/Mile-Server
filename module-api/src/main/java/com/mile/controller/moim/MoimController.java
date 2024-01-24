@@ -16,7 +16,6 @@ import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writerName.service.dto.PopularWriterListResponse;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
