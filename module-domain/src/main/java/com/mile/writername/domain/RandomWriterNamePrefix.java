@@ -1,4 +1,4 @@
-package com.mile.writerName.domain;
+package com.mile.writername.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

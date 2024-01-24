@@ -13,7 +13,7 @@ import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
-import com.mile.writerName.service.dto.PopularWriterListResponse;
+import com.mile.writername.service.dto.PopularWriterListResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

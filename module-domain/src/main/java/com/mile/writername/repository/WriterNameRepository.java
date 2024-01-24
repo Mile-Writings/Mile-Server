@@ -1,6 +1,6 @@
-package com.mile.writerName.repository;
+package com.mile.writername.repository;
 
-import com.mile.writerName.domain.WriterName;
+import com.mile.writername.domain.WriterName;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

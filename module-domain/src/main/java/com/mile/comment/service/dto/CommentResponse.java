@@ -1,7 +1,7 @@
 package com.mile.comment.service.dto;
 
 import com.mile.comment.domain.Comment;
-import com.mile.writerName.domain.WriterName;
+import com.mile.writername.domain.WriterName;
 
 public record CommentResponse(
         String commentId,

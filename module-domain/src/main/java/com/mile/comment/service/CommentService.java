@@ -11,13 +11,12 @@ import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.utils.SecureUrlUtil;
-import com.mile.writerName.domain.WriterName;
-import com.mile.writerName.service.WriterNameService;
+import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 

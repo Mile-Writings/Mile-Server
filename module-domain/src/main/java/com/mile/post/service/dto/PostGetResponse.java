@@ -3,7 +3,6 @@ package com.mile.post.service.dto;
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.utils.DateUtil;
-import com.mile.writerName.domain.WriterName;
 
 public record PostGetResponse(
         String topic,
