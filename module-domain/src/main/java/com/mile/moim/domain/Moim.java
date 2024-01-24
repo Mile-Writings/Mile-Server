@@ -1,8 +1,7 @@
 package com.mile.moim.domain;
 
 import com.mile.config.BaseTimeEntity;
-import com.mile.user.domain.User;
-import com.mile.writerName.domain.WriterName;
+import com.mile.writername.domain.WriterName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

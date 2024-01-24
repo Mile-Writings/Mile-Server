@@ -1,6 +1,6 @@
-package com.mile.writerName.repository;
+package com.mile.writername.repository;
 
-import com.mile.writerName.domain.RandomWriterNameSuffix;
+import com.mile.writername.domain.RandomWriterNameSuffix;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RandomWriterNameSuffixRepository extends JpaRepository<RandomWriterNameSuffix, Long> {

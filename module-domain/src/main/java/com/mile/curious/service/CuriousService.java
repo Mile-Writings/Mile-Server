@@ -8,7 +8,7 @@ import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
-import com.mile.writerName.service.WriterNameService;
+import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

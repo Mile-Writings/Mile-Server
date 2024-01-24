@@ -21,9 +21,9 @@ import com.mile.post.service.PostTemporaryService;
 import com.mile.topic.service.TopicService;
 import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
-import com.mile.writerName.domain.WriterName;
-import com.mile.writerName.service.WriterNameService;
-import com.mile.writerName.service.dto.PopularWriterListResponse;
+import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.dto.PopularWriterListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

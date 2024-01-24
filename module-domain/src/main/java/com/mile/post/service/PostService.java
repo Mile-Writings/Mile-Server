@@ -25,11 +25,10 @@ import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.user.service.UserService;
 import com.mile.utils.SecureUrlUtil;
-import com.mile.writerName.domain.WriterName;
-import com.mile.writerName.service.WriterNameService;
-import com.mile.writerName.service.dto.WriterNameResponse;
+import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.dto.WriterNameResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
