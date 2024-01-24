@@ -15,9 +15,9 @@ import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
-import com.mile.post.service.PostCuriousService;
+import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
-import com.mile.post.service.PostTemporaryService;
+import com.mile.post.service.PostCreateService;
 import com.mile.topic.service.TopicService;
 import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
@@ -39,9 +39,9 @@ public class MoimService {
     private final WriterNameService writerNameService;
     private final TopicService topicService;
     private final MoimRepository moimRepository;
-    private final PostCuriousService postCuriousService;
+    private final PostDeleteService postCuriousService;
     private final PostAuthenticateService postAuthenticateService;
-    private final PostTemporaryService postTemporaryService;
+    private final PostCreateService postCreateService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
 
@@ -136,7 +136,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        String postId = postTemporaryService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
+        String postId = postCreateService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 }
