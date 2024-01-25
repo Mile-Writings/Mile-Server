@@ -81,17 +81,20 @@ public class Post extends BaseTimeEntity {
 
     public void updatePost(
             final Topic topic,
-            final PostPutRequest putRequest,
-            final boolean isTemporary
+            final PostPutRequest putRequest
     ) {
         this.topic = topic;
         this.title = putRequest.title();
         this.content = putRequest.content();
         this.imageUrl = putRequest.imageUrl();
         this.anonymous = putRequest.anonymous();
-        this.isTemporary = isTemporary;
     }
 
+    public void setTemporary(
+            final boolean isTemporary
+    ) {
+        this.isTemporary = isTemporary;
+    }
     public void setIdUrl(
             final String idUrl
     ) {

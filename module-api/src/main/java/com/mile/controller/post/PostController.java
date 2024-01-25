@@ -18,6 +18,8 @@ import com.mile.resolver.post.PostIdPathVariable;
 import com.mile.writername.service.dto.WriterNameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,13 +101,13 @@ public class PostController implements PostControllerSwagger {
 
     @PutMapping("/{postId}")
     @Override
-    public SuccessResponse putPost(
+    public ResponseEntity<SuccessResponse> putPost(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final PostPutRequest putRequest,
             @PathVariable("postId") final String postUrl
     ) {
         postService.updatePost(postId, principalHandler.getUserIdFromPrincipal(), putRequest);
-        return SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS));
     }
 
     @DeleteMapping("/{postId}")
@@ -161,12 +163,12 @@ public class PostController implements PostControllerSwagger {
     }
 
     @PutMapping("/temporary/{postId}")
-    public SuccessResponse<WriterNameResponse> putFixedPost(
+    public SuccessResponse<WriterNameResponse> putTemporaryToFixedPost(
             @PostIdPathVariable final Long postId,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putFixedPost(
+        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putTemporaryToFixedPost(
                 principalHandler.getUserIdFromPrincipal(),
                 request,
                 postId
@@ -175,12 +177,12 @@ public class PostController implements PostControllerSwagger {
 
     @Override
     @GetMapping("/modify/{postId}")
-    public SuccessResponse<ModifyPostGetResponse> getModifyPost(
+    public SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MODIFY_POST_GET_SUCCESS,
-                postService.getModifyPost(postId, principalHandler.getUserIdFromPrincipal()));
+                postService.getPostForModifying(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
 }

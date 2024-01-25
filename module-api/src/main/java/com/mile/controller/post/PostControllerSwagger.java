@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -155,7 +156,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse putPost(
+    ResponseEntity<SuccessResponse> putPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest putRequest,
             @PathVariable("postId") final String postUrl
@@ -261,7 +262,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse<WriterNameResponse> putFixedPost(
+    SuccessResponse<WriterNameResponse> putTemporaryToFixedPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
@@ -277,7 +278,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<ModifyPostGetResponse> getModifyPost(
+    SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
