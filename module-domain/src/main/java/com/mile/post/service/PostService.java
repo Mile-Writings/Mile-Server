@@ -41,6 +41,8 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostUpdateService postUpdateService;
+    private final PostGetService postGetService;
     private final PostAuthenticateService postAuthenticateService;
     private final CommentService commentService;
     private final WriterNameService writerNameService;
@@ -63,7 +65,7 @@ public class PostService {
             final CommentCreateRequest commentCreateRequest
 
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
         postAuthenticateService.authenticateUserWithPost(post, userId);
         commentService.createComment(post, writerNameService.findByMoimAndUser(moimId, userId), commentCreateRequest);
@@ -75,7 +77,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.createCurious(post, userService.findById(userId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
@@ -89,21 +91,13 @@ public class PostService {
     }
 
 
-    public Post findById(
-            final Long postId
-    ) {
-        return postRepository.findById(postId)
-                .orElseThrow(
-                        () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
-                );
-    }
 
     @Transactional(readOnly = true)
     public CuriousInfoResponse getCuriousInfo(
             final Long postId,
             final Long userId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         return curiousService.getCuriousInfoResponse(post, userService.findById(userId));
     }
@@ -113,30 +107,21 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         curiousService.deleteCurious(post, userService.findById(userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
-    @Transactional
     public void updatePost(
             final Long postId,
             final Long userId,
             final PostPutRequest putRequest
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateWriter(postId, userId);
         Topic topic = topicService.findById(decodeUrlToLong(putRequest.topicId()));
-        update(post, topic, putRequest);
-    }
-
-    private void update(
-            final Post post,
-            final Topic topic,
-            final PostPutRequest putRequest
-    ) {
-        post.updatePost(topic, putRequest, post.isTemporary());
+        postUpdateService.update(post, topic, putRequest);
     }
 
     public WriterAuthenticateResponse getAuthenticateWriter(
@@ -158,7 +143,7 @@ public class PostService {
     private void delete(
             final Long postId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         deleteRelatedData(post);
         postRepository.delete(post);
     }
@@ -184,7 +169,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         isPostTemporary(post);
 
@@ -203,7 +188,7 @@ public class PostService {
     public PostGetResponse getPost(
             final Long postId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         Moim moim = post.getTopic().getMoim();
         return PostGetResponse.of(post, moim);
     }
@@ -268,7 +253,7 @@ public class PostService {
     @Transactional
     public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
         postAuthenticateService.authenticateWriter(postId, userId);
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         isPostTemporary(post);
         post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request, false);
         return WriterNameResponse.of(post.getIdUrl(), post.getWriterName().getName());
@@ -279,7 +264,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        Post post = findById(postId);
+        Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         isPostNotTemporary(post);
 
