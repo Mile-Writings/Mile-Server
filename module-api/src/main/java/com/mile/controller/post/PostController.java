@@ -163,12 +163,12 @@ public class PostController implements PostControllerSwagger {
     }
 
     @PutMapping("/temporary/{postId}")
-    public SuccessResponse<WriterNameResponse> putFixedPost(
+    public SuccessResponse<WriterNameResponse> putTemporaryToFixedPost(
             @PostIdPathVariable final Long postId,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putFixedPost(
+        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putTemporaryToFixedPost(
                 principalHandler.getUserIdFromPrincipal(),
                 request,
                 postId
@@ -177,12 +177,12 @@ public class PostController implements PostControllerSwagger {
 
     @Override
     @GetMapping("/modify/{postId}")
-    public SuccessResponse<ModifyPostGetResponse> getModifyPost(
+    public SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MODIFY_POST_GET_SUCCESS,
-                postService.getModifyPost(postId, principalHandler.getUserIdFromPrincipal()));
+                postService.getPostForModifying(postId, principalHandler.getUserIdFromPrincipal()));
     }
 
 }

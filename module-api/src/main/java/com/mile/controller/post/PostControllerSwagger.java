@@ -262,7 +262,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse<WriterNameResponse> putFixedPost(
+    SuccessResponse<WriterNameResponse> putTemporaryToFixedPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
@@ -278,7 +278,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<ModifyPostGetResponse> getModifyPost(
+    SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
