@@ -17,7 +17,7 @@ public class PostUpdateService {
             final Topic topic,
             final PostPutRequest putRequest
     ) {
-        post.updatePost(topic, putRequest, post.isTemporary());
+        post.updatePost(topic, putRequest);
     }
 
 }

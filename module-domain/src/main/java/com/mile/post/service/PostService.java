@@ -6,7 +6,6 @@ import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
@@ -245,22 +244,23 @@ public class PostService {
         post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
     }
 
-    private boolean checkContainPhoto(String imageUrl) {
+    private boolean checkContainPhoto(final String imageUrl) {
         return !imageUrl.equals(DEFAULT_IMG_URL);
     }
 
 
     @Transactional
-    public WriterNameResponse putFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
+    public WriterNameResponse putTemporaryToFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
         postAuthenticateService.authenticateWriter(postId, userId);
         Post post = postGetService.findById(postId);
         isPostTemporary(post);
-        post.updatePost(topicService.findById(decodeUrlToLong(request.topicId())), request, false);
+        updatePost(postId, userId, request);
+        post.setTemporary(false);
         return WriterNameResponse.of(post.getIdUrl(), post.getWriterName().getName());
     }
 
     @Transactional(readOnly = true)
-    public ModifyPostGetResponse getModifyPost(
+    public ModifyPostGetResponse getPostForModifying(
             final Long postId,
             final Long userId
     ) {
