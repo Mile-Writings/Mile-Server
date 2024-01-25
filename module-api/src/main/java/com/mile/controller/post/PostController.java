@@ -18,6 +18,8 @@ import com.mile.resolver.post.PostIdPathVariable;
 import com.mile.writername.service.dto.WriterNameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,13 +101,13 @@ public class PostController implements PostControllerSwagger {
 
     @PutMapping("/{postId}")
     @Override
-    public SuccessResponse putPost(
+    public ResponseEntity<SuccessResponse> putPost(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final PostPutRequest putRequest,
             @PathVariable("postId") final String postUrl
     ) {
         postService.updatePost(postId, principalHandler.getUserIdFromPrincipal(), putRequest);
-        return SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS));
     }
 
     @DeleteMapping("/{postId}")
