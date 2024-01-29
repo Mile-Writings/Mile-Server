@@ -1,6 +1,7 @@
-package com.mile.writername.service.dto;
+package com.mile.moim.service.dto;
 import com.mile.writername.domain.WriterName;
 
+import com.mile.writername.service.dto.PopularWriterResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
