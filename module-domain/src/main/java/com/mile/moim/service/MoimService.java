@@ -23,7 +23,7 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
-import com.mile.writername.service.dto.PopularWriterListResponse;
+import com.mile.moim.service.dto.PopularWriterListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +78,7 @@ public class MoimService {
         );
     }
 
-    public PopularWriterListResponse getMostCuriousWriters(
+    public PopularWriterListResponse getMostCuriousWritersOfMoim(
             final Long moimId
     ) {
         List<WriterName> writers = writerNameService.findTop2ByCuriousCount(moimId);
