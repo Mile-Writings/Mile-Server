@@ -14,6 +14,6 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     Optional<WriterName> findByWriterId(final Long userId);
 
-    List<WriterName> findTop2ByMoimIdOrderByTotalCuriousCountDesc(final Long moimid);
+    List<WriterName> findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Long moimId, final int totalCuriousCount);
 
 }
