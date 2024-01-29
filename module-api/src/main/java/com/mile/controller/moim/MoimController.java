@@ -13,9 +13,11 @@ import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
-import com.mile.writername.service.dto.PopularWriterListResponse;
+import com.mile.moim.service.dto.PopularWriterListResponse;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,11 +51,11 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/mostCuriousWriters")
-    public SuccessResponse<PopularWriterListResponse> getMostCuriousWritersOfMoim(
+    public ResponseEntity<SuccessResponse<PopularWriterListResponse>> getMostCuriousWritersOfMoim(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.MOIM_POPULAR_WRITER_SEARCH_SUCCESS, moimService.getMostCuriousWriters(moimId));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.MOIM_POPULAR_WRITER_SEARCH_SUCCESS, moimService.getMostCuriousWritersOfMoim(moimId)));
     }
 
     @Override
