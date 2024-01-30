@@ -80,11 +80,11 @@ public class MoimController implements MoimControllerSwagger {
 
     @GetMapping("/{moimId}/topicList")
     @Override
-    public SuccessResponse<TopicListResponse> getTopicList(
+    public ResponseEntity<SuccessResponse<TopicListResponse>> getTopicList(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.TOPIC_LIST_SEARCH_SUCCESS, moimService.getTopicList(moimId));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.TOPIC_LIST_SEARCH_SUCCESS, moimService.getTopicList(moimId)));
     }
 
     @Override

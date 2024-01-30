@@ -125,7 +125,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<TopicListResponse> getTopicList(
+    ResponseEntity<SuccessResponse<TopicListResponse>> getTopicList(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
