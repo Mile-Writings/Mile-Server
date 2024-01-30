@@ -18,6 +18,7 @@ import java.util.List;
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
     private final RandomWriterNameService randomWriterNameService;
+    private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
 
     public boolean isUserInMoim(
             final Long moimId,
@@ -78,7 +79,7 @@ public class WriterNameService {
     }
 
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
-        return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, 0);
+        return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
     }
 
     @Transactional
