@@ -30,7 +30,7 @@ public class TopicService {
     public List<ContentResponse> getContentsFromMoim(
             final Long moimId
     ) {
-        List<Topic> topicList = sortByCreatedAt(findByMoimId(moimId));
+        List<Topic> topicList = sortByCreatedAt(findTopicListByMoimId(moimId));
         isContentsEmpty(topicList);
         return topicList
                 .stream()
@@ -42,7 +42,7 @@ public class TopicService {
             final Long moimId,
             final Long selectedTopicId
     ) {
-        List<Topic> topicList = sortByCreatedAt(findByMoimId(moimId));
+        List<Topic> topicList = sortByCreatedAt(findTopicListByMoimId(moimId));
         isContentsEmpty(topicList);
 
         return topicList.stream()
@@ -60,7 +60,7 @@ public class TopicService {
         }
     }
 
-    private List<Topic> findByMoimId(
+    private List<Topic> findTopicListByMoimId(
             final Long moimId
     ) {
         return topicRepository.findByMoimId(moimId);
@@ -86,8 +86,8 @@ public class TopicService {
     public List<TopicResponse> getKeywordsFromMoim(
             final Long moimId
     ) {
-        List<Topic> topicList = findByMoimId(moimId);
-        isKeywordsEmpty(topicList);
+        List<Topic> topicList = findTopicListByMoimId(moimId);
+        checkKeywordsEmpty(topicList);
         return topicList
                 .stream()
                 .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
@@ -95,7 +95,7 @@ public class TopicService {
                 .collect(Collectors.toList());
     }
 
-    private void isKeywordsEmpty(
+    private void checkKeywordsEmpty(
             final List<Topic> topicList
     ) {
         if (topicList.isEmpty()) {
