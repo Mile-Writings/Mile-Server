@@ -138,7 +138,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<BestMoimListResponse> getBestMoimAndPostList();
+    ResponseEntity<SuccessResponse<BestMoimListResponse>> getBestMoimAndPostList();
 
 
     @Operation(summary = "임시 저장 글 존재 여부 조회")
