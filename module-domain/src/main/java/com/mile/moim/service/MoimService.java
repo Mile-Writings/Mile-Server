@@ -117,8 +117,7 @@ public class MoimService {
     }
 
     public List<Moim> getBestMoimByPostNumber() {
-        LocalDateTime beforeWeek = LocalDateTime.now().minusWeeks(1);
-        List<Moim> moims = moimRepository.findTop3MoimsByPostCount();
+        List<Moim> moims = moimRepository.findTop3MoimsByPostCountInLastWeek();
         return moims;
     }
 

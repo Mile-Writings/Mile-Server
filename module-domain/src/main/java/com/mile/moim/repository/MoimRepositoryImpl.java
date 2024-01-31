@@ -10,10 +10,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MoimRepositoryCustomImpl implements MoimRepositoryCustom {
+public class MoimRepositoryImpl implements MoimRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public List<Moim> findTop3MoimsByPostCount() {
+    public List<Moim> findTop3MoimsByPostCountInLastWeek() {
 
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
 
