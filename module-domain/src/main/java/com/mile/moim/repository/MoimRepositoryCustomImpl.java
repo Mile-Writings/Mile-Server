@@ -10,7 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MoimRepositoryImpl implements MoimRepositoryCustom {
+public class MoimRepositoryCustomImpl implements MoimRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     public List<Moim> findTop3MoimsByPostCountInLastWeek() {
