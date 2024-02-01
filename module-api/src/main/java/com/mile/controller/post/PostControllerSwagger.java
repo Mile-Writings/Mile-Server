@@ -204,7 +204,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<PostGetResponse> getPost(
+    ResponseEntity<SuccessResponse<PostGetResponse>> getPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );

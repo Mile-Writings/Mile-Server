@@ -132,11 +132,11 @@ public class PostController implements PostControllerSwagger {
 
     @Override
     @GetMapping("/{postId}")
-    public SuccessResponse<PostGetResponse> getPost(
+    public ResponseEntity<SuccessResponse<PostGetResponse>> getPost(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.POST_GET_SUCCESS, postService.getPost(postId));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_GET_SUCCESS, postService.getPost(postId)));
     }
 
 
