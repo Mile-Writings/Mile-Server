@@ -97,8 +97,8 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @GetMapping("/best")
-    public SuccessResponse<BestMoimListResponse> getBestMoimAndPostList() {
-        return SuccessResponse.of(SuccessMessage.BEST_MOIM_POSTS_GET_SUCCESS, moimService.getBestMoimAndPostList());
+    public ResponseEntity<SuccessResponse<BestMoimListResponse>> getBestMoimAndPostList() {
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.BEST_MOIM_POSTS_GET_SUCCESS, moimService.getBestMoimAndPostList()));
     }
 
     @Override

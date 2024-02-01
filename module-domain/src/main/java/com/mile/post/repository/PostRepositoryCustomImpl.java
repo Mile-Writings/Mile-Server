@@ -14,7 +14,7 @@ import static com.mile.topic.domain.QTopic.topic;
 import static com.mile.writername.domain.QWriterName.writerName;
 
 @RequiredArgsConstructor
-public class PostRepositoryImpl implements PostRepositoryCustom {
+public class PostRepositoryCustomImpl implements PostRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     // select p from post p join moim m on p.topic = m.topic orderby p.curiousCount limit 2

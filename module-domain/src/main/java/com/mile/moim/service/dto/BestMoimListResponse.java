@@ -5,13 +5,15 @@ import com.mile.post.domain.Post;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public record BestMoimListResponse(List<BestMoimInfoResponse> moim) {
-    public static BestMoimListResponse of(Map<Moim, List<Post>> BestMoimAndPost) {
-        List<BestMoimInfoResponse> bestMoims = new ArrayList<>();
-        for (Moim moim : BestMoimAndPost.keySet()) {
-            bestMoims.add(BestMoimInfoResponse.of(moim, BestMoimAndPost.get(moim)));
-        }
+    public static BestMoimListResponse of(Map<Moim, List<Post>> bestMoimAndPost) {
+
+        List<BestMoimInfoResponse> bestMoims = bestMoimAndPost.entrySet().stream()
+                .map(entry -> BestMoimInfoResponse.of(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
         return new BestMoimListResponse(bestMoims);
 
     }

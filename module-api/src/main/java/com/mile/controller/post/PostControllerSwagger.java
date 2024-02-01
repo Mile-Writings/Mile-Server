@@ -93,7 +93,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<CuriousInfoResponse> getCuriousInfo(
+    ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );

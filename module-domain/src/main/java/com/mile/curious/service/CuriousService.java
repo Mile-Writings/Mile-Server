@@ -45,7 +45,7 @@ public class CuriousService {
         }
     }
 
-    public CuriousInfoResponse getCuriousInfoResponse(final Post post, final User user) {
+    public CuriousInfoResponse getCuriousInfoOfPostAndUser(final Post post, final User user) {
         return CuriousInfoResponse.of(curiousRepository.existsByPostAndUser(post, user), post.getCuriousCount());
     }
 

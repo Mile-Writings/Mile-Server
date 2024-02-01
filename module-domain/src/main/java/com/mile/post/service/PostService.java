@@ -92,13 +92,13 @@ public class PostService {
 
 
     @Transactional(readOnly = true)
-    public CuriousInfoResponse getCuriousInfo(
+    public CuriousInfoResponse getCuriousInfoOfPost(
             final Long postId,
             final Long userId
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoResponse(post, userService.findById(userId));
+        return curiousService.getCuriousInfoOfPostAndUser(post, userService.findById(userId));
     }
 
     @Transactional
