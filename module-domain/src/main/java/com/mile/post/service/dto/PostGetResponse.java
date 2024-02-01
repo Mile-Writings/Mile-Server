@@ -17,7 +17,9 @@ public record PostGetResponse(
     private final static String ANONYMOUS = "작자미상";
     private final static String ANONYMOUS_INFO = "익명으로 작성한 사용자입니다.";
 
-    public static PostGetResponse of(Post post, Moim moim) {
+    public static PostGetResponse of(Post post) {
+        Moim moim = post.getTopic().getMoim();
+
         String writerName = post.getWriterName().getName();
         String information = post.getWriterName().getInformation();
         if (post.isAnonymous()) {
