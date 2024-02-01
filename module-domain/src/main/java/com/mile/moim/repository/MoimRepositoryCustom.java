@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface MoimRepositoryCustom {
 
-    List<Moim> findTop3MoimsByPostCount();
+    List<Moim> findTop3MoimsByPostCountInLastWeek();
 }

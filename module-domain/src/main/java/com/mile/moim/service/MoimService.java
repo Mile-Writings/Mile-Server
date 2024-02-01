@@ -24,6 +24,7 @@ import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.moim.service.dto.PopularWriterListResponse;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -117,19 +118,21 @@ public class MoimService {
     }
 
     public List<Moim> getBestMoimByPostNumber() {
-        LocalDateTime beforeWeek = LocalDateTime.now().minusWeeks(1);
-        List<Moim> moims = moimRepository.findTop3MoimsByPostCount();
+        List<Moim> moims = moimRepository.findTop3MoimsByPostCountInLastWeek();
         return moims;
     }
 
     public BestMoimListResponse getBestMoimAndPostList() {
-        Map<Moim, List<Post>> BestMoimAndPost = new HashMap<>();
+
         List<Moim> bestMoimsByPostNumber = getBestMoimByPostNumber();
-        for (Moim moim : bestMoimsByPostNumber) {
-            List<Post> latestPosts = postGetService.getLatestPostsByMoim(moim);
-            BestMoimAndPost.put(moim, latestPosts);
-        }
-        return BestMoimListResponse.of(BestMoimAndPost);
+
+        Map<Moim, List<Post>> bestMoimAndPostMap = bestMoimsByPostNumber.stream()
+                .collect(Collectors.toMap(
+                        moim -> moim,
+                        moim -> postGetService.getLatestPostsByMoim(moim)
+                ));
+
+        return BestMoimListResponse.of(bestMoimAndPostMap);
     }
 
     public TemporaryPostExistResponse getTemporaryPost(
