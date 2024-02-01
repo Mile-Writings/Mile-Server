@@ -78,7 +78,7 @@ public class PostController implements PostControllerSwagger {
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfo(postId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfoOfPost(postId, principalHandler.getUserIdFromPrincipal())));
     }
 
     @DeleteMapping("/{postId}/curious")
