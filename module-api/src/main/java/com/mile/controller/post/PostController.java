@@ -112,12 +112,12 @@ public class PostController implements PostControllerSwagger {
 
     @DeleteMapping("/{postId}")
     @Override
-    public SuccessResponse deletePost(
+    public ResponseEntity<SuccessResponse> deletePost(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
         postService.deletePost(postId, principalHandler.getUserIdFromPrincipal());
-        return SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS));
     }
 
     @Override
