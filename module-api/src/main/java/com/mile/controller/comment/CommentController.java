@@ -7,6 +7,8 @@ import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.resolver.comment.CommentIdPathVariable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +23,11 @@ public class CommentController implements CommentControllerSwagger{
     private final PrincipalHandler principalHandler;
 
     @DeleteMapping("/{commentId}")
-    public SuccessResponse deleteComment(
+    public ResponseEntity<SuccessResponse> deleteComment(
             @CommentIdPathVariable final Long commentId,
             @PathVariable("commentId") final String commentUrl
     ) {
         commentService.deleteComment(commentId, principalHandler.getUserIdFromPrincipal());
-        return SuccessResponse.of(SuccessMessage.COMMENT_DELETE_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.COMMENT_DELETE_SUCCESS));
     }
 }
