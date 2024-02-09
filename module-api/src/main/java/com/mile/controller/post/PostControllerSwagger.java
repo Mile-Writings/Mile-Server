@@ -60,7 +60,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<PostCuriousResponse> postCurious(
+    ResponseEntity<SuccessResponse<PostCuriousResponse>> postCurious(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );

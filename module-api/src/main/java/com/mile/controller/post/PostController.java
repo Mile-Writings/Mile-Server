@@ -55,11 +55,11 @@ public class PostController implements PostControllerSwagger {
 
     @PostMapping("/{postId}/curious")
     @Override
-    public SuccessResponse<PostCuriousResponse> postCurious(
+    public ResponseEntity<SuccessResponse<PostCuriousResponse>> postCurious(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal()));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal())));
     }
 
     @GetMapping("/{postId}/comment")
