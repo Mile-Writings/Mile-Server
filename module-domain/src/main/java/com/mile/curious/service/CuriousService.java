@@ -19,7 +19,7 @@ public class CuriousService {
     private final CuriousRepository curiousRepository;
     private final WriterNameService writerNameService;
 
-    public void deleteCurious(final Post post, final User user) {
+    public void deleteCuriousOnPost(final Post post, final User user) {
         checkCuriousNotExists(post, user);
         curiousRepository.delete(curiousRepository.findByPostAndUser(post, user));
         post.decreaseCuriousCount();

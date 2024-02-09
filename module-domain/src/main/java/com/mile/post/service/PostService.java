@@ -108,7 +108,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.deleteCurious(post, userService.findById(userId));
+        curiousService.deleteCuriousOnPost(post, userService.findById(userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
