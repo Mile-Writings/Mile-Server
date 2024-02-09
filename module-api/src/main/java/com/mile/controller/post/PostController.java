@@ -83,11 +83,11 @@ public class PostController implements PostControllerSwagger {
 
     @DeleteMapping("/{postId}/curious")
     @Override
-    public SuccessResponse<PostCuriousResponse> deleteCurious(
+    public ResponseEntity<SuccessResponse<PostCuriousResponse>> deleteCurious(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal()));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal())));
     }
 
     @GetMapping("/{postId}/authenticate")
