@@ -32,7 +32,7 @@ public class CuriousService {
         }
     }
 
-    public void createCurious(final Post post, final User user) {
+    public void createCuriousOnPost(final Post post, final User user) {
         checkCuriousExists(post, user);
         curiousRepository.save(Curious.create(post, user));
         post.increaseCuriousCount();

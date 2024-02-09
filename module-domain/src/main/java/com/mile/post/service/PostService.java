@@ -78,7 +78,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.createCurious(post, userService.findById(userId));
+        curiousService.createCuriousOnPost(post, userService.findById(userId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
