@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
@@ -29,7 +30,7 @@ public interface CommentControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse deleteComment(
+    ResponseEntity<SuccessResponse> deleteComment(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long commentId,
             @PathVariable("commentId") final String commentUrl
     );

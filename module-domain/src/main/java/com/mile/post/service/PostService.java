@@ -48,7 +48,7 @@ public class PostService {
     private final CuriousService curiousService;
     private final UserService userService;
     private final TopicService topicService;
-    private final S3Service s3Service;
+    private final PostDeleteService postDeleteService;
     private final SecureUrlUtil secureUrlUtil;
 
     private static final boolean TEMPRORARY_FALSE = false;
@@ -136,32 +136,10 @@ public class PostService {
             final Long userId
     ) {
         postAuthenticateService.authenticateWriter(postId, userId);
-        delete(postId);
-    }
-
-    private void delete(
-            final Long postId
-    ) {
         Post post = postGetService.findById(postId);
-        deleteRelatedData(post);
-        postRepository.delete(post);
+        postDeleteService.delete(post);
     }
 
-    private void deleteRelatedData(
-            final Post post
-    ) {
-        if (post.isContainPhoto()) {
-            deleteS3File(post.getImageUrl());
-        }
-        curiousService.deleteAllByPost(post);
-        commentService.deleteAllByPost(post);
-    }
-
-    private void deleteS3File(
-            final String key
-    ) {
-        s3Service.deleteImage(key);
-    }
 
     @Transactional(readOnly = true)
     public TemporaryPostGetResponse getTemporaryPost(
