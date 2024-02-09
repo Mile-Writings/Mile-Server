@@ -166,7 +166,8 @@ public class PostService {
             final Long postId
     ) {
         Post post = postGetService.findById(postId);
-        return PostGetResponse.of(post);
+        Moim moim = post.getTopic().getMoim();
+        return PostGetResponse.of(post, moim);
     }
 
 
