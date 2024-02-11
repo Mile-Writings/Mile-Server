@@ -27,6 +27,11 @@ public class WriterNameService {
         return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId).isPresent();
     }
 
+    public void deleteWriterName(
+            final Long userId
+    ) {
+        writerNameRepository.delete(findByWriterId(userId));
+    }
     public Long getWriterNameIdByUserId(
             final Long userId
     ) {

@@ -4,14 +4,17 @@ import com.mile.authentication.UserAuthentication;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
+import com.mile.exception.model.UnauthorizedException;
 import com.mile.external.client.SocialType;
 import com.mile.external.client.dto.UserLoginRequest;
 import com.mile.external.client.kakao.KakaoSocialService;
 import com.mile.external.client.service.dto.UserInfoResponse;
 import com.mile.jwt.JwtTokenProvider;
+import com.mile.jwt.redis.service.TokenService;
 import com.mile.moim.service.MoimService;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
+import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
 import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoSocialService kakaoSocialService;
     private final MoimService moimService;
+    private final TokenService tokenService;
     private final WriterNameService writerNameService;
 
     private static final Long STATIC_MOIM_ID = 1L;
@@ -79,6 +83,18 @@ public class UserService {
         return user;
     }
 
+    public AccessTokenGetSuccess refreshToken(
+            final String refreshToken
+    ) {
+        Long userId = jwtTokenProvider.getUserFromJwt(refreshToken);
+        if (!userId.equals(tokenService.findIdByRefreshToken(refreshToken))) {
+            throw new UnauthorizedException(ErrorMessage.TOKEN_INCORRECT_ERROR);
+        }
+        UserAuthentication userAuthentication = new UserAuthentication(userId, null, null);
+        return AccessTokenGetSuccess.of(
+                jwtTokenProvider.issueAccessToken(userAuthentication)
+        );
+    }
 
     public boolean isExistingUser(
             final Long socialId,
@@ -92,6 +108,7 @@ public class UserService {
     ) {
         UserAuthentication userAuthentication = new UserAuthentication(id, null, null);
         String refreshToken = jwtTokenProvider.issueRefreshToken(userAuthentication);
+        tokenService.saveRefreshToken(id, refreshToken);
         return LoginSuccessResponse.of(
                 jwtTokenProvider.issueAccessToken(userAuthentication),
                 refreshToken
@@ -102,11 +119,25 @@ public class UserService {
     public void deleteUser(
             final Long id
     ) {
+        writerNameService.deleteWriterName(id);
+        delete(id);
+        deleteUserToken(id);
+    }
+
+    private void delete(
+            final Long id
+    ) {
         User user = userRepository.findById(id)
                 .orElseThrow(
                         () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
                 );
         userRepository.delete(user);
+    }
+
+    private void deleteUserToken(
+            final Long id
+    ) {
+        tokenService.deleteRefreshToken(id);
     }
 
     private LoginSuccessResponse getTokenDto(
