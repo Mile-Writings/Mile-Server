@@ -3,6 +3,7 @@ package com.mile.writername.service;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
@@ -24,7 +25,7 @@ public class WriterNameService {
             final Long moimId,
             final Long writerId
     ) {
-        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId).isPresent();
+        return writerNameRepository.existsWriterNameByMoimIdAndWriterId(moimId, writerId);
     }
 
     public Long getWriterNameIdByUserId(
@@ -42,6 +43,15 @@ public class WriterNameService {
                 );
     }
 
+    public WriterName getWriterNameIdByPostAndUserId(
+            final Post post,
+            final Long userId
+    ) {
+        return writerNameRepository.findByMoimIdAndWriterId(post.getTopic().getMoim().getId(), userId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                );
+    }
     public int findNumbersOfWritersByMoimId(
             final Long moimId
     ) {

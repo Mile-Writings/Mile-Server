@@ -5,6 +5,7 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,20 +50,29 @@ public class PostAuthenticateService {
                 );
     }
 
-    public boolean authenticateWriterWithPost(
+    public boolean existsPostByWriterWithPost(
             final Long postId,
-            final Long userId
+            final Long writerNameId
     ) {
-        return postRepository.existsPostByIdAndWriterNameId(postId, writerNameService.findByWriterId(userId).getId());
+        return postRepository.existsPostByIdAndWriterNameId(postId, writerNameId);
     }
 
-    public void authenticateWriter(
+    public void authenticateWriterWithPost(
+            final Long postId,
+            final Long writerNameId
+    ) {
+        if(!existsPostByWriterWithPost(postId, writerNameId)) {
+            throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
+        }
+    }
+
+    public WriterName authenticateWriter(
             final Long postId,
             final Long userId
     ) {
-        if (!authenticateWriterWithPost(postId,userId)) {
-            throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
-        }
+        WriterName writerName = writerNameService.getWriterNameIdByPostAndUserId(findById(postId), userId);
+        authenticateWriterWithPost(postId, writerName.getId());
+        return writerName;
     }
 
 
