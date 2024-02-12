@@ -133,7 +133,7 @@ public class PostService {
             final Long userId
     ) {
         return WriterAuthenticateResponse.of(postAuthenticateService.existsPostByWriterWithPost(postId,
-                writerNameService.getWriterNameIdByPostAndUserId(postGetService.findById(postId), userId).getId()));
+                writerNameService.getWriterNameByPostAndUserId(postGetService.findById(postId), userId).getId()));
     }
 
     @Transactional

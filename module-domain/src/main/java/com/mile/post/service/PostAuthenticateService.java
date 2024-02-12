@@ -70,7 +70,7 @@ public class PostAuthenticateService {
             final Long postId,
             final Long userId
     ) {
-        WriterName writerName = writerNameService.getWriterNameIdByPostAndUserId(findById(postId), userId);
+        WriterName writerName = writerNameService.getWriterNameByPostAndUserId(findById(postId), userId);
         authenticateWriterWithPost(postId, writerName.getId());
         return writerName;
     }

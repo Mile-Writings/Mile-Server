@@ -43,7 +43,7 @@ public class WriterNameService {
                 );
     }
 
-    public WriterName getWriterNameIdByPostAndUserId(
+    public WriterName getWriterNameByPostAndUserId(
             final Post post,
             final Long userId
     ) {
