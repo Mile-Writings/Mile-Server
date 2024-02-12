@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TopicRepository extends JpaRepository<Topic, Long>, TopicRepositoryCustom {
 
-    public List<Topic> findByMoimId(final Long moimId);
+    List<Topic> findByMoimId(final Long moimId);
 }
