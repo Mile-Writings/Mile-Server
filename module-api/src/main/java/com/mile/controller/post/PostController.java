@@ -16,6 +16,7 @@ import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.resolver.post.PostIdPathVariable;
 import com.mile.writername.service.dto.WriterNameResponse;
+import feign.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -92,11 +93,11 @@ public class PostController implements PostControllerSwagger {
 
     @GetMapping("/{postId}/authenticate")
     @Override
-    public SuccessResponse getAuthenticateWrite(
+    public ResponseEntity<SuccessResponse> getAuthenticateWrite(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, principalHandler.getUserIdFromPrincipal()));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, principalHandler.getUserIdFromPrincipal())));
     }
 
     @PutMapping("/{postId}")
@@ -163,16 +164,16 @@ public class PostController implements PostControllerSwagger {
     }
 
     @PutMapping("/temporary/{postId}")
-    public SuccessResponse<WriterNameResponse> putTemporaryToFixedPost(
+    public ResponseEntity<SuccessResponse<WriterNameResponse>> putTemporaryToFixedPost(
             @PostIdPathVariable final Long postId,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putTemporaryToFixedPost(
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putTemporaryToFixedPost(
                 principalHandler.getUserIdFromPrincipal(),
                 request,
                 postId
-        ));
+        )));
     }
 
     @Override

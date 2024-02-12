@@ -128,7 +128,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse getAuthenticateWrite(
+    ResponseEntity<SuccessResponse> getAuthenticateWrite(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
@@ -262,7 +262,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    SuccessResponse<WriterNameResponse> putTemporaryToFixedPost(
+    ResponseEntity<SuccessResponse<WriterNameResponse>> putTemporaryToFixedPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest request,
             @PathVariable("postId") final String postUrl
