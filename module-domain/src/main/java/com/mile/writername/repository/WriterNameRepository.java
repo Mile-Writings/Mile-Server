@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     Optional<WriterName> findByMoimIdAndWriterId(final Long moimId, final Long userId);
+    boolean existsWriterNameByMoimIdAndWriterId(final Long moimId, final Long userId);
 
     List<WriterName> findByMoimId(final Long moimId);
 
