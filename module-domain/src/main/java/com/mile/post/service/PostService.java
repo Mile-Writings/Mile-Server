@@ -114,7 +114,7 @@ public class PostService {
             final PostPutRequest putRequest
     ) {
         Post post = postGetService.findById(postId);
-        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        postAuthenticateService.authenticateWriter(postId, userId);
         Topic topic = topicService.findById(decodeUrlToLong(putRequest.topicId()));
         postUpdateService.update(post, topic, putRequest);
     }
@@ -141,7 +141,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        postAuthenticateService.authenticateWriterWithPost(postId, userId);
+        postAuthenticateService.authenticateWriter(postId, userId);
         Post post = postGetService.findById(postId);
         postDeleteService.delete(post);
     }
