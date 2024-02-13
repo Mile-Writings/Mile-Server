@@ -8,17 +8,19 @@ import com.mile.external.client.kakao.response.KakaoAccessTokenResponse;
 import com.mile.external.client.kakao.response.KakaoUserResponse;
 import com.mile.external.client.service.SocialService;
 import com.mile.external.client.service.dto.UserInfoResponse;
+import com.mile.jwt.redis.service.TokenService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
-public class KakaoSocialService implements SocialService {
+public class KakaoSocialService extends SocialService {
 
     private static final String AUTH_CODE = "authorization_code";
     @Value("${kakao.clientId}")
