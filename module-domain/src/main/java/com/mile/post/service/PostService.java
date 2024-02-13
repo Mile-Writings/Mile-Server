@@ -1,6 +1,5 @@
 package com.mile.post.service;
 
-import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
@@ -51,7 +50,7 @@ public class PostService {
     private final PostDeleteService postDeleteService;
     private final SecureUrlUtil secureUrlUtil;
 
-    private static final boolean TEMPRORARY_FALSE = false;
+    private static final boolean TEMPORARY_FALSE = false;
     private static final boolean TEMPORARY_TRUE = true;
     private static final boolean CURIOUS_FALSE = false;
     private static final boolean CURIOUS_TRUE = true;
@@ -70,7 +69,6 @@ public class PostService {
         commentService.createComment(post, writerNameService.findByMoimAndUser(moimId, userId), commentCreateRequest);
     }
 
-
     @Transactional
     public PostCuriousResponse createCuriousOnPost(
             final Long postId,
@@ -88,8 +86,6 @@ public class PostService {
     ) {
         return CommentListResponse.of(commentService.getCommentResponse(postId, userId));
     }
-
-
 
     @Transactional(readOnly = true)
     public CuriousInfoResponse getCuriousInfoOfPost(
@@ -123,11 +119,21 @@ public class PostService {
         postUpdateService.update(post, topic, putRequest);
     }
 
+    private void updateTemporaryPost(
+            final Long postId,
+            final PostPutRequest putRequest
+    ) {
+        Post post = postGetService.findById(postId);
+        Topic topic = topicService.findById(decodeUrlToLong(putRequest.topicId()));
+        postUpdateService.update(post, topic, putRequest);
+    }
+
     public WriterAuthenticateResponse getAuthenticateWriter(
             final Long postId,
             final Long userId
     ) {
-        return WriterAuthenticateResponse.of(postAuthenticateService.authenticateWriterWithPost(postId, userId));
+        return WriterAuthenticateResponse.of(postAuthenticateService.existsPostByWriterWithPost(postId,
+                writerNameService.getWriterNameByPostAndUserId(postGetService.findById(postId), userId).getId()));
     }
 
     @Transactional
@@ -149,7 +155,6 @@ public class PostService {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         isPostTemporary(post);
-
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(post.getTopic().getMoim().getId(), post.getTopic().getId());
         return TemporaryPostGetResponse.of(post, contentResponse);
     }
@@ -199,7 +204,7 @@ public class PostService {
                 postCreateRequest.imageUrl(),
                 checkContainPhoto(postCreateRequest.imageUrl()),
                 postCreateRequest.anonymous(),
-                TEMPRORARY_FALSE
+                TEMPORARY_FALSE
         );
     }
 
@@ -226,15 +231,14 @@ public class PostService {
         return !imageUrl.equals(DEFAULT_IMG_URL);
     }
 
-
     @Transactional
     public WriterNameResponse putTemporaryToFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
-        postAuthenticateService.authenticateWriter(postId, userId);
+        WriterName writerName = postAuthenticateService.authenticateWriter(postId, userId);
         Post post = postGetService.findById(postId);
         isPostTemporary(post);
-        updatePost(postId, userId, request);
-        post.setTemporary(false);
-        return WriterNameResponse.of(post.getIdUrl(), post.getWriterName().getName());
+        updateTemporaryPost(postId, request);
+        post.setTemporary(TEMPORARY_FALSE);
+        return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 
     @Transactional(readOnly = true)
@@ -245,7 +249,6 @@ public class PostService {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
         isPostNotTemporary(post);
-
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(post.getTopic().getMoim().getId(), post.getTopic().getId());
         return ModifyPostGetResponse.of(post, contentResponse);
     }

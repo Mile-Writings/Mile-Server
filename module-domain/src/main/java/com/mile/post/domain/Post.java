@@ -6,6 +6,7 @@ import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,9 +26,9 @@ public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Topic topic;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private WriterName writerName;
     private String title;
     @Column(length = 50000)

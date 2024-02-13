@@ -3,6 +3,7 @@ package com.mile.writername.domain;
 import com.mile.moim.domain.Moim;
 import com.mile.user.domain.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,13 +20,13 @@ public class WriterName {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Moim moim;
 
     private String name;
     private String information;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
 
     private Integer totalCuriousCount;
