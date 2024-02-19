@@ -77,7 +77,7 @@ public interface PostControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse<CommentListResponse> getComments(
+    ResponseEntity<SuccessResponse<CommentListResponse>> getComments(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @PathVariable("postId") final String postUrl
     );
