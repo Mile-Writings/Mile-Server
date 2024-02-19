@@ -33,10 +33,11 @@ public class WriterNameService {
     ) {
         writerNameRepository.delete(findByWriterId(userId));
     }
-    public Long getWriterNameIdByUserId(
+    public Long getWriterNameIdByMoimIdAndUserId(
+            final Long moimId,
             final Long userId
     ) {
-        return findByWriterId(userId).getId();
+        return findByMoimAndUser(moimId, userId).getId();
     }
     public WriterName findByMoimAndUser(
             final Long moimId,
