@@ -84,7 +84,7 @@ public class PostService {
             final Long postId,
             final Long userId
     ) {
-        return CommentListResponse.of(commentService.getCommentResponse(postId, userId));
+        return CommentListResponse.of(commentService.getCommentResponse(getMoimIdByPostId(postId), postId, userId));
     }
 
     @Transactional(readOnly = true)
@@ -146,6 +146,11 @@ public class PostService {
         postDeleteService.delete(post);
     }
 
+    private Long getMoimIdByPostId(
+            final Long postId
+    ) {
+        return postGetService.findById(postId).getTopic().getMoim().getId();
+    }
 
     @Transactional(readOnly = true)
     public TemporaryPostGetResponse getTemporaryPost(

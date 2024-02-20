@@ -65,11 +65,11 @@ public class PostController implements PostControllerSwagger {
 
     @GetMapping("/{postId}/comment")
     @Override
-    public SuccessResponse<CommentListResponse> getComments(
+    public ResponseEntity<SuccessResponse<CommentListResponse>> getComments(
             @PostIdPathVariable final Long postId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, principalHandler.getUserIdFromPrincipal()));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, principalHandler.getUserIdFromPrincipal())));
     }
 
 

@@ -85,13 +85,14 @@ public class CommentService {
     }
 
     public List<CommentResponse> getCommentResponse(
+            final Long moimId,
             final Long postId,
             final Long userId
     ) {
         postAuthenticateService.authenticateUserWithPostId(postId, userId);
         List<Comment> commentList = findByPostId(postId);
         return commentList.stream()
-                .map(comment -> CommentResponse.of(comment, writerNameService.getWriterNameIdByUserId(userId), isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
+                .map(comment -> CommentResponse.of(comment, writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId), isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
     }
 
     private boolean isCommentWriterEqualWriterOfPost(
