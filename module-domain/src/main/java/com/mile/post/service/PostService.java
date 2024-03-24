@@ -172,10 +172,12 @@ public class PostService {
         }
     }
 
+    @Transactional
     public PostGetResponse getPost(
             final Long postId
     ) {
         Post post = postGetService.findById(postId);
+        post.increaseHits();
         Moim moim = post.getTopic().getMoim();
         return PostGetResponse.of(post, moim);
     }

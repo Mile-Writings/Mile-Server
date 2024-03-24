@@ -108,6 +108,12 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
+    public int findCommentCountByPost(
+            final Post post
+    ) {
+        return findByPostId(post.getId()).size();
+    }
+
 
     private boolean isCommentListNull(
             final List<Comment> commentList

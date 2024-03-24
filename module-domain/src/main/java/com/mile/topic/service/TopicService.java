@@ -1,5 +1,6 @@
 package com.mile.topic.service;
 
+import com.mile.comment.service.CommentService;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final CommentService commentService;
     private final PostGetService postGetService;
 
     public List<ContentResponse> getContentsFromMoim(
@@ -49,7 +51,6 @@ public class TopicService {
                 .map(topic -> ContentWithIsSelectedResponse.of(topic, topic.getId().equals(selectedTopicId)))
                 .collect(Collectors.toList());
     }
-
 
 
     private void isContentsEmpty(
@@ -117,6 +118,6 @@ public class TopicService {
     ) {
         Topic topic = findById(topicId);
         return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
-                postGetService.findByTopic(topic).stream().map(PostListResponse::of).collect(Collectors.toList()));
+                postGetService.findByTopic(topic).stream().map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).collect(Collectors.toList()));
     }
 }
