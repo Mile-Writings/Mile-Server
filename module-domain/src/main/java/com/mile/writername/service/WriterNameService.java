@@ -33,12 +33,14 @@ public class WriterNameService {
     ) {
         writerNameRepository.delete(findByWriterId(userId));
     }
+
     public Long getWriterNameIdByMoimIdAndUserId(
             final Long moimId,
             final Long userId
     ) {
         return findByMoimAndUser(moimId, userId).getId();
     }
+
     public WriterName findByMoimAndUser(
             final Long moimId,
             final Long writerId
@@ -58,6 +60,7 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
                 );
     }
+
     public int findNumbersOfWritersByMoimId(
             final Long moimId
     ) {
@@ -65,10 +68,11 @@ public class WriterNameService {
     }
 
 
-    public List<WriterName> findWriterNamesByMoimId(
-            final Long moimId
+    public boolean existWriterNamesByMoimAndName(
+            final Moim moim,
+            final String name
     ) {
-        return writerNameRepository.findByMoimId(moimId);
+        return writerNameRepository.existsWriterNameByMoimAndName(moim, name);
     }
 
     public WriterName findByWriterId(
