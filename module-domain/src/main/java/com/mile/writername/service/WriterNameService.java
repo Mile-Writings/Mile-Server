@@ -95,6 +95,7 @@ public class WriterNameService {
         return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
     }
 
+    @Transactional
     public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
         WriterName writerName = WriterName.of(moim, joinRequest, user);
         writerNameRepository.saveAndFlush(writerName);
