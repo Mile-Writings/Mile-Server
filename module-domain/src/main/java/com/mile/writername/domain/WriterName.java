@@ -1,6 +1,7 @@
 package com.mile.writername.domain;
 
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -51,22 +52,25 @@ public class WriterName {
             final Moim moim,
             final String name,
             final User user,
+            final String information,
             final int curiousCount
     ) {
         this.moim = moim;
         this.name = name;
         this.writer = user;
+        this.information = information;
         this.totalCuriousCount = curiousCount;
     }
 
     public static WriterName of(
             final Moim moim,
-            final String name,
+            final WriterMemberJoinRequest joinRequest,
             final User user
     ) {
         return WriterName.builder()
                 .moim(moim)
-                .name(name)
+                .name(joinRequest.writerName())
+                .information(joinRequest.writerDescription())
                 .user(user)
                 .curiousCount(0)
                 .build();

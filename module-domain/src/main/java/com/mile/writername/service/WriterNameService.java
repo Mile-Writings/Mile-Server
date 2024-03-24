@@ -3,6 +3,7 @@ package com.mile.writername.service;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
@@ -18,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
-    private final RandomWriterNameService randomWriterNameService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
 
     public boolean isUserInMoim(
@@ -103,9 +103,9 @@ public class WriterNameService {
     }
 
     @Transactional
-    public void createWriterNameInMile(final User user, final Moim moim) {
-        writerNameRepository.save(
-                WriterName.of(moim, randomWriterNameService.generateRandomWriterName(), user)
-        );
+    public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
+        WriterName writerName = WriterName.of(moim, joinRequest, user);
+        writerNameRepository.saveAndFlush(writerName);
+        return writerName.getId();
     }
 }

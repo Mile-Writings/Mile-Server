@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -34,8 +35,10 @@ public class Post extends BaseTimeEntity {
     @Column(length = 50000)
     private String content;
     private String imageUrl;
+    @Setter
     private String idUrl;
     private int curiousCount;
+    private int hitsCount;
     private boolean containPhoto;
     private boolean anonymous;
     private boolean isTemporary;
@@ -73,12 +76,16 @@ public class Post extends BaseTimeEntity {
                 .content(content)
                 .imageUrl(returnImageUrl(imageUrl, containPhoto))
                 .curiousCount(0)
+                .hitsCount(0)
                 .containPhoto(containPhoto)
                 .anonymous(anonymous)
                 .isTemporary(isTemporary)
                 .build();
     }
 
+    public void increaseHits() {
+        this.hitsCount++;
+    }
 
     public void updatePost(
             final Topic topic,
@@ -95,11 +102,6 @@ public class Post extends BaseTimeEntity {
             final boolean isTemporary
     ) {
         this.isTemporary = isTemporary;
-    }
-    public void setIdUrl(
-            final String idUrl
-    ) {
-        this.idUrl = idUrl;
     }
 
     private static String returnImageUrl(

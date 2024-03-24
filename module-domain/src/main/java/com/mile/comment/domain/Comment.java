@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -27,6 +28,7 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     private Post post;
+    @Setter
     private String idUrl;
     private String content;
     private boolean anonymous;
@@ -37,21 +39,15 @@ public class Comment extends BaseTimeEntity {
     public static Comment create(
             final Post post,
             final WriterName writerName,
-            final CommentCreateRequest createRequest,
-            final boolean anonymous
+            final CommentCreateRequest createRequest
     ) {
         return Comment
                 .builder()
                 .post(post)
                 .content(createRequest.content())
                 .writerName(writerName)
-                .anonymous(anonymous)
+                .anonymous(createRequest.isAnonymous())
                 .build();
     }
 
-    public void setIdUrl(
-            final String idUrl
-    ) {
-        this.idUrl = idUrl;
-    }
 }

@@ -14,18 +14,22 @@ import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.PostCreateService;
 import com.mile.topic.service.TopicService;
+import com.mile.user.service.UserService;
 import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.moim.service.dto.PopularWriterListResponse;
+
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +44,7 @@ public class MoimService {
 
     private final WriterNameService writerNameService;
     private final TopicService topicService;
+    private final UserService userService;
     private final MoimRepository moimRepository;
     private final PostDeleteService postCuriousService;
     private final PostAuthenticateService postAuthenticateService;
@@ -57,6 +62,13 @@ public class MoimService {
 
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName){
         return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
+    }
+    public Long joinMoim(
+            final Long moimId,
+            final Long userId,
+            final WriterMemberJoinRequest joinRequest
+    ) {
+        return writerNameService.createWriterName(userService.findById(userId),findById(moimId),joinRequest);
     }
 
     public void authenticateUserOfMoim(
