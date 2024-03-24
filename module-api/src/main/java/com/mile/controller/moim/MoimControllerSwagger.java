@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Moim", description = "모임 관련 API")
 public interface MoimControllerSwagger {
@@ -154,6 +156,24 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "글모임 링크 접속 후 모임원 가입")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode =  "201", description = "모임 가입에 완료되었습니다"),
+                    @ApiResponse(responseCode = "400" ,description = "1. 소개 글은 최대 110자 이내로 작성해주세요.\n" +
+                    "2. 필명이 입력되지 않았습니다.\n" +
+                    "3. 이미 존재하는 필명이 있습니다.\n"),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse> joinMoim(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @RequestBody final WriterMemberJoinRequest joinRequest,
             @PathVariable("moimId") final String moimUrl
     );
 }
