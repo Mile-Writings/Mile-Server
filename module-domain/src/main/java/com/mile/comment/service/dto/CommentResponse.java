@@ -19,16 +19,26 @@ public record CommentResponse(
             final boolean isWriterOfPost
     ) {
         WriterName writerName = comment.getWriterName();
-        String name = ANONYMOUS + writerName.getId().toString();
-        if (isWriterOfPost) {
-            name = AUTHOR;
-        }
         return new CommentResponse(
                 comment.getIdUrl(),
-                name,
+                getNameString(comment,writerName,isWriterOfPost),
                 writerName.getMoim().getName(),
                 comment.getContent(),
                 writerName.getId().equals(writerNameId)
         );
+    }
+
+    private static String getNameString(
+            final Comment comment,
+            final WriterName writerName,
+            final boolean isWriterOfPost
+    ) {
+        if (isWriterOfPost) {
+            return AUTHOR;
+        } else if (comment.isAnonymous()) {
+            return ANONYMOUS + writerName.getId().toString();
+        } else {
+            return writerName.getName();
+        }
     }
 }
