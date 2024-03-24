@@ -162,8 +162,9 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "댓글 중복 여부가 조회되었습니다."),
-                    @ApiResponse(responseCode = "400")
-
+                    @ApiResponse(responseCode = "404" , description = "1. 해당 모임은 존재하지 않습니다.\n"),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
