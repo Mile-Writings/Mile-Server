@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
+import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -156,4 +157,19 @@ public interface MoimControllerSwagger {
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
+
+    @Operation(summary = "필명 중복 확인")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "댓글 중복 여부가 조회되었습니다."),
+                    @ApiResponse(responseCode = "400")
+
+            }
+    )
+    ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            final String writerName,
+            @PathVariable("moimId") final String moimUrl
+    );
+
 }
