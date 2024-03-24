@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private static boolean ANONYMOUS_TRUE = true;
     private final PostAuthenticateService postAuthenticateService;
     private final CommentRepository commentRepository;
     private final PostGetService postGetService;
@@ -80,7 +79,7 @@ public class CommentService {
             final WriterName writerName,
             final CommentCreateRequest commentCreateRequest
     ) {
-        return commentRepository.saveAndFlush(Comment.create(post, writerName, commentCreateRequest, ANONYMOUS_TRUE));
+        return commentRepository.saveAndFlush(Comment.create(post, writerName, commentCreateRequest));
 
     }
 
