@@ -52,7 +52,7 @@ public class MoimController implements MoimControllerSwagger {
             @RequestBody final WriterMemberJoinRequest joinRequest,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(moimService.joinMoim(moimId, principalHandler.getUserIdFromPrincipal(), joinRequest))).body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS));
+        return ResponseEntity.created(URI.create(moimService.joinMoim(moimId, principalHandler.getUserIdFromPrincipal(), joinRequest).toString())).body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS));
     }
 
     @Override
