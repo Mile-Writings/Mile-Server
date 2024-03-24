@@ -13,6 +13,7 @@ import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
+import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
@@ -59,6 +60,9 @@ public class MoimService {
         return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
     }
 
+    public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName){
+        return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
+    }
     public Long joinMoim(
             final Long moimId,
             final Long userId,

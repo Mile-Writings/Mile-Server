@@ -1,5 +1,6 @@
 package com.mile.writername.repository;
 
+import com.mile.moim.domain.Moim;
 import com.mile.writername.domain.WriterName;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,6 +13,9 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     boolean existsWriterNameByMoimIdAndWriterId(final Long moimId, final Long userId);
 
     List<WriterName> findByMoimId(final Long moimId);
+
+
+    boolean existsWriterNameByMoimAndName(final Moim moim, final String name);
 
     Optional<WriterName> findByWriterId(final Long userId);
 

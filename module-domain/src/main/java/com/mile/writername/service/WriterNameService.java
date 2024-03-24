@@ -68,6 +68,13 @@ public class WriterNameService {
     }
 
 
+    public boolean existWriterNamesByMoimAndName(
+            final Moim moim,
+            final String name
+    ) {
+        return writerNameRepository.existsWriterNameByMoimAndName(moim, name);
+    }
+
     public WriterName findByWriterId(
             final Long writerId
     ) {

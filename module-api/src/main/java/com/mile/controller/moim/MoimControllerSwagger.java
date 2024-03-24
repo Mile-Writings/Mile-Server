@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
+import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -159,6 +160,21 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
 
+    @Operation(summary = "필명 중복 확인")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "댓글 중복 여부가 조회되었습니다."),
+                    @ApiResponse(responseCode = "404" , description = "1. 해당 모임은 존재하지 않습니다.\n"),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            final String writerName,
+            @PathVariable("moimId") final String moimUrl
+    );
+  
     @Operation(summary = "글모임 링크 접속 후 모임원 가입")
     @ApiResponses(
             value = {
