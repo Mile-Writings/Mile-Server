@@ -5,6 +5,7 @@ import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.MoimTopicInfoResponse;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
@@ -119,5 +120,16 @@ public class TopicService {
         Topic topic = findById(topicId);
         return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
                 postGetService.findByTopic(topic).stream().map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).collect(Collectors.toList()));
+    }
+
+    public List<MoimTopicInfoResponse> getTopicListFromMoim(
+            final Long moimId
+    ) {
+        List<Topic> topicList = sortByCreatedAt(findTopicListByMoimId(moimId));
+        isContentsEmpty(topicList);
+        return topicList
+                .stream()
+                .map(MoimTopicInfoResponse::of)
+                .collect(Collectors.toList());
     }
 }

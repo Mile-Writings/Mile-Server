@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
@@ -33,8 +34,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -158,4 +157,26 @@ public class MoimService {
         String postId = postCreateService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
+
+    public MoimTopicInfoListResponse getMoimTopicList(
+        final Long moimId,
+        final Long userId,
+        final Long page
+    ) {
+        // 모임장인지 확인하기
+        getAuthenticateOwnerOfMoim(moimId, userId);
+        return MoimTopicInfoListResponse.of(topicService.getTopicListFromMoim(moimId));
+    }
+
+    private void getAuthenticateOwnerOfMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+        Moim moim = findById(moimId);
+        if (!moim.getOwner().getId().equals(writerNameId)) {
+            throw new ForbiddenException(ErrorMessage.OWNER_AUTHENTICATE_ERROR);
+        }
+    }
+
 }
