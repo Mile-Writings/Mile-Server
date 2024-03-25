@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
@@ -69,6 +70,12 @@ public class MoimService {
             final WriterMemberJoinRequest joinRequest
     ) {
         return writerNameService.createWriterName(userService.findById(userId),findById(moimId),joinRequest);
+    }
+
+    public MoimInvitationInfoResponse getMoimInvitationInfo(
+            final Long moimId
+    ) {
+        return MoimInvitationInfoResponse.of(findById(moimId), writerNameService.findNumbersOfWritersByMoimId(moimId));
     }
 
     public void authenticateUserOfMoim(
