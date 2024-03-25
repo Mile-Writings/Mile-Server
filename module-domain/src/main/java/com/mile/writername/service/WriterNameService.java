@@ -3,6 +3,7 @@ package com.mile.writername.service;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
@@ -18,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
-    private final RandomWriterNameService randomWriterNameService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
 
     public boolean isUserInMoim(
@@ -33,12 +33,14 @@ public class WriterNameService {
     ) {
         writerNameRepository.delete(findByWriterId(userId));
     }
+
     public Long getWriterNameIdByMoimIdAndUserId(
             final Long moimId,
             final Long userId
     ) {
         return findByMoimAndUser(moimId, userId).getId();
     }
+
     public WriterName findByMoimAndUser(
             final Long moimId,
             final Long writerId
@@ -58,12 +60,19 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
                 );
     }
+
     public int findNumbersOfWritersByMoimId(
             final Long moimId
     ) {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
+    public boolean existWriterNamesByMoimAndName(
+            final Moim moim,
+            final String name
+    ) {
+        return writerNameRepository.existsWriterNameByMoimAndName(moim, name);
+    }
 
     public WriterName findByWriterId(
             final Long writerId
@@ -93,9 +102,9 @@ public class WriterNameService {
     }
 
     @Transactional
-    public void createWriterNameInMile(final User user, final Moim moim) {
-        writerNameRepository.save(
-                WriterName.of(moim, randomWriterNameService.generateRandomWriterName(), user)
-        );
+    public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
+        WriterName writerName = WriterName.of(moim, joinRequest, user);
+        writerNameRepository.saveAndFlush(writerName);
+        return writerName.getId();
     }
 }

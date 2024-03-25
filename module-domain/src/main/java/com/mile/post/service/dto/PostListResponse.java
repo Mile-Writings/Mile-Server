@@ -12,19 +12,23 @@ public record PostListResponse(
         String writerName,
         String createdAt,
         int curiousCount,
-        Boolean isImageContained,
-        String imageUrl
+        int hitsCount,
+        int commentCount,
+        String imageUrl,
+        Boolean isImageContained
 ) {
     private static final int SUBSTRING_START = 0;
     private static final int SUBSTRING_END = 400;
 
-    public static PostListResponse of(final Post post) {
+    public static PostListResponse of(final Post post, final int commentCount) {
         return new PostListResponse(post.getIdUrl(), post.getTitle(), getSubString(post),
                 post.getWriterName().getName(),
                 DateUtil.getStringWithTimeOfLocalDate(post.getCreatedAt()),
                 post.getCuriousCount(),
-                post.isContainPhoto(),
-                post.getImageUrl());
+                post.getHitsCount(),
+                commentCount,
+                post.getImageUrl(),
+                post.isContainPhoto());
     }
 
     private static String getSubString(final Post post) {
