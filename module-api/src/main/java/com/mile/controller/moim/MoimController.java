@@ -17,12 +17,16 @@ import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.resolver.moim.MoimIdPathVariable;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -145,5 +149,14 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
+    }
+
+    @Override
+    @PutMapping("/{moimId}/topic/{topicId}")
+    public ResponseEntity<SuccessResponse> putTopic(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long topicId
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_PUT_SUCCESS));
     }
 }
