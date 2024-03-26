@@ -223,7 +223,7 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            final Long page,
+            final int page,
             @PathVariable("moimId") final String moimUrl
     );
 

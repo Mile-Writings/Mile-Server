@@ -30,7 +30,6 @@ import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.moim.service.dto.PopularWriterListResponse;
-
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -169,11 +168,10 @@ public class MoimService {
     public MoimTopicInfoListResponse getMoimTopicList(
         final Long moimId,
         final Long userId,
-        final Long page
+        final int page
     ) {
-        // 모임장인지 확인하기
         getAuthenticateOwnerOfMoim(moimId, userId);
-        return MoimTopicInfoListResponse.of(topicService.getTopicListFromMoim(moimId));
+        return MoimTopicInfoListResponse.of(topicService.getNumberOfTopicFromMoim(moimId), topicService.getTopicListFromMoim(moimId, page));
     }
 
     private void getAuthenticateOwnerOfMoim(

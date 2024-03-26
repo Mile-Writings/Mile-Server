@@ -153,7 +153,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/admin/topicList")
     public ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @MoimIdPathVariable final Long moimId,
-            @RequestParam final Long page,
+            @RequestParam final int page,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, principalHandler.getUserIdFromPrincipal(), page)));
