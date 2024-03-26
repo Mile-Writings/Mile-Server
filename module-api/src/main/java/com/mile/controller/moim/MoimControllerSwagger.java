@@ -7,6 +7,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
@@ -205,6 +206,23 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> joinMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final WriterMemberJoinRequest joinRequest,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "관리자 페이지 모임 정보 수정")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode =  "204", description = "모임 정보 수정이 완료되었습니다."),
+                    @ApiResponse(responseCode = "400" ,description = "1. 소개 글은 최대 100자 이내로 작성해주세요.\n" +
+                            "2. 글모임 이름은 최대 10 글자 이내로 작성해주세요.\n"),
+                    @ApiResponse(responseCode = "401", description = "로그인 후 진행해주세요."),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.")
+            }
+    )
+    ResponseEntity<SuccessResponse> modifyMoimInformation(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @RequestBody final MoimInfoModifyRequest request,
             @PathVariable("moimId") final String moimUrl
     );
 }

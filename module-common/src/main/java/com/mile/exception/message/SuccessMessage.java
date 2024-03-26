@@ -35,6 +35,7 @@ public enum SuccessMessage {
     IS_TEMPORARY_POST_EXIST_GET_SUCCESS(HttpStatus.OK.value(), "임시저장 글 존재 여부 조회가 완료되었습니다."),
     MOIM_INVITE_INFO_GET_SUCCESS(HttpStatus.OK.value(), "모임의 초대 정보 조회가 완료되었습니다."),
     IS_CONFLICT_WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "댓글 중복 여부가 조회되었습니다."),
+    MOIM_INFORMATION_PUT_SUCCESS(HttpStatus.OK.value(), "모임 정보 수정이 완료되었습니다."),
     /*
     201 CREATED
      */
