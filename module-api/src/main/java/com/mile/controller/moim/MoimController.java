@@ -148,7 +148,7 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
     }
 
-    @GetMapping("/validate-name")
+    @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
             @RequestParam final String moimName
