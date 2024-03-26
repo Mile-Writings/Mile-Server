@@ -10,6 +10,8 @@ import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
@@ -66,6 +68,15 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.created(URI.create(moimService.joinMoim(moimId, principalHandler.getUserIdFromPrincipal(), joinRequest).toString())).body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS));
+    }
+
+    @Override
+    @GetMapping("/{moimId}/invite")
+    public ResponseEntity<SuccessResponse<MoimInvitationInfoResponse>> getInvitationInfo(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INVITE_INFO_GET_SUCCESS, moimService.getMoimInvitationInfo(moimId)));
     }
 
     @Override
@@ -148,5 +159,13 @@ public class MoimController implements MoimControllerSwagger {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, principalHandler.getUserIdFromPrincipal(), page)));
     }
 
+
+    @GetMapping("/name/validation")
+    @Override
+    public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
+            @RequestParam final String moimName
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS, moimService.validateMoimName(moimName)));
+    }
 
 }
