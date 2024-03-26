@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
@@ -29,14 +30,11 @@ import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.moim.service.dto.PopularWriterListResponse;
-
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,6 +163,26 @@ public class MoimService {
     ) {
         String postId = postCreateService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
+    }
+
+    public MoimTopicInfoListResponse getMoimTopicList(
+        final Long moimId,
+        final Long userId,
+        final int page
+    ) {
+        getAuthenticateOwnerOfMoim(moimId, userId);
+        return MoimTopicInfoListResponse.of(topicService.getNumberOfTopicFromMoim(moimId), topicService.getTopicListFromMoim(moimId, page));
+    }
+
+    private void getAuthenticateOwnerOfMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+        Moim moim = findById(moimId);
+        if (!moim.getOwner().getId().equals(writerNameId)) {
+            throw new ForbiddenException(ErrorMessage.OWNER_AUTHENTICATE_ERROR);
+        }
     }
 
     public MoimNameConflictCheckResponse validateMoimName(
