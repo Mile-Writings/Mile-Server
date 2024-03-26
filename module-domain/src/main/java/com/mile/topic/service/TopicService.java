@@ -16,6 +16,9 @@ import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
 import com.mile.topic.service.dto.TopicResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -25,6 +28,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TopicService {
+
+    private static final int TOPIC_PER_PAGE_SIZE = 4;
 
     private final TopicRepository topicRepository;
     private final CommentService commentService;
@@ -123,13 +128,24 @@ public class TopicService {
     }
 
     public List<MoimTopicInfoResponse> getTopicListFromMoim(
-            final Long moimId
+            final Long moimId,
+            final int page
     ) {
-        List<Topic> topicList = sortByCreatedAt(findTopicListByMoimId(moimId));
-        isContentsEmpty(topicList);
-        return topicList
+
+        PageRequest pageRequest = PageRequest.of(page-1, TOPIC_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Topic> topicPage = topicRepository.findByMoimIdOrderByCreatedAtDesc(moimId, pageRequest);
+
+        isContentsEmpty(topicPage.getContent());
+
+        return topicPage.getContent()
                 .stream()
                 .map(MoimTopicInfoResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    public Long getNumberOfTopicFromMoim(
+            final Long moimId
+    ) {
+        return topicRepository.countByMoimId(moimId);
     }
 }

@@ -3,14 +3,15 @@ package com.mile.moim.service.dto;
 import java.util.List;
 
 public record MoimTopicInfoListResponse(
-        int topicCount,
+        Long topicCount,
         List<MoimTopicInfoResponse> topics
 ) {
     public static MoimTopicInfoListResponse of (
+            final Long topicCount,
             final List<MoimTopicInfoResponse> moimTopicInfoResponses
     ) {
         return new MoimTopicInfoListResponse(
-                moimTopicInfoResponses.size(),
+                topicCount,
                 moimTopicInfoResponses
         );
     }
