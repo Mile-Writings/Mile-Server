@@ -7,6 +7,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Moim", description = "모임 관련 API")
 public interface MoimControllerSwagger {
@@ -208,6 +210,7 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
 
+
     @Operation(summary = "글모임 글감 수정")
     @ApiResponses(
             value = {
@@ -222,5 +225,18 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> putTopic(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long topicId
+    );
+
+    @Operation(summary = "글모임 이름 중복확인")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임 이름 중복 확인이 완료되었습니다."),
+
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
+            @RequestParam final String moimName
     );
 }

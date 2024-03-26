@@ -36,6 +36,7 @@ public enum SuccessMessage {
     MOIM_INVITE_INFO_GET_SUCCESS(HttpStatus.OK.value(), "모임의 초대 정보 조회가 완료되었습니다."),
     IS_CONFLICT_WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "댓글 중복 여부가 조회되었습니다."),
     TOPIC_PUT_SUCCESS(HttpStatus.OK.value(), "글감 수정이 완료되었습니다."),
+    IS_CONFLICT_MOIM_NAME_GET_SUCCESS(HttpStatus.OK.value(), "글모임 이름 중복 확인이 완료되었습니다."),
     /*
     201 CREATED
      */
