@@ -33,6 +33,7 @@ public enum SuccessMessage {
     MOIM_POST_GET_SUCCESS(HttpStatus.OK.value(), "카테고리별 글 리스트 조회가 완료되었습니다."),
     BEST_MOIM_POSTS_GET_SUCCESS(HttpStatus.OK.value(), "베스트 활동 모임과 글 조회가 완료되었습니다."),
     IS_TEMPORARY_POST_EXIST_GET_SUCCESS(HttpStatus.OK.value(), "임시저장 글 존재 여부 조회가 완료되었습니다."),
+    MOIM_INVITE_INFO_GET_SUCCESS(HttpStatus.OK.value(), "모임의 초대 정보 조회가 완료되었습니다."),
     IS_CONFLICT_WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "댓글 중복 여부가 조회되었습니다."),
     IS_CONFLICT_MOIM_NAME_GET_SUCCESS(HttpStatus.OK.value(), "글모임 이름 중복 확인이 완료되었습니다."),
     /*

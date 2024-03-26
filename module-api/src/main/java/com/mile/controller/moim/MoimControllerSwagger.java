@@ -7,6 +7,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
@@ -162,6 +163,20 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
 
+    @Operation(summary = "초대 링크에서 모임 정보 조회")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "댓글 조회가 완료되었습니다."),
+                @ApiResponse(responseCode = "404", description = "해당 글모임이 존재하지 않습니다.\n",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimInvitationInfoResponse>> getInvitationInfo(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    );
     @Operation(summary = "필명 중복 확인")
     @ApiResponses(
             value = {

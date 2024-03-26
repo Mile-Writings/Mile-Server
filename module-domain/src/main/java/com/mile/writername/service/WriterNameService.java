@@ -67,7 +67,6 @@ public class WriterNameService {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
-
     public boolean existWriterNamesByMoimAndName(
             final Moim moim,
             final String name
