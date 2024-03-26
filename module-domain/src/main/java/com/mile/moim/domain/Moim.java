@@ -1,6 +1,7 @@
 package com.mile.moim.domain;
 
 import com.mile.config.BaseTimeEntity;
+import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.writername.domain.WriterName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,4 +26,13 @@ public class Moim extends BaseTimeEntity {
     private String information;
     private String idUrl;
     private boolean isPublic;
+
+    public void modifyMoimInfo(
+            final MoimInfoModifyRequest moimInfoModifyRequest
+    ) {
+        this.name = moimInfoModifyRequest.moimTitle();
+        this.imageUrl = moimInfoModifyRequest.imageUrl();
+        this.information = moimInfoModifyRequest.description();
+        this.isPublic = moimInfoModifyRequest.isPublic();
+    }
 }
