@@ -13,6 +13,7 @@ public class DateUtil {
     private static final String DAY = "일";
     private static final String STRING_DATE_WITH_TIME = "yy.MM.dd HH:mm";
     private static final String STRING_DATE = "yy-MM-dd";
+    private static  final String YEAR_DATE_STRING = "yyyy-MM-dd";
 
     /*
         yyyy년 MM월 dd일 이 필요할 때 사용
@@ -43,6 +44,15 @@ public class DateUtil {
         return localDateTime.format(formatter);
     }
 
+    /*
+    YYYY-MM-dd 가 필요할 때 사용
+     */
+    public static String getStringDateWithYear(
+            final LocalDateTime localDateTime
+    ) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(YEAR_DATE_STRING);
+        return localDateTime.format(formatter);
+    }
     private static String getKoreanString(
             final LocalDateTime localDateTime
     ) {

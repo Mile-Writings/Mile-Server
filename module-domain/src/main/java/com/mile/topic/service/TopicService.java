@@ -3,6 +3,7 @@ package com.mile.topic.service;
 import com.mile.comment.service.CommentService;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.post.service.PostGetService;
@@ -12,9 +13,13 @@ import com.mile.topic.repository.TopicRepository;
 import com.mile.topic.service.dto.ContentResponse;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
+import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
 import com.mile.topic.service.dto.TopicResponse;
+import com.mile.user.domain.User;
+import com.mile.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -27,6 +32,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
     private final CommentService commentService;
+    private final UserService userService;
     private final PostGetService postGetService;
 
     public List<ContentResponse> getContentsFromMoim(
@@ -38,6 +44,15 @@ public class TopicService {
                 .stream()
                 .map(ContentResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    private void authenticateTopicWithUser(
+            final Topic topic,
+            final User user
+    ) {
+        if(!topic.getMoim().getOwner().getWriter().equals(user)){
+            throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
+        }
     }
 
     public List<ContentWithIsSelectedResponse> getContentsWithIsSelectedFromMoim(
@@ -119,5 +134,14 @@ public class TopicService {
         Topic topic = findById(topicId);
         return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
                 postGetService.findByTopic(topic).stream().map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).collect(Collectors.toList()));
+    }
+
+    public TopicDetailResponse getTopicDetail(
+            final Long userId,
+            final Long topicId
+    ) {
+        Topic topic = findById(topicId);
+        authenticateTopicWithUser(topic, userService.findById(userId));
+        return TopicDetailResponse.of(topic);
     }
 }
