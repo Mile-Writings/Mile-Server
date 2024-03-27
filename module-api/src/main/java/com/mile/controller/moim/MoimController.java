@@ -11,6 +11,7 @@ import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -147,7 +149,16 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
     }
-
+    @Override
+    @PutMapping("/{moimId}/info")
+    public ResponseEntity<SuccessResponse> modifyMoimInformation(
+            @MoimIdPathVariable final Long moimId,
+            @RequestBody final MoimInfoModifyRequest request,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        moimService.modifyMoimInforation(moimId, principalHandler.getUserIdFromPrincipal(), request);
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFORMATION_PUT_SUCCESS));
+    }
     @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(

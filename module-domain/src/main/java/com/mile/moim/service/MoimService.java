@@ -9,36 +9,35 @@ import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
+import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicListResponse;
-import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
+import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
+import com.mile.post.service.PostCreateService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
-import com.mile.post.service.PostCreateService;
 import com.mile.topic.service.TopicService;
+import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
-import com.mile.moim.service.dto.PopularWriterListResponse;
-
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,15 +61,16 @@ public class MoimService {
         return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
     }
 
-    public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName){
+    public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
         return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
     }
+
     public Long joinMoim(
             final Long moimId,
             final Long userId,
             final WriterMemberJoinRequest joinRequest
     ) {
-        return writerNameService.createWriterName(userService.findById(userId),findById(moimId),joinRequest);
+        return writerNameService.createWriterName(userService.findById(userId), findById(moimId), joinRequest);
     }
 
     public MoimInvitationInfoResponse getMoimInvitationInfo(
@@ -79,13 +79,20 @@ public class MoimService {
         return MoimInvitationInfoResponse.of(findById(moimId), writerNameService.findNumbersOfWritersByMoimId(moimId));
     }
 
-    public void authenticateUserOfMoim(
-            final Long moimId,
+    public void authenticateOwnerOfMoim(
+            final Moim moim,
             final Long userId
     ) {
-        if (!writerNameService.isUserInMoim(moimId, userId)) {
-            throw new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR);
+        if (!isMoimOwnerEqualsUser(moim, userService.findById(userId))) {
+            throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
         }
+    }
+
+    private boolean isMoimOwnerEqualsUser(
+            final Moim moim,
+            final User user
+    ) {
+        return moim.getOwner().getWriter().equals(user);
     }
 
     public MoimAuthenticateResponse getAuthenticateUserOfMoim(
@@ -153,7 +160,7 @@ public class MoimService {
         Map<Moim, List<Post>> bestMoimAndPostMap = bestMoimsByPostNumber.stream()
                 .collect(Collectors.toMap(
                         moim -> moim,
-                        moim -> postGetService.getLatestPostsByMoim(moim)
+                        postGetService::getLatestPostsByMoim
                 ));
 
         return BestMoimListResponse.of(bestMoimAndPostMap);
@@ -167,6 +174,16 @@ public class MoimService {
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 
+    @Transactional
+    public void modifyMoimInforation(
+            final Long moimId,
+            final Long userId,
+            final MoimInfoModifyRequest modifyRequest
+    ) {
+        Moim moim = findById(moimId);
+        moim.modifyMoimInfo(modifyRequest);
+        authenticateOwnerOfMoim(moim, userId);
+    }
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
