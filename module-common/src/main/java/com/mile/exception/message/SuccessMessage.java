@@ -46,6 +46,7 @@ public enum SuccessMessage {
     CURIOUS_CREATE_SUCCESS(HttpStatus.CREATED.value(), "궁금해요 생성이 완료되었습니다."),
     POST_CREATE_SUCCESS(HttpStatus.OK.value(), "글 생성이 완료되었습니다."),
     TEMPORARY_POST_CREATE_SUCCESS(HttpStatus.OK.value(), "임시저장 글 생성이 완료되었습니다."),
+    MOIM_CREATE_SUCCESS(HttpStatus.OK.value(), "글모임 생성이 완료되었습니다."),
     ;
 
     final int status;
