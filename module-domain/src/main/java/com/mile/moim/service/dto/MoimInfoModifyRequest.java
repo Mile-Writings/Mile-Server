@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record MoimInfoModifyRequest(
         @Max(value = 10, message = " 글모임 이름은 최대 10 글자 이내로 작성해주세요.")
         String moimTitle,
-        @Max(value = 100, message = "글모임 이름은 최대 10 글자 이내로 작성해주세요.")
+        @Max(value = 100, message = "글모임 설명은 최대 100 글자 이내로 작성해주세요.")
         String description,
 
         String imageUrl,
