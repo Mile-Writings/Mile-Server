@@ -11,6 +11,7 @@ import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
@@ -182,5 +183,10 @@ public class MoimService {
         Moim moim = findById(moimId);
         moim.modifyMoimInfo(modifyRequest);
         authenticateOwnerOfMoim(moim, userId);
+    }
+    public MoimNameConflictCheckResponse validateMoimName(
+            final String moimName
+    ) {
+        return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
     }
 }

@@ -9,6 +9,7 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
@@ -148,7 +149,6 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
     }
-
     @Override
     @PutMapping("/{moimId}/info")
     public ResponseEntity<SuccessResponse> modifyMoimInformation(
@@ -158,5 +158,12 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         moimService.modifyMoimInforation(moimId, principalHandler.getUserIdFromPrincipal(), request);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFORMATION_PUT_SUCCESS));
+    }
+    @GetMapping("/name/validation")
+    @Override
+    public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
+            @RequestParam final String moimName
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS, moimService.validateMoimName(moimName)));
     }
 }
