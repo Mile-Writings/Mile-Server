@@ -8,6 +8,8 @@ import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
+import com.mile.moim.service.dto.MoimCreateRequest;
+import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoResponse;
@@ -189,4 +191,21 @@ public class MoimService {
     ) {
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
     }
+
+    @Transactional
+    public MoimCreateResponse createMoim(
+            final Long userId,
+            final MoimCreateRequest createRequest
+    ) {
+        Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
+        User user = userService.findById(userId);
+        WriterMemberJoinRequest joinRequest = WriterMemberJoinRequest.of(createRequest.writerName(), createRequest.writerNameDescription());
+        WriterName owner = writerNameService.getById(writerNameService.createWriterName(user, moim, joinRequest));
+        moim.setOwner(owner);
+        moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
+        String link = "초대링크"; // 초대링크 로직 넣기
+        // Topic 생성 로직 넣기
+        return MoimCreateResponse.of(moim.getIdUrl(), link);
+    }
+
 }

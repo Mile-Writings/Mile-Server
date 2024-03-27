@@ -107,4 +107,8 @@ public class WriterNameService {
         writerNameRepository.saveAndFlush(writerName);
         return writerName.getId();
     }
+
+    public WriterName getById(final Long writerNameId) {
+        return writerNameRepository.getById(writerNameId);
+    }
 }
