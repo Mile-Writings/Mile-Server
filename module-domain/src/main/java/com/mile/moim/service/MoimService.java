@@ -8,6 +8,8 @@ import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
+import com.mile.moim.service.dto.MoimCreateRequest;
+import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoResponse;
@@ -16,6 +18,7 @@ import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
@@ -31,6 +34,7 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -188,5 +192,56 @@ public class MoimService {
             final String moimName
     ) {
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
+    }
+
+    public String createTopic(
+            final Long moimId,
+            final Long userId,
+            final TopicCreateRequest createRequest
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return topicService.createTopicOfMoim(moim, createRequest).toString();
+    }
+
+    @Transactional
+    public MoimCreateResponse createMoim(
+            final Long userId,
+            final MoimCreateRequest createRequest
+    ) {
+        Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
+        User user = userService.findById(userId);
+
+        setMoimOwner(moim, user, createRequest);
+        String link = generateInviteLink(moim);
+        setFirstTopic(moim, userId, createRequest);
+
+        return MoimCreateResponse.of(moim.getIdUrl(), link);
+    }
+
+    private void setMoimOwner(
+            final Moim moim,
+            final User user,
+            final MoimCreateRequest createRequest
+    ) {
+        WriterMemberJoinRequest joinRequest = WriterMemberJoinRequest.of(createRequest.writerName(), createRequest.writerNameDescription());
+        WriterName owner = writerNameService.getById(writerNameService.createWriterName(user, moim, joinRequest));
+        moim.setOwner(owner);
+        moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
+    }
+
+    private String generateInviteLink(Moim moim) {
+        String inviteLink = UUID.randomUUID().toString() + moim.getIdUrl();
+        moim.setInvitationCode(inviteLink);
+        return inviteLink;
+    }
+
+    private void setFirstTopic(
+            final Moim moim,
+            final Long userId,
+            final MoimCreateRequest createRequest
+    ) {
+        TopicCreateRequest topicRequest = TopicCreateRequest.of(createRequest.topic(), createRequest.topicTag(), createRequest.topicDescription());
+        createTopic(moim.getId(), userId, topicRequest);
     }
 }
