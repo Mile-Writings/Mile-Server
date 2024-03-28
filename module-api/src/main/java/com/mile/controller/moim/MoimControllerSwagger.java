@@ -4,6 +4,7 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
@@ -15,6 +16,7 @@ import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
+import com.mile.resolver.moim.MoimIdPathVariable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -238,5 +240,20 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
             @RequestParam final String moimName
+    );
+
+    @Operation(summary = "초대링크 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "초대링크 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다."),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
     );
 }
