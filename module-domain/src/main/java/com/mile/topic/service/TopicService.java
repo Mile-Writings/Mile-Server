@@ -6,6 +6,7 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
@@ -18,6 +19,8 @@ import com.mile.topic.service.dto.TopicOfMoimResponse;
 import com.mile.topic.service.dto.TopicResponse;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
+import com.mile.utils.SecureUrlUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ public class TopicService {
     private final CommentService commentService;
     private final UserService userService;
     private final PostGetService postGetService;
+    private final SecureUrlUtil secureUrlUtil;
 
     public List<ContentResponse> getContentsFromMoim(
             final Long moimId
@@ -143,5 +147,15 @@ public class TopicService {
         Topic topic = findById(topicId);
         authenticateTopicWithUser(topic, userService.findById(userId));
         return TopicDetailResponse.of(topic);
+    }
+
+    @Transactional
+    public Long createTopicOfMoim(
+            final Moim moim,
+            final TopicCreateRequest createRequest
+    ) {
+        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, createRequest));
+        topic.setIdUrl(secureUrlUtil.encodeUrl(topic.getId()));
+        return topic.getId();
     }
 }
