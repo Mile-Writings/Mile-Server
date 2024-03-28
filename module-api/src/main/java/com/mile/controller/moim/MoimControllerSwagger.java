@@ -12,6 +12,7 @@ import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
@@ -254,6 +255,30 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
             @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "관리자 페이지 글모임 글감 생성")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "글감 생성이 완료되었습니다."),
+                    @ApiResponse(responseCode = "400",description = "1. 글감은 최대 15자 이내로 작성해주세요.\n"
+                            + "2. 글감 제목이 비어있습니다.\n" + "3. 글감 태그는 최대 5자 이내로 작성해주세요.\n"
+                            + "4. 글감 태그가 비어있습니다.\n" +  "5. 글감 설명은 최대 90자 이내로 작성해주세요."
+                    ),
+                    @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse> createTopicOfMoim(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @RequestBody final TopicCreateRequest createRequest,
             @PathVariable("moimId") final String moimUrl
     );
 }

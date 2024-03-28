@@ -17,6 +17,7 @@ import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
@@ -198,5 +199,15 @@ public class MoimService {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
         return InvitationCodeGetResponse.of(moim.getInvitationCode());
+    }
+
+    public String createTopic(
+            final Long moimId,
+            final Long userId,
+            final TopicCreateRequest createRequest
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return topicService.createTopicOfMoim(moim, createRequest).toString();
     }
 }

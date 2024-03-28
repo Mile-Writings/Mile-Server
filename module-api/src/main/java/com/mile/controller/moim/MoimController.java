@@ -16,6 +16,7 @@ import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
@@ -138,6 +139,16 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_TOP_2_POST_GET_SUCCESS, moimService.getMostCuriousPostFromMoim(moimId));
+    }
+
+    @Override
+    @PostMapping("/{moimId}/topic")
+    public ResponseEntity<SuccessResponse> createTopicOfMoim(
+            @MoimIdPathVariable final Long moimId,
+            @RequestBody final TopicCreateRequest createRequest,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.created(URI.create(moimService.createTopic(moimId,principalHandler.getUserIdFromPrincipal(), createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
     }
 
     @GetMapping("/best")
