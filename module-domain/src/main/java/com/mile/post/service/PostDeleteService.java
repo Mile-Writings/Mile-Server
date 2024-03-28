@@ -8,6 +8,7 @@ import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,17 @@ public class PostDeleteService {
         deleteRelatedData(post);
         postRepository.delete(post);
     }
+
     private void deleteRelatedData(
             final Post post
     ) {
         if (post.isContainPhoto()) {
             deleteS3File(post.getImageUrl());
         }
+
+        WriterName writerName = post.getWriterName();
+        writerName.decreaseTotalCuriousCountByPostDelete(post.getCuriousCount());
+
         curiousService.deleteAllByPost(post);
         commentService.deleteAllByPost(post);
     }

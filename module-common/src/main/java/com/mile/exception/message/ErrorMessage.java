@@ -45,6 +45,7 @@ public enum ErrorMessage {
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
     IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),
     INVALID_URL_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청된 URL을 다시 확인해주세요"),
+    LEAST_TOPIC_SIZE_OF_MOIM_ERROR(HttpStatus.BAD_REQUEST.value(), "모임에는 최소 하나의 글감이 있어야 합니다."),
     /*
     Conflict
      */
@@ -80,6 +81,7 @@ public enum ErrorMessage {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다."),
     DISCORD_LOG_APPENDER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "디스코드 로그 전송에 실패하였습니다"),
     ;
+
     final int status;
     final String message;
 }
