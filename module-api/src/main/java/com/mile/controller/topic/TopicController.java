@@ -12,8 +12,10 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,5 +43,15 @@ public class TopicController implements TopicControllerSwagger {
             @PathVariable("topicId") final String topicUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DETAIL_GET_SUCCESS ,topicService.getTopicDetail(principalHandler.getUserIdFromPrincipal(), topicId)));
+    }
+
+    @Override
+    @DeleteMapping("/{topicId}")
+    public ResponseEntity<SuccessResponse> deleteTopic(
+            @TopicIdPathVariable final Long topicId,
+            @PathVariable("topicId") final String topicUrl
+    ) {
+        topicService.deleteTopic(principalHandler.getUserIdFromPrincipal(), topicId);
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DELETE_SUCCESS));
     }
 }
