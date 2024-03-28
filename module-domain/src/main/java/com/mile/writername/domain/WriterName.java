@@ -47,6 +47,11 @@ public class WriterName {
         }
     }
 
+    public void decreaseTotalCuriousCountByPostDelete(Integer count) {
+        this.totalCuriousCount -= count;
+        setTotalCuriousCountZero();
+    }
+
     @Builder
     private WriterName(
             final Moim moim,

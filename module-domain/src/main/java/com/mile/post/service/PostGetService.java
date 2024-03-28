@@ -42,4 +42,10 @@ public class PostGetService {
     public List<Post> getLatestPostsByMoim(Moim moim) {
         return postRepository.findLatest4NonTemporaryPostsByMoim(moim);
     }
+
+    public List<Post> findAllByTopic(
+            final Topic topic
+    ) {
+        return postRepository.findByTopic(topic);
+    }
 }
