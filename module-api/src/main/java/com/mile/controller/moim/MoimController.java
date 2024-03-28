@@ -175,15 +175,6 @@ public class MoimController implements MoimControllerSwagger {
 
 
     @Override
-    @PutMapping("/{moimId}/topic/{topicId}")
-    public ResponseEntity<SuccessResponse> putTopic(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long topicId
-    ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_PUT_SUCCESS));
-    }
-
-    @Override
     @PutMapping("/{moimId}/info")
     public ResponseEntity<SuccessResponse> modifyMoimInformation(
             @MoimIdPathVariable final Long moimId,
