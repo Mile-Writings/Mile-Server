@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -26,6 +27,8 @@ public class Moim extends BaseTimeEntity {
     private String information;
     private String idUrl;
     private boolean isPublic;
+    @Setter
+    private String invitationCode;
 
     public void modifyMoimInfo(
             final MoimInfoModifyRequest moimInfoModifyRequest
