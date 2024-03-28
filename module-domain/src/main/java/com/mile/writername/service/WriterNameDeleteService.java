@@ -29,9 +29,8 @@ public class WriterNameDeleteService {
     private WriterName findById(
             final Long writerNameId
     ) {
-        WriterName writerName = writerNameRepository.findById(writerNameId).orElseThrow(
+        return writerNameRepository.findById(writerNameId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
         );
-        return writerName;
     }
 }
