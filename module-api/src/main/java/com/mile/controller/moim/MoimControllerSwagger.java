@@ -7,8 +7,8 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
-import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
@@ -213,6 +213,8 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
 
+
+
     @Operation(summary = "관리자 페이지 모임 정보 수정")
     @ApiResponses(
             value = {
@@ -230,10 +232,12 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
   
+
     @Operation(summary = "글모임 이름 중복확인")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글모임 이름 중복 확인이 완료되었습니다."),
+
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
