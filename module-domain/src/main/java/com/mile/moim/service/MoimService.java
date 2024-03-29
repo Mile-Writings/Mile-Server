@@ -185,7 +185,7 @@ public class MoimService {
         final int page
     ) {
         getAuthenticateOwnerOfMoim(moimId, userId);
-        return MoimTopicInfoListResponse.of(topicService.getNumberOfTopicFromMoim(moimId), topicService.getTopicListFromMoim(moimId, page));
+        return topicService.getTopicListFromMoim(moimId, page);
     }
 
     private void getAuthenticateOwnerOfMoim(

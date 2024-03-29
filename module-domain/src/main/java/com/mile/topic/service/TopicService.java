@@ -6,6 +6,7 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicInfoResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.post.service.PostGetService;
@@ -146,7 +147,7 @@ public class TopicService {
                 postGetService.findByTopic(topic).stream().map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).collect(Collectors.toList()));
     }
 
-    public List<MoimTopicInfoResponse> getTopicListFromMoim(
+    public MoimTopicInfoListResponse getTopicListFromMoim(
             final Long moimId,
             final int page
     ) {
@@ -155,11 +156,16 @@ public class TopicService {
         Page<Topic> topicPage = topicRepository.findByMoimIdOrderByCreatedAtDesc(moimId, pageRequest);
 
         isContentsEmpty(topicPage.getContent());
-
-        return topicPage.getContent()
+        List<MoimTopicInfoResponse> infoResponses = topicPage.getContent()
                 .stream()
                 .map(MoimTopicInfoResponse::of)
                 .collect(Collectors.toList());
+
+        return MoimTopicInfoListResponse.of(
+                topicPage.getTotalPages(),
+                getNumberOfTopicFromMoim(moimId),
+                infoResponses
+        );
     }
 
     public Long getNumberOfTopicFromMoim(
