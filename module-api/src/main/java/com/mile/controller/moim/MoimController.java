@@ -14,6 +14,7 @@ import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
@@ -186,4 +187,14 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS, moimService.validateMoimName(moimName)));
     }
+
+    @Override
+    @GetMapping("/{moimId}/writerNameList")
+    public ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
+            @MoimIdPathVariable final Long moimId,
+            @RequestParam final int page,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, principalHandler.getUserIdFromPrincipal(), page)));
+    };
 }
