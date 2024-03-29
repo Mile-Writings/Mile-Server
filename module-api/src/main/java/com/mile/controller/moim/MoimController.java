@@ -8,13 +8,16 @@ import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
+import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
+import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
@@ -25,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -135,6 +139,24 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.MOIM_TOP_2_POST_GET_SUCCESS, moimService.getMostCuriousPostFromMoim(moimId));
     }
 
+    @Override
+    @GetMapping("/{moimId}/info/owner")
+    public ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, principalHandler.getUserIdFromPrincipal())));
+    }
+    @Override
+    @PostMapping("/{moimId}/topic")
+    public ResponseEntity<SuccessResponse> createTopicOfMoim(
+            @MoimIdPathVariable final Long moimId,
+            @RequestBody final TopicCreateRequest createRequest,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.created(URI.create(moimService.createTopic(moimId,principalHandler.getUserIdFromPrincipal(), createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
+    }
+
     @GetMapping("/best")
     public ResponseEntity<SuccessResponse<BestMoimListResponse>> getBestMoimAndPostList() {
         return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.BEST_MOIM_POSTS_GET_SUCCESS, moimService.getBestMoimAndPostList()));
@@ -160,6 +182,16 @@ public class MoimController implements MoimControllerSwagger {
     }
 
 
+    @Override
+    @PutMapping("/{moimId}/info")
+    public ResponseEntity<SuccessResponse> modifyMoimInformation(
+            @MoimIdPathVariable final Long moimId,
+            @RequestBody final MoimInfoModifyRequest request,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        moimService.modifyMoimInforation(moimId, principalHandler.getUserIdFromPrincipal(), request);
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFORMATION_PUT_SUCCESS));
+    }
     @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
