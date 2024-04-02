@@ -16,6 +16,7 @@ import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
@@ -36,6 +37,7 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import java.util.stream.Collectors;
+import com.mile.writername.service.dto.WriterNameInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -232,5 +234,15 @@ public class MoimService {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
         return MoimInfoOwnerResponse.of(moim);
+    }
+
+    public MoimWriterNameListGetResponse getWriterNameListOfMoim(
+            final Long moimId,
+            final Long userId,
+            final int page
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return writerNameService.getWriterNameInfoList(moimId, page);
     }
 }

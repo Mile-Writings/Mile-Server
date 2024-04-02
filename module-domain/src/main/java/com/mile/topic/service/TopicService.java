@@ -18,6 +18,7 @@ import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
+import com.mile.topic.service.dto.TopicPutRequest;
 import com.mile.topic.service.dto.TopicResponse;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
@@ -197,4 +198,17 @@ public class TopicService {
         topic.setIdUrl(secureUrlUtil.encodeUrl(topic.getId()));
         return topic.getId();
     }
+
+    @Transactional
+    public void putTopic(
+            final Long userId,
+            final Long topicId,
+            final TopicPutRequest topicPutRequest
+    ) {
+        Topic topic = findById(topicId);
+        User user = userService.findById(userId);
+        authenticateTopicWithUser(topic, user);
+        topic.updateTopic(topicPutRequest);
+    }
+
 }
