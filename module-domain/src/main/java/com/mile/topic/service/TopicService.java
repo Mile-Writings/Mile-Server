@@ -156,6 +156,11 @@ public class TopicService {
         Page<Topic> topicPage = topicRepository.findByMoimIdOrderByCreatedAtDesc(moimId, pageRequest);
 
         isContentsEmpty(topicPage.getContent());
+
+        return getTopicResponsesFromPage(topicPage, moimId);
+    }
+
+    public MoimTopicInfoListResponse getTopicResponsesFromPage(Page<Topic> topicPage, final Long moimId) {
         List<MoimTopicInfoResponse> infoResponses = topicPage.getContent()
                 .stream()
                 .map(MoimTopicInfoResponse::of)
