@@ -27,8 +27,6 @@ public class Moim extends BaseTimeEntity {
     private String information;
     private String idUrl;
     private boolean isPublic;
-    @Setter
-    private String invitationCode;
 
     public void modifyMoimInfo(
             final MoimInfoModifyRequest moimInfoModifyRequest

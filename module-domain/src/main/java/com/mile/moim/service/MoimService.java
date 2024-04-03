@@ -198,7 +198,7 @@ public class MoimService {
     ) {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
-        return InvitationCodeGetResponse.of(moim.getInvitationCode());
+        return InvitationCodeGetResponse.of(moim.getIdUrl());
     }
 
     public String createTopic(
