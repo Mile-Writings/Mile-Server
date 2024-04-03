@@ -3,12 +3,14 @@ package com.mile.topic.service;
 import com.mile.comment.service.CommentService;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicInfoResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
+import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
@@ -28,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -46,6 +47,7 @@ public class TopicService {
     private final UserService userService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
+    private final PostDeleteService postDeleteService;
 
     public List<ContentResponse> getContentsFromMoim(
             final Long moimId
@@ -200,6 +202,20 @@ public class TopicService {
     }
 
     @Transactional
+    public void deleteTopic(
+            final Long userId,
+            final Long topicId
+    ){
+        Topic topic = findById(topicId);
+        User user = userService.findById(userId);
+        authenticateTopicWithUser(topic, user);
+        checkSingleTopicDeletion(topic);
+
+        deletePostsOfTopic(topic);
+        topicRepository.deleteById(topic.getId());
+    }
+
+    @Transactional
     public void putTopic(
             final Long userId,
             final Long topicId,
@@ -211,4 +227,21 @@ public class TopicService {
         topic.updateTopic(topicPutRequest);
     }
 
+
+    private void checkSingleTopicDeletion(
+            final Topic topic
+    ) {
+        if (topicRepository.countByMoimId(topic.getMoim().getId()) <= 1) {
+            throw new BadRequestException(ErrorMessage.LEAST_TOPIC_SIZE_OF_MOIM_ERROR);
+        }
+    }
+
+    private void deletePostsOfTopic(
+        final Topic topic
+    ) {
+        postGetService.findAllByTopic(topic)
+                .forEach(postDeleteService::delete);
+    }
 }
+
+

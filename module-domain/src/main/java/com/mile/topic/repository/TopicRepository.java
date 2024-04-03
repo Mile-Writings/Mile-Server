@@ -9,6 +9,7 @@ import java.util.List;
 public interface TopicRepository extends JpaRepository<Topic, Long>, TopicRepositoryCustom {
 
     List<Topic> findByMoimId(final Long moimId);
-    Page<Topic> findByMoimIdOrderByCreatedAtDesc(Long moimId, Pageable pageable);
     Long countByMoimId(final Long moimId);
+
+    Page<Topic> findByMoimIdOrderByCreatedAtDesc(Long moimId, Pageable pageable);
 }
