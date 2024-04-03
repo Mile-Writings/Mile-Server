@@ -6,6 +6,8 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
+import com.mile.moim.service.dto.MoimTopicInfoResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
@@ -16,22 +18,27 @@ import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
+import com.mile.topic.service.dto.TopicPutRequest;
 import com.mile.topic.service.dto.TopicResponse;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import com.mile.utils.SecureUrlUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class TopicService {
+
+    private static final int TOPIC_PER_PAGE_SIZE = 4;
 
     private final TopicRepository topicRepository;
     private final CommentService commentService;
@@ -140,6 +147,38 @@ public class TopicService {
                 postGetService.findByTopic(topic).stream().map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).collect(Collectors.toList()));
     }
 
+    public MoimTopicInfoListResponse getTopicListFromMoim(
+            final Long moimId,
+            final int page
+    ) {
+
+        PageRequest pageRequest = PageRequest.of(page-1, TOPIC_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Topic> topicPage = topicRepository.findByMoimIdOrderByCreatedAtDesc(moimId, pageRequest);
+
+        isContentsEmpty(topicPage.getContent());
+
+        return getTopicResponsesFromPage(topicPage, moimId);
+    }
+
+    public MoimTopicInfoListResponse getTopicResponsesFromPage(Page<Topic> topicPage, final Long moimId) {
+        List<MoimTopicInfoResponse> infoResponses = topicPage.getContent()
+                .stream()
+                .map(MoimTopicInfoResponse::of)
+                .collect(Collectors.toList());
+
+        return MoimTopicInfoListResponse.of(
+                topicPage.getTotalPages(),
+                getNumberOfTopicFromMoim(moimId),
+                infoResponses
+        );
+    }
+
+    public Long getNumberOfTopicFromMoim(
+            final Long moimId
+    ) {
+        return topicRepository.countByMoimId(moimId);
+    }
+
     public TopicDetailResponse getTopicDetail(
             final Long userId,
             final Long topicId
@@ -148,7 +187,6 @@ public class TopicService {
         authenticateTopicWithUser(topic, userService.findById(userId));
         return TopicDetailResponse.of(topic);
     }
-
 
     @Transactional
     public Long createTopicOfMoim(
@@ -159,4 +197,18 @@ public class TopicService {
         topic.setIdUrl(secureUrlUtil.encodeUrl(topic.getId()));
         return topic.getId();
     }
+
+    @Transactional
+    public void putTopic(
+            final Long userId,
+            final Long topicId,
+            final TopicPutRequest topicPutRequest
+    ) {
+        Topic topic = findById(topicId);
+        User user = userService.findById(userId);
+        authenticateTopicWithUser(topic, user);
+        topic.updateTopic(topicPutRequest);
+    }
+
 }
+

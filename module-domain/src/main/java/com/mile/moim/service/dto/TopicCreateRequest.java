@@ -2,6 +2,7 @@ package com.mile.moim.service.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+
 public record TopicCreateRequest(
         @Max(value = 15, message = "글감은 최대 15자 이내로 작성해주세요.")
         @NotBlank(message = "글감 제목이 비어있습니다.")

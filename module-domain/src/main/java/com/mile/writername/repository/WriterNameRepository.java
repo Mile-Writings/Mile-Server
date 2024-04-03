@@ -2,6 +2,8 @@ package com.mile.writername.repository;
 
 import com.mile.moim.domain.Moim;
 import com.mile.writername.domain.WriterName;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -20,5 +22,5 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     Optional<WriterName> findByWriterId(final Long userId);
 
     List<WriterName> findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Long moimId, final int totalCuriousCount);
-
+    Page<WriterName> findByMoimIdOrderByIdDesc(Long moimId, Pageable pageable);
 }

@@ -67,6 +67,7 @@ public enum ErrorMessage {
     Forbidden
      */
     COMMENT_ACCESS_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 댓글에 접근 권한이 없습니다."),
+    OWNER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
     /*
     Method Not Supported
      */
