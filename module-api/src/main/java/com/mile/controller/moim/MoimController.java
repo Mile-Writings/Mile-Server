@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
@@ -174,6 +175,15 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
     }
 
+    @Override
+    @GetMapping("/{moimId}/admin/topicList")
+    public ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
+            @MoimIdPathVariable final Long moimId,
+            @RequestParam final int page,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, principalHandler.getUserIdFromPrincipal(), page)));
+    }
 
     @Override
     @PutMapping("/{moimId}/info")
