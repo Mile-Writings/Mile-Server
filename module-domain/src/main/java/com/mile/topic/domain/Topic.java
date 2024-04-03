@@ -3,6 +3,7 @@ package com.mile.topic.domain;
 import com.mile.config.BaseTimeEntity;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.TopicCreateRequest;
+import com.mile.topic.service.dto.TopicPutRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -50,4 +51,13 @@ public class Topic extends BaseTimeEntity {
                 .description(topicCreateRequest.topicDescription())
                 .build();
     }
+
+    public void updateTopic(
+            final TopicPutRequest putRequest
+    ) {
+        this.content = putRequest.topic();
+        this.keyword = putRequest.topicTag();
+        this.description = putRequest.topicDescription();
+    }
+
 }
