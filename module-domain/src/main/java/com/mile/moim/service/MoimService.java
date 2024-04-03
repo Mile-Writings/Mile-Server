@@ -213,10 +213,9 @@ public class MoimService {
         User user = userService.findById(userId);
 
         setMoimOwner(moim, user, createRequest);
-        String link = generateInviteLink(moim);
         setFirstTopic(moim, userId, createRequest);
 
-        return MoimCreateResponse.of(moim.getIdUrl(), link);
+        return MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl());
     }
 
     private void setMoimOwner(
@@ -230,11 +229,6 @@ public class MoimService {
         moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
     }
 
-    private String generateInviteLink(Moim moim) {
-        String inviteLink = UUID.randomUUID().toString() + moim.getIdUrl();
-        moim.setInvitationCode(inviteLink);
-        return inviteLink;
-    }
 
     private void setFirstTopic(
             final Moim moim,
