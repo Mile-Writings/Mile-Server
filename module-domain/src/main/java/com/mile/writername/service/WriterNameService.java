@@ -117,7 +117,10 @@ public class WriterNameService {
     }
 
     public WriterName getById(final Long writerNameId) {
-        return writerNameRepository.getById(writerNameId);
+        return writerNameRepository.getById(writerNameId)
+                .orElseThrow(
+                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+        );
     }
 
     private List<WriterName> findAllByMoimId(
