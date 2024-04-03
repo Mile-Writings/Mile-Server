@@ -126,4 +126,10 @@ public class CommentService {
     ) {
         commentRepository.deleteAllByPost(post);
     }
+
+    public int countByPost(
+            final Post post
+    ) {
+        return commentRepository.countByPost(post);
+    }
 }

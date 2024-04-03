@@ -179,7 +179,7 @@ public class PostService {
         Post post = postGetService.findById(postId);
         post.increaseHits();
         Moim moim = post.getTopic().getMoim();
-        return PostGetResponse.of(post, moim);
+        return PostGetResponse.of(post, moim, commentService.countByPost(post));
     }
 
 

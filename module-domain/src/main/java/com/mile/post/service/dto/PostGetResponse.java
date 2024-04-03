@@ -12,12 +12,15 @@ public record PostGetResponse(
         String imageUrl,
         String writerName,
         String moimName,
-        String writerInfo
+        String writerInfo,
+        int hitsCount,
+        int curiousCount,
+        int commentCount
 ) {
     private final static String ANONYMOUS = "작자미상";
     private final static String ANONYMOUS_INFO = "익명으로 작성한 사용자입니다.";
 
-    public static PostGetResponse of(Post post, Moim moim) {
+    public static PostGetResponse of(Post post, Moim moim, int commentCount) {
 
         String writerName = post.getWriterName().getName();
         String information = post.getWriterName().getInformation();
@@ -33,7 +36,10 @@ public record PostGetResponse(
                 post.getImageUrl(),
                 writerName,
                 moim.getName(),
-                information
+                information,
+                post.getHitsCount(),
+                post.getCuriousCount(),
+                commentCount
         );
     }
 }
