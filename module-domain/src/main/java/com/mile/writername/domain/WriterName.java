@@ -38,18 +38,18 @@ public class WriterName {
 
     public void decreaseTotalCuriousCount() {
         totalCuriousCount--;
-        setTotalCuriousCountZero();
+        validateTotalCuriousCount();
     }
 
-    private void setTotalCuriousCountZero() {
+    private void validateTotalCuriousCount() {
         if( this.totalCuriousCount < 0 ) {
             this.totalCuriousCount = 0;
         }
     }
 
-    public void decreaseTotalCuriousCountByPostDelete(Integer count) {
+    public void decreaseTotalCuriousCountByPostDelete(final int count) {
         this.totalCuriousCount -= count;
-        setTotalCuriousCountZero();
+        validateTotalCuriousCount();
     }
 
     @Builder

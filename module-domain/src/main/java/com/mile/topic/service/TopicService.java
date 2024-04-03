@@ -173,17 +173,16 @@ public class TopicService {
         User user = userService.findById(userId);
         authenticateTopicWithUser(topic, user);
 
-        preventSingleTopicDeletion(topic);
+        checkSingleTopicDeletion(topic);
 
         deletePostsOfTopic(topic);
         topicRepository.deleteById(topic.getId());
     }
 
-    private void preventSingleTopicDeletion(
+    private void checkSingleTopicDeletion(
             final Topic topic
     ) {
-        Long topicCount = topicRepository.countByMoimId(topic.getMoim().getId());
-        if (topicCount <= 1) {
+        if (topicRepository.countByMoimId(topic.getMoim().getId()) <= 1) {
             throw new BadRequestException(ErrorMessage.LEAST_TOPIC_SIZE_OF_MOIM_ERROR);
         }
     }
@@ -191,9 +190,7 @@ public class TopicService {
     private void deletePostsOfTopic(
         final Topic topic
     ) {
-        List<Post> posts = postGetService.findAllByTopic(topic);
-        for (Post post: posts) {
-            postDeleteService.delete(post);
-        }
+        postGetService.findAllByTopic(topic)
+                .forEach(postDeleteService::delete);
     }
 }
