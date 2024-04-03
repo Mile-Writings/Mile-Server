@@ -202,7 +202,7 @@ public class MoimController implements MoimControllerSwagger {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS, moimService.validateMoimName(moimName)));
     }
 
-    @GetMapping("/{moimId}/invite-code")
+    @GetMapping("/{moimId}/invitation-code")
     @Override
     public ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
             @MoimIdPathVariable final Long moimId,
