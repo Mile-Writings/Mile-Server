@@ -117,7 +117,7 @@ public class WriterNameService {
     }
 
     public WriterName getById(final Long writerNameId) {
-        return writerNameRepository.getById(writerNameId)
+        return writerNameRepository.findById(writerNameId)
                 .orElseThrow(
                 () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
         );

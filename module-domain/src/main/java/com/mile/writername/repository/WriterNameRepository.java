@@ -24,5 +24,5 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     List<WriterName> findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Long moimId, final int totalCuriousCount);
     Page<WriterName> findByMoimIdOrderByIdDesc(Long moimId, Pageable pageable);
 
-    Optional<WriterName> getById(final Long id);
+    Optional<WriterName> findById(final Long id);
 }
