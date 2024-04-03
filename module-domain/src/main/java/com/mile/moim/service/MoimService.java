@@ -11,10 +11,13 @@ import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
+import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
@@ -33,6 +36,9 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
+import com.mile.moim.service.dto.PopularWriterListResponse;
+import java.util.stream.Collectors;
+import com.mile.writername.service.dto.WriterNameInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -176,6 +182,26 @@ public class MoimService {
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 
+    public MoimTopicInfoListResponse getMoimTopicList(
+        final Long moimId,
+        final Long userId,
+        final int page
+    ) {
+        getAuthenticateOwnerOfMoim(moimId, userId);
+        return topicService.getTopicListFromMoim(moimId, page);
+    }
+
+    private void getAuthenticateOwnerOfMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+        Moim moim = findById(moimId);
+        if (!moim.getOwner().getId().equals(writerNameId)) {
+            throw new ForbiddenException(ErrorMessage.OWNER_AUTHENTICATE_ERROR);
+        }
+    }
+
     @Transactional
     public void modifyMoimInforation(
             final Long moimId,
@@ -209,5 +235,23 @@ public class MoimService {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
         return topicService.createTopicOfMoim(moim, createRequest).toString();
+    }
+    public MoimInfoOwnerResponse getMoimInfoForOwner(
+            final Long moimId,
+            final Long userId
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return MoimInfoOwnerResponse.of(moim);
+    }
+
+    public MoimWriterNameListGetResponse getWriterNameListOfMoim(
+            final Long moimId,
+            final Long userId,
+            final int page
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return writerNameService.getWriterNameInfoList(moimId, page);
     }
 }

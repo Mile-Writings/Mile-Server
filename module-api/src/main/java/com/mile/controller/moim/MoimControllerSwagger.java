@@ -6,11 +6,15 @@ import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
+import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
@@ -214,6 +218,23 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
 
+    @Operation(summary = "관리자 페이지 글감 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글감 리스트 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다."),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            final int page,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+
     @Operation(summary = "관리자 페이지 모임 정보 수정")
     @ApiResponses(
             value = {
@@ -231,10 +252,12 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
   
+
     @Operation(summary = "글모임 이름 중복확인")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글모임 이름 중복 확인이 완료되었습니다."),
+
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
@@ -279,6 +302,46 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> createTopicOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final TopicCreateRequest createRequest,
+            @PathVariable("moimId") final String moimUrl
+    );
+    @Operation(summary = "관리자 페이지 모임 정보 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "관리자 페이지의 모임 정보가 조회되었습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "관리자 페이지 멤버 리스트 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "멤버 리스트 조회가 조회되었습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @RequestParam final int page,
             @PathVariable("moimId") final String moimUrl
     );
 }

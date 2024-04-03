@@ -9,11 +9,14 @@ import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
+import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimTopicResponse;
+import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
@@ -21,9 +24,6 @@ import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.resolver.moim.MoimIdPathVariable;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -142,6 +142,14 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
+    @GetMapping("/{moimId}/info/owner")
+    public ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, principalHandler.getUserIdFromPrincipal())));
+    }
+    @Override
     @PostMapping("/{moimId}/topic")
     public ResponseEntity<SuccessResponse> createTopicOfMoim(
             @MoimIdPathVariable final Long moimId,
@@ -164,6 +172,17 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS, moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
     }
+
+    @Override
+    @GetMapping("/{moimId}/admin/topicList")
+    public ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
+            @MoimIdPathVariable final Long moimId,
+            @RequestParam final int page,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, principalHandler.getUserIdFromPrincipal(), page)));
+    }
+
     @Override
     @PutMapping("/{moimId}/info")
     public ResponseEntity<SuccessResponse> modifyMoimInformation(
@@ -174,6 +193,7 @@ public class MoimController implements MoimControllerSwagger {
         moimService.modifyMoimInforation(moimId, principalHandler.getUserIdFromPrincipal(), request);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFORMATION_PUT_SUCCESS));
     }
+
     @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
@@ -191,4 +211,13 @@ public class MoimController implements MoimControllerSwagger {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.INVITATION_CODE_GET_SUCCESS, moimService.getInvitationCode(moimId, principalHandler.getUserIdFromPrincipal())));
     }
 
+    @Override
+    @GetMapping("/{moimId}/writerNameList")
+    public ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
+            @MoimIdPathVariable final Long moimId,
+            @RequestParam final int page,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, principalHandler.getUserIdFromPrincipal(), page)));
+    };
 }
