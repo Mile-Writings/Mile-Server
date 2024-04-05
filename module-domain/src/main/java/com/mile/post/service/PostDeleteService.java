@@ -23,11 +23,19 @@ public class PostDeleteService {
     private final CuriousService curiousService;
     private final CommentService commentService;
     private final S3Service s3Service;
+
     private List<Post> getPostHaveCuriousCount(
             final List<Post> postList
     ) {
         postList.removeIf(post -> post.getCuriousCount() <= 0);
         return postList;
+    }
+
+    public void deleteTemporaryPosts(
+            final Moim moim,
+            final WriterName writerName
+    ) {
+        postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName).forEach(this::delete);
     }
 
     public void delete(
@@ -56,6 +64,7 @@ public class PostDeleteService {
     ) {
         s3Service.deleteImage(key);
     }
+
     public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
         return MoimCuriousPostListResponse.of(postList
