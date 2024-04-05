@@ -49,9 +49,9 @@ public class PostService {
     private final TopicService topicService;
     private final PostDeleteService postDeleteService;
     private final SecureUrlUtil secureUrlUtil;
+    private final PostCreateService postCreateService;
 
     private static final boolean TEMPORARY_FALSE = false;
-    private static final boolean TEMPORARY_TRUE = true;
     private static final boolean CURIOUS_FALSE = false;
     private static final boolean CURIOUS_TRUE = true;
     private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/post/KakaoTalk_Photo_2024-01-14-15-52-49.png";
@@ -221,17 +221,9 @@ public class PostService {
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(temporaryPostCreateRequest.moimId()));
-        Post post = postRepository.saveAndFlush(Post.create(
-                topicService.findById(decodeUrlToLong(temporaryPostCreateRequest.topicId())), // Topic
-                writerNameService.findByMoimAndUser(decodeUrlToLong(temporaryPostCreateRequest.moimId()), userId), // WriterName
-                temporaryPostCreateRequest.title(),
-                temporaryPostCreateRequest.content(),
-                temporaryPostCreateRequest.imageUrl(),
-                checkContainPhoto(temporaryPostCreateRequest.imageUrl()),
-                temporaryPostCreateRequest.anonymous(),
-                TEMPORARY_TRUE
-        ));
-        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
+        WriterName writerName = writerNameService.findByMoimAndUser(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.moimId()), userId);
+        postDeleteService.deleteTemporaryPosts(topicService.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())).getMoim(), writerName);
+        postCreateService.createTemporaryPost(writerName, temporaryPostCreateRequest);
     }
 
     private boolean checkContainPhoto(final String imageUrl) {
