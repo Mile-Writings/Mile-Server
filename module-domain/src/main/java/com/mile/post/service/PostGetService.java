@@ -7,6 +7,8 @@ import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.topic.domain.Topic;
+import com.mile.utils.SecureUrlUtil;
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 public class PostGetService {
 
     private final PostRepository postRepository;
-
+    private final SecureUrlUtil secureUrlUtil;
 
     public Post findById(
             final Long postId
@@ -27,6 +29,25 @@ public class PostGetService {
         return postRepository.findById(postId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
         );
+
+    }
+
+
+    public String getTemporaryPostExist(
+            final Moim moim,
+            final WriterName writerName
+    ) {
+        List<Post> postList = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName);
+        if (isPostListEmpty(postList)) {
+            return secureUrlUtil.encodeUrl(0L);
+        }
+        return postList.stream().sorted(Comparator.comparing(Post::getCreatedAt).reversed()).toList().get(0).getIdUrl();
+    }
+
+    private boolean isPostListEmpty(
+            final List<Post> postList
+    ) {
+        return postList.isEmpty();
     }
 
     public List<Post> findByTopic(
