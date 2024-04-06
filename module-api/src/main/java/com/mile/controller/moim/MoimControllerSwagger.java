@@ -4,6 +4,8 @@ import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.MoimCreateRequest;
+import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
@@ -264,6 +266,23 @@ public interface MoimControllerSwagger {
             @RequestParam final String moimName
     );
 
+    @Operation(summary = "글모임 생성")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "글감 리스트 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "400" ,description = "1. 글모임명은 최대 10글자 이내로 작성해주세요.\n" +
+                            "2. 필명은 최대 8글자 이내로 작성해주세요.\n" +
+                            "3. 글모임장 소개글은 최대 100자 이내로 작성해주세요." +
+                            "4. 글감 소개글은 최대 90자 이내로 작성해주세요."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
+            @RequestBody final MoimCreateRequest creatRequest
+    );
+
+
     @Operation(summary = "관리자 페이지 글모임 글감 생성")
     @ApiResponses(
             value = {
@@ -278,7 +297,6 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
@@ -288,6 +306,7 @@ public interface MoimControllerSwagger {
             @RequestBody final TopicCreateRequest createRequest,
             @PathVariable("moimId") final String moimUrl
     );
+
     @Operation(summary = "관리자 페이지 모임 정보 조회")
     @ApiResponses(
             value = {

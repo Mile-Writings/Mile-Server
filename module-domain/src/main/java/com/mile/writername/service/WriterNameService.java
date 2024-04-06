@@ -74,6 +74,7 @@ public class WriterNameService {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
+
     public boolean existWriterNamesByMoimAndName(
             final Moim moim,
             final String name
@@ -113,6 +114,13 @@ public class WriterNameService {
         WriterName writerName = WriterName.of(moim, joinRequest, user);
         writerNameRepository.saveAndFlush(writerName);
         return writerName.getId();
+    }
+
+    public WriterName getById(final Long writerNameId) {
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(
+                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+        );
     }
 
     private List<WriterName> findAllByMoimId(
