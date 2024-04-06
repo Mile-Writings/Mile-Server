@@ -7,6 +7,7 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCreateRequest;
 import com.mile.moim.service.dto.MoimCreateResponse;
@@ -214,6 +215,15 @@ public class MoimService {
             final String moimName
     ) {
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
+    }
+
+    public InvitationCodeGetResponse getInvitationCode(
+            final Long moimId,
+            final Long userId
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return InvitationCodeGetResponse.of(moim.getIdUrl());
     }
 
     public String createTopic(

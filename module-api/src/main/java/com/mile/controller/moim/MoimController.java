@@ -6,6 +6,7 @@ import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCreateRequest;
 import com.mile.moim.service.dto.MoimCreateResponse;
@@ -25,9 +26,6 @@ import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.resolver.moim.MoimIdPathVariable;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -226,6 +224,15 @@ public class MoimController implements MoimControllerSwagger {
             @RequestBody final MoimCreateRequest creatRequest
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_CREATE_SUCCESS, moimService.createMoim(principalHandler.getUserIdFromPrincipal(), creatRequest)));
+    }
+
+    @GetMapping("/{moimId}/invitation-code")
+    @Override
+    public ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.INVITATION_CODE_GET_SUCCESS, moimService.getInvitationCode(moimId, principalHandler.getUserIdFromPrincipal())));
     }
 
     @Override
