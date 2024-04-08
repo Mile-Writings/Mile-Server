@@ -35,10 +35,10 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
-import com.mile.moim.service.dto.PopularWriterListResponse;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
-import com.mile.writername.service.dto.WriterNameInfoResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -156,7 +156,11 @@ public class MoimService {
     }
 
     public List<Moim> getBestMoimByPostNumber() {
-        List<Moim> moims = moimRepository.findTop3MoimsByPostCountInLastWeek();
+        LocalDateTime endOfWeek = LocalDateTime.now();
+        LocalDateTime startOfWeek = endOfWeek.minusDays(7);
+        PageRequest pageRequest = PageRequest.of(0, 3); // Top 3
+        List<Moim> moims = moimRepository.findTop3PrivateMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
+        System.out.println(moims);
         return moims;
     }
 
