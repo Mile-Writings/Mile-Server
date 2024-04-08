@@ -160,7 +160,7 @@ public class MoimService {
     public List<Moim> getBestMoimByPostNumber() {
         LocalDateTime endOfWeek = LocalDateTime.now();
         LocalDateTime startOfWeek = endOfWeek.minusDays(7);
-        PageRequest pageRequest = PageRequest.of(0, 3); // Top 3
+        PageRequest pageRequest = PageRequest.of(0, 2);
         List<Moim> moims = moimRepository.findTop3PrivateMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
         System.out.println(moims);
         return moims;
