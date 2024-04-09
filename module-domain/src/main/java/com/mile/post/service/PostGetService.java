@@ -41,7 +41,8 @@ public class PostGetService {
         if (isPostListEmpty(postList)) {
             return secureUrlUtil.encodeUrl(0L);
         }
-        return postList.stream().sorted(Comparator.comparing(Post::getCreatedAt).reversed()).toList().get(0).getIdUrl();
+        postList.sort(Comparator.comparing(Post::getCreatedAt).reversed());
+        return postList.get(0).getIdUrl();
     }
 
     private boolean isPostListEmpty(
