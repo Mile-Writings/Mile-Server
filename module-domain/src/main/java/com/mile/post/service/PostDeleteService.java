@@ -11,6 +11,7 @@ import com.mile.post.repository.PostRepository;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +37,13 @@ public class PostDeleteService {
             final WriterName writerName
     ) {
         postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName).forEach(this::delete);
+    }
+    @Transactional
+    public void deleteTemporaryPost(
+            final Post post
+    ) {
+        postRepository.delete(post);
+
     }
 
     public void delete(

@@ -69,4 +69,11 @@ public class PostGetService {
     ) {
         return postRepository.findByTopic(topic);
     }
+
+    public int findPostCountByWriterNameId(
+            final Long writerNameId
+    ) {
+        return postRepository.countByWriterNameId(writerNameId);
+    }
+
 }
