@@ -46,6 +46,7 @@ public enum SuccessMessage {
     MOIM_INFO_FOR_OWNER_GET_SUCCESS(HttpStatus.OK.value(), "관리자 페이지의 모임 정보가 조회되었습니다."),
     TOPIC_DELETE_SUCCESS(HttpStatus.OK.value(), "글감 삭제가 완료되었습니다."),
     MOIM_WRITERNAME_LIST_GET_SUCCESS(HttpStatus.OK.value(), "멤버 리스트 조회가 완료되었습니다."),
+    TEMPORARY_POST_DELETE_SUCCESS(HttpStatus.OK.value(), "임시 저장 글 삭제가 완료되었습니다."),
     /*
     201 CREATED
      */

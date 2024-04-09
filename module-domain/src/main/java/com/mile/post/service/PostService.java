@@ -189,6 +189,13 @@ public class PostService {
         return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
     }
 
+    public void deleteTemporaryPost(final Long userId, final Long postId) {
+        postAuthenticateService.authenticateWriter(postId, userId);
+        Post post = postGetService.findById(postId);
+        postDeleteService.deleteTemporaryPost(post);
+    }
+
+
     @Transactional
     public WriterNameResponse createPost(
             final Long userId,

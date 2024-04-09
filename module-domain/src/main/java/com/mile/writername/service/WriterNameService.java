@@ -13,7 +13,6 @@ import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -138,7 +138,7 @@ public class WriterNameService {
             final Long moimId,
             final int page
     ) {
-        PageRequest pageRequest = PageRequest.of(page-1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page - 1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         Page<WriterName> writerNamePage = writerNameRepository.findByMoimIdOrderByIdDesc(moimId, pageRequest);
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
