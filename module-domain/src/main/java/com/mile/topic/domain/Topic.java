@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -29,6 +30,7 @@ public class Topic extends BaseTimeEntity {
     private String keyword;
     private String content;
     private String description;
+
     @Builder
     private Topic(final Moim moim,
                   final String content,

@@ -10,9 +10,15 @@ public record TopicCreateRequest(
         @Max(value = 5, message = "글감 태그는 최대 5자 이내로 작성해주세요.")
         @NotBlank(message = "글감 태그가 비어있습니다.")
         String topicTag,
-        @Max(value = 90, message = "글감 설명은 최대 90자 이내로 작성해주세요.")
+        @Max(value = 5, message = "글감 설명은 최대 90자 이내로 작성해주세요.")
         @NotBlank(message = "글감 설명은 비어있습니다.")
         String topicDescription
 ) {
-
+        public static TopicCreateRequest of(
+                final String topicName,
+                final String topicTag,
+                final String topicDescription
+        ) {
+                return new TopicCreateRequest(topicName, topicTag, topicDescription);
+        }
 }

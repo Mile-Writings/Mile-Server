@@ -1,11 +1,14 @@
 package com.mile.writername.service;
 
+import com.mile.comment.service.CommentGetService;
+import com.mile.comment.service.CommentService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
+import com.mile.post.service.PostGetService;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
@@ -25,6 +28,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
+    private final PostGetService postGetService;
+    private final CommentGetService commentGetService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
 
@@ -74,6 +79,7 @@ public class WriterNameService {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
+
     public boolean existWriterNamesByMoimAndName(
             final Moim moim,
             final String name
@@ -115,6 +121,13 @@ public class WriterNameService {
         return writerName.getId();
     }
 
+    public WriterName getById(final Long writerNameId) {
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(
+                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+        );
+    }
+
     private List<WriterName> findAllByMoimId(
             final Long moimId
     ) {
@@ -129,7 +142,9 @@ public class WriterNameService {
         Page<WriterName> writerNamePage = writerNameRepository.findByMoimIdOrderByIdDesc(moimId, pageRequest);
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
-                .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(), writerName.getInformation()))
+                .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
+                        postGetService.findPostCountByWriterNameId(writerName.getId()),
+                        commentGetService.findCommentCountByWriterNameId(writerName.getId())))
                 .collect(Collectors.toList());
 
         return MoimWriterNameListGetResponse.of(
