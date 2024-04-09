@@ -126,4 +126,10 @@ public class CommentService {
     ) {
         commentRepository.deleteAllByPost(post);
     }
+
+    public void deleteAllCommentByWriterNameId(
+            final Long writerNameId
+    ) {
+        commentRepository.deleteAllByWriterNameId(writerNameId);
+    }
 }
