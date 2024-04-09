@@ -32,11 +32,18 @@ public class PostDeleteService {
         return postList;
     }
 
+    public void deleteTemporaryPosts(
+            final Moim moim,
+            final WriterName writerName
+    ) {
+        postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName).forEach(this::delete);
+    }
     @Transactional
     public void deleteTemporaryPost(
             final Post post
     ) {
         postRepository.delete(post);
+
     }
 
     public void delete(
