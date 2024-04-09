@@ -65,4 +65,9 @@ public class PostDeleteService {
                 ).collect(Collectors.toList()));
     }
 
+
+    public void deleteAllPostByWriterNameId(final Long writerNameId) {
+        List<Post> posts = postRepository.findByWriterNameId(writerNameId);
+        posts.forEach(this::delete);
+    }
 }
