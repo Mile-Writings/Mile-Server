@@ -60,7 +60,7 @@ public class MoimController implements MoimControllerSwagger {
 
 
     @Override
-    @GetMapping("/{moimId}/")
+    @GetMapping("/{moimId}/name/validation")
     public ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final String writerName,
