@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -62,6 +63,14 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.USER_AUTHENTICATE_ERROR)
                 );
     }
+
+    public Optional<WriterName> findMemberByMoimIdANdWriterId(
+            final Long moimId,
+            final Long writerId
+    ) {
+        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId);
+    }
+
 
     public WriterName getWriterNameByPostAndUserId(
             final Post post,
