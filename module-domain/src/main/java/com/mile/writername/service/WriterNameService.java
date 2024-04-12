@@ -169,4 +169,13 @@ public class WriterNameService {
                 infoResponses
         );
     }
+
+    public List<Moim> getMoimListOfUser(
+            final Long userId
+    ) {
+        return writerNameRepository.findAllByWriterId(userId)
+                .stream()
+                .map(writerName -> writerName.getMoim())
+                .collect(Collectors.toList());
+    }
 }
