@@ -152,6 +152,7 @@ public class CommentService {
     public void deleteAllByPost(
             final Post post
     ) {
+        commentRepository.findByPostId(post.getId()).forEach(commentReplyService::deleteRepliesByComment);
         commentRepository.deleteAllByPost(post);
     }
 }
