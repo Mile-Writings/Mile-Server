@@ -29,6 +29,7 @@ public enum ErrorMessage {
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
     RANDOM_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "랜덤 글 이름을 생성하는데 실패했습니다."),
+    REPLY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Id에 해당하는 대댓글이 없습니다."),
     /*
     Bad Request
      */
@@ -63,6 +64,7 @@ public enum ErrorMessage {
     Forbidden
      */
     USER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 모임에 접근 권한이 없습니다."),
+    REPLY_USER_FORBIDDEN(HttpStatus.UNAUTHORIZED.value(), "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
     WRITER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
     MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
     /*
