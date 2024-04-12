@@ -110,6 +110,13 @@ public class WriterNameService {
         writerName.increaseTotalCuriousCount();
     }
 
+
+    public WriterName findWriterNameByMoimIdAndUserId(
+            final Long moimId,
+            final Long userId
+    ) {
+        return getById(getWriterNameIdByMoimIdAndUserId(moimId, userId));
+    }
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
         return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
     }
