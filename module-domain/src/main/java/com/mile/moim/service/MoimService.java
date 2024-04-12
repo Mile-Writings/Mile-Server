@@ -1,6 +1,7 @@
 package com.mile.moim.service;
 
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
@@ -38,8 +39,11 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
+
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MoimService {
 
@@ -81,9 +86,20 @@ public class MoimService {
     }
 
     public MoimInvitationInfoResponse getMoimInvitationInfo(
+            final Long userId,
             final Long moimId
     ) {
+        isUserAlreadyInMoim(moimId, userId);
         return MoimInvitationInfoResponse.of(findById(moimId), writerNameService.findNumbersOfWritersByMoimId(moimId));
+    }
+
+    private void isUserAlreadyInMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        if(writerNameService.findMemberByMoimIdANdWriterId(moimId, userId).isPresent()){
+            throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
+        }
     }
 
     public void authenticateOwnerOfMoim(
@@ -272,6 +288,7 @@ public class MoimService {
                 createRequest.topicDescription());
         createTopic(moim.getId(), userId, topicRequest);
     }
+
     public MoimInfoOwnerResponse getMoimInfoForOwner(
             final Long moimId,
             final Long userId
