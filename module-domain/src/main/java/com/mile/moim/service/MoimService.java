@@ -29,7 +29,6 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
-import com.mile.post.service.PostCreateService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
 import com.mile.topic.service.TopicService;
@@ -39,9 +38,6 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
-
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -61,7 +58,6 @@ public class MoimService {
     private final MoimRepository moimRepository;
     private final PostDeleteService postCuriousService;
     private final PostAuthenticateService postAuthenticateService;
-    private final PostCreateService postCreateService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
 
@@ -97,7 +93,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        if(writerNameService.findMemberByMoimIdANdWriterId(moimId, userId).isPresent()){
+        if (writerNameService.findMemberByMoimIdANdWriterId(moimId, userId).isPresent()) {
             throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
         }
     }
@@ -122,7 +118,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
+        return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId), isMoimOwnerEqualsUser(findById(moimId), userService.findById(userId)));
     }
 
     public Moim findById(
