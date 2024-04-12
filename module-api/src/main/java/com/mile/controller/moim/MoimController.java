@@ -89,7 +89,7 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INVITE_INFO_GET_SUCCESS,
-                moimService.getMoimInvitationInfo(moimId)));
+                moimService.getMoimInvitationInfo(principalHandler.getUserIdFromPrincipal(), moimId)));
     }
 
     @Override
