@@ -13,6 +13,7 @@ import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
@@ -244,4 +245,11 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, principalHandler.getUserIdFromPrincipal(), page)));
     };
+
+    @Override
+    @GetMapping("/moimList")
+    public ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser() {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, moimService.getMoimOfUserList(principalHandler.getUserIdFromPrincipal())));
+    }
+
 }

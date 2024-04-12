@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
@@ -33,6 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -364,4 +366,18 @@ public interface MoimControllerSwagger {
             @RequestParam final int page,
             @PathVariable("moimId") final String moimUrl
     );
+
+    @Operation(summary = "유저 글모임 리스트 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임 리스트 조회가 조회되었습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser();
+
 }
