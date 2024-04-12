@@ -17,7 +17,9 @@ import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimOfUserResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
@@ -302,5 +304,14 @@ public class MoimService {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
         return writerNameService.getWriterNameInfoList(moimId, page);
+    }
+
+    public MoimListOfUserResponse getMoimOfUserList(
+            final Long userId
+    ) {
+        return MoimListOfUserResponse.of(writerNameService.getMoimListOfUser(userId)
+                .stream()
+                .map(moim -> MoimOfUserResponse.of(moim))
+                .collect(Collectors.toList()));
     }
 }
