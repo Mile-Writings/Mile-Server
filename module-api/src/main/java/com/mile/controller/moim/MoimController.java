@@ -11,22 +11,24 @@ import com.mile.moim.service.dto.MoimAuthenticateResponse;
 import com.mile.moim.service.dto.MoimCreateRequest;
 import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
+import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
-import com.mile.moim.service.dto.MoimListOfUserResponse;
-import com.mile.moim.service.dto.MoimTopicInfoListResponse;
-import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
-import com.mile.moim.service.dto.MoimInfoModifyRequest;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
 import com.mile.moim.service.dto.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
-import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
+import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +66,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/name/validation")
     public ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
             @MoimIdPathVariable final Long moimId,
-            @RequestParam final String writerName,
+            @Max(value = 8, message = "필명은 최대 10자 이내로 작성해주세요.") @RequestParam final String writerName,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_WRITER_NAME_GET_SUCCESS,
@@ -162,6 +164,7 @@ public class MoimController implements MoimControllerSwagger {
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, principalHandler.getUserIdFromPrincipal())));
     }
+
     @Override
     @PostMapping("/{moimId}/topic")
     public ResponseEntity<SuccessResponse> createTopicOfMoim(
@@ -169,7 +172,7 @@ public class MoimController implements MoimControllerSwagger {
             @RequestBody final TopicCreateRequest createRequest,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(moimService.createTopic(moimId,principalHandler.getUserIdFromPrincipal(), createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
+        return ResponseEntity.created(URI.create(moimService.createTopic(moimId, principalHandler.getUserIdFromPrincipal(), createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
     }
 
     @GetMapping("/best")
@@ -213,7 +216,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
-            @RequestParam final String moimName
+            @Min(value = 10, message = "글모임명은 최대 10자 이내로 작성해주세요.") @RequestParam final String moimName
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS,
                 moimService.validateMoimName(moimName)));
@@ -244,7 +247,9 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, principalHandler.getUserIdFromPrincipal(), page)));
-    };
+    }
+
+    ;
 
     @Override
     @GetMapping("/moimList")
