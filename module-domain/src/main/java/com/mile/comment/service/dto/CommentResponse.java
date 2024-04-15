@@ -12,6 +12,7 @@ public record CommentResponse(
         String moimName,
         String content,
         boolean isMyComment,
+        boolean isAnonymous,
         List<ReplyResponse> replies
 ) {
     private final static String ANONYMOUS = "작자미상";
@@ -30,6 +31,7 @@ public record CommentResponse(
                 writerName.getMoim().getName(),
                 comment.getContent(),
                 writerName.getId().equals(writerNameId),
+                comment.isAnonymous(),
                 replies
         );
     }

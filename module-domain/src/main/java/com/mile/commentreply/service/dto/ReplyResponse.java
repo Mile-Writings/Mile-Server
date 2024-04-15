@@ -12,7 +12,8 @@ public record ReplyResponse(
         String name,
         String moimName,
         String content,
-        boolean isMyReply
+        boolean isMyReply,
+        boolean isAnonymous
 ) {
     private final static String ANONYMOUS = "작자미상";
     private final static String AUTHOR = "글쓴이";
@@ -28,7 +29,8 @@ public record ReplyResponse(
                 getNameString(commentReply, writerName, isWriterOfPost),
                 writerName.getMoim().getName(),
                 commentReply.getContent(),
-                writerName.getId().equals(writerNameId)
+                writerName.getId().equals(writerNameId),
+                commentReply.isAnonymous()
         );
     }
 
