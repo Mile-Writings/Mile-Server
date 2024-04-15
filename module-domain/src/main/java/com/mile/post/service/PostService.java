@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -244,6 +245,7 @@ public class PostService {
         isPostTemporary(post);
         updateTemporaryPost(postId, request);
         post.setTemporary(TEMPORARY_FALSE);
+        post.updateCratedAt(LocalDateTime.now());
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 
