@@ -28,7 +28,6 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -216,7 +215,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
-            @Min(value = 10, message = "사용 불가능한 모임명입니다.") @RequestParam final String moimName
+            @Max(value = 10, message = "사용 불가능한 모임명입니다.") @RequestParam final String moimName
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS,
                 moimService.validateMoimName(moimName)));
