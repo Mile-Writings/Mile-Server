@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,12 +38,12 @@ public class PostGetService {
             final Moim moim,
             final WriterName writerName
     ) {
-        List<Post> postList = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName);
-        if (isPostListEmpty(postList)) {
+
+        Optional<Post> post = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName);
+        if (post.isEmpty()) {
             return secureUrlUtil.encodeUrl(0L);
         }
-        postList.sort(Comparator.comparing(Post::getCreatedAt).reversed());
-        return postList.get(0).getIdUrl();
+        return post.get().getIdUrl();
     }
 
     private boolean isPostListEmpty(

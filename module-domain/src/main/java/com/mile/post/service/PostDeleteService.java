@@ -36,8 +36,11 @@ public class PostDeleteService {
             final Moim moim,
             final WriterName writerName
     ) {
-        postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName).forEach(this::delete);
+        postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName).ifPresent(
+                this::delete
+        );
     }
+
     @Transactional
     public void deleteTemporaryPost(
             final Post post
