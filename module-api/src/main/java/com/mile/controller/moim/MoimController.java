@@ -66,7 +66,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/name/validation")
     public ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
             @MoimIdPathVariable final Long moimId,
-            @Max(value = 8, message = "필명은 최대 10자 이내로 작성해주세요.") @RequestParam final String writerName,
+            @Max(value = 8, message = "사용 불가능한 필명입니다.") @RequestParam final String writerName,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_WRITER_NAME_GET_SUCCESS,
@@ -216,7 +216,7 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/name/validation")
     @Override
     public ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
-            @Min(value = 10, message = "글모임명은 최대 10자 이내로 작성해주세요.") @RequestParam final String moimName
+            @Min(value = 10, message = "사용 불가능한 모임명입니다.") @RequestParam final String moimName
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.IS_CONFLICT_MOIM_NAME_GET_SUCCESS,
                 moimService.validateMoimName(moimName)));
