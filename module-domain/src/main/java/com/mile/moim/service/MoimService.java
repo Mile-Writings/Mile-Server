@@ -104,7 +104,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        if (writerNameService.findMemberByMoimIdANdWriterId(moimId, userId).isPresent()) {
+        if (writerNameService.findMemberByMoimIdAndWriterId(moimId, userId).isPresent()) {
             throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
         }
     }
@@ -204,7 +204,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        String postId = postGetService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
+        String postId = postGetService.getTemporaryPostExist(findById(moimId), writerNameService.findByMoimAndUser(moimId, userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 
