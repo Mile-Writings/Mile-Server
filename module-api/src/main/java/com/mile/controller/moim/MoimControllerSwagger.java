@@ -32,7 +32,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Max;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -203,7 +202,7 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Max(value = 8, message = "사용 불가능한 필명입니다.") final String writerName,
+            final String writerName,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -271,7 +270,7 @@ public interface MoimControllerSwagger {
             }
     )
     ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
-            @Max(value = 10, message = "사용 불가능한 모임명입니다.") @RequestParam final String moimName
+            @RequestParam final String moimName
     );
 
     @Operation(summary = "초대링크 조회")

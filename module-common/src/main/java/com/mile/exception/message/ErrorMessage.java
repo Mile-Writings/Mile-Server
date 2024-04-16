@@ -48,6 +48,8 @@ public enum ErrorMessage {
     INVALID_URL_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청된 URL을 다시 확인해주세요"),
     LEAST_TOPIC_SIZE_OF_MOIM_ERROR(HttpStatus.BAD_REQUEST.value(), "모임에는 최소 하나의 글감이 있어야 합니다."),
     USER_MOIM_ALREADY_JOIN(HttpStatus.BAD_REQUEST.value(), "사용자는 이미 모임에 가입했습니다."),
+    WRITER_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 필명입니다."),
+    MOIM_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 모임명입니다."),
     /*
     Conflict
      */

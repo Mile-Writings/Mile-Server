@@ -29,7 +29,7 @@ import java.util.Objects;
 public class GlobalExceptionHandler {
 
     private static final int INDEX_ZERO = 0;
-    
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.ENUM_VALUE_BAD_REQUEST));
