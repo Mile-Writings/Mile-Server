@@ -1,35 +1,44 @@
 package com.mile.post.service;
 
-import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.post.service.dto.TemporaryPostCreateRequest;
+import com.mile.topic.service.TopicService;
+import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostCreateService {
     private final PostRepository postRepository;
+    private final TopicService topicService;
+    private final SecureUrlUtil secureUrlUtil;
+    private static final boolean TEMPORARY_TRUE = true;
+    private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/post/KakaoTalk_Photo_2024-01-14-15-52-49.png";
 
-    public String getTemporaryPostExist(
-            final Moim moim,
-            final WriterName writerName
-    ) {
-        List<Post> postList = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName);
-        if(isPostListEmpty(postList)) {
-            return Base64.getUrlEncoder().encodeToString(String.valueOf(0L).getBytes());
-        }
-        return postList.stream().sorted(Comparator.comparing(Post::getCreatedAt).reversed()).toList().get(0).getIdUrl();
+
+    private boolean checkContainPhoto(final String imageUrl) {
+        return !imageUrl.equals(DEFAULT_IMG_URL);
     }
 
-    private boolean isPostListEmpty(
-            final List<Post> postList
+    public void createTemporaryPost(
+            final WriterName writerName,
+            final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
-        return postList.isEmpty();
+        Post post = postRepository.save(Post.create(
+                topicService.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())), // Topic
+                writerName, // WriterName
+                temporaryPostCreateRequest.title(),
+                temporaryPostCreateRequest.content(),
+                temporaryPostCreateRequest.imageUrl(),
+                checkContainPhoto(temporaryPostCreateRequest.imageUrl()),
+                temporaryPostCreateRequest.anonymous(),
+                TEMPORARY_TRUE
+        ));
+        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
     }
 }

@@ -1,49 +1,47 @@
-package com.mile.comment.service.dto;
+package com.mile.commentreply.service.dto;
 
 import com.mile.comment.domain.Comment;
-import com.mile.commentreply.service.dto.ReplyResponse;
+import com.mile.comment.service.dto.CommentResponse;
+import com.mile.commentreply.domain.CommentReply;
 import com.mile.writername.domain.WriterName;
 
 import java.util.List;
 
-public record CommentResponse(
-        String commentId,
+public record ReplyResponse(
+        String replyId,
         String name,
         String moimName,
         String content,
-        boolean isMyComment,
-        boolean isAnonymous,
-        List<ReplyResponse> replies
+        boolean isMyReply,
+        boolean isAnonymous
 ) {
     private final static String ANONYMOUS = "작자미상";
     private final static String AUTHOR = "글쓴이";
 
-    public static CommentResponse of(
-            final Comment comment,
+    public static ReplyResponse of(
+            final CommentReply commentReply,
             final Long writerNameId,
-            final boolean isWriterOfPost,
-            final List<ReplyResponse> replies
+            final boolean isWriterOfPost
     ) {
-        WriterName writerName = comment.getWriterName();
-        return new CommentResponse(
-                comment.getIdUrl(),
-                getNameString(comment, writerName, isWriterOfPost),
+        WriterName writerName = commentReply.getWriterName();
+        return new ReplyResponse(
+                commentReply.getIdUrl(),
+                getNameString(commentReply, writerName, isWriterOfPost),
                 writerName.getMoim().getName(),
-                comment.getContent(),
+                commentReply.getContent(),
                 writerName.getId().equals(writerNameId),
-                comment.isAnonymous(),
-                replies
+                commentReply.isAnonymous()
         );
     }
 
     private static String getNameString(
-            final Comment comment,
+            final CommentReply commentReply,
             final WriterName writerName,
             final boolean isWriterOfPost
     ) {
         if (isWriterOfPost) {
             return AUTHOR;
-        } else if (comment.isAnonymous()) {
+        } else if (commentReply.isAnonymous()) {
             return ANONYMOUS + writerName.getId().toString();
         } else {
             return writerName.getName();

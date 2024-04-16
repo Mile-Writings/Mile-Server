@@ -19,4 +19,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("delete from Comment c where c.post = :post")
     void deleteAllByPost(@Param("post")final Post post);
+
+    int countByPost(final Post post);
+    int countByWriterNameId(final Long writerNameId);
 }
