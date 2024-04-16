@@ -8,7 +8,9 @@ import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
+import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +55,21 @@ public class CuriousService {
             final Post post
     ) {
         curiousRepository.deleteAllByPost(post);
+    }
+
+    public void deleteAllByWriterNameId(
+            final Long userId
+    ) {
+        List<Curious> curiousList = curiousRepository.findAllByUserId(userId);
+
+        curiousList.forEach(curious -> {
+            Post post = curious.getPost();
+            WriterName writerName = post.getWriterName();
+
+            post.decreaseCuriousCount();
+            writerName.decreaseTotalCuriousCount();
+        });
+
+        curiousRepository.deleteAll(curiousList);
     }
 }
