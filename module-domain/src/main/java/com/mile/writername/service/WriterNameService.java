@@ -64,7 +64,7 @@ public class WriterNameService {
                 );
     }
 
-    public Optional<WriterName> findMemberByMoimIdANdWriterId(
+    public Optional<WriterName> findMemberByMoimIdAndWriterId(
             final Long moimId,
             final Long writerId
     ) {
