@@ -2,6 +2,7 @@ package com.mile.curious.repository;
 import com.mile.curious.domain.Curious;
 import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface CuriousRepository extends JpaRepository<Curious, Long> {
     @Modifying
     @Query("delete from Curious c where c.post = :post")
     void deleteAllByPost(@Param("post") final Post post);
+
+    List<Curious> findAllByUserId(final Long userId);
 }
