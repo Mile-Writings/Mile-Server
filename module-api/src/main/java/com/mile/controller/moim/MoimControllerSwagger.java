@@ -33,6 +33,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -193,14 +195,17 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "댓글 중복 여부가 조회되었습니다."),
-                    @ApiResponse(responseCode = "404" , description = "1. 해당 모임은 존재하지 않습니다.\n"),
+                    @ApiResponse(responseCode = "400", description = "사용 불가능한 필명입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404" , description = "1. 해당 모임은 존재하지 않습니다.\n",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     ResponseEntity<SuccessResponse<WriterNameConflictCheckResponse>> checkConflictOfWriterName(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            final String writerName,
+            @Max(value = 8, message = "사용 불가능한 필명입니다.")  final String writerName,
             @PathVariable("moimId") final String moimUrl
     );
   
@@ -261,13 +266,14 @@ public interface MoimControllerSwagger {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "글모임 이름 중복 확인이 완료되었습니다."),
-
+                    @ApiResponse(responseCode = "400", description = "사용 불가능한 모임명입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     ResponseEntity<SuccessResponse<MoimNameConflictCheckResponse>> validateMoimName(
-            @RequestParam final String moimName
+            @Min(value = 10, message = "사용 불가능한 모임명입니다.") @RequestParam final String moimName
     );
 
     @Operation(summary = "초대링크 조회")
