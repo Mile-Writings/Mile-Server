@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.mile.moim.domain.QMoim.moim;
 import static com.mile.post.domain.QPost.post;
@@ -43,13 +44,12 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return result;
     }
 
-    public List<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim requestMoim, final WriterName requestWriterName) {
-        return jpaQueryFactory.selectFrom(post)
+    public Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim requestMoim, final WriterName requestWriterName) {
+        return Optional.ofNullable(jpaQueryFactory.selectFrom(post)
                 .join(moim)
                 .on(post.topic.moim.eq(requestMoim))
                 .join(writerName)
                 .on(post.writerName.eq(requestWriterName))
-                .where(post.isTemporary.eq(true))
-                .stream().toList();
+                .where(post.isTemporary.eq(true)).fetchOne());
     }
 }

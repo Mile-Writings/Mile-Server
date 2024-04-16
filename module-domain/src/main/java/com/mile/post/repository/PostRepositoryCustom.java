@@ -5,10 +5,13 @@ import com.mile.post.domain.Post;
 import com.mile.writername.domain.WriterName;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostRepositoryCustom {
     List<Post> findTop2ByMoimOrderByCuriousCountDesc(final Moim requestMoim);
+
     List<Post> findLatest4NonTemporaryPostsByMoim(Moim moim);
-    List<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim moim, final WriterName writerName);
+
+    Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim moim, final WriterName writerName);
 }
 
