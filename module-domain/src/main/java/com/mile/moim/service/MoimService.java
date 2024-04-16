@@ -1,20 +1,26 @@
 package com.mile.moim.service;
 
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
+import com.mile.moim.service.dto.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.MoimAuthenticateResponse;
+import com.mile.moim.service.dto.MoimCreateRequest;
+import com.mile.moim.service.dto.MoimCreateResponse;
 import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
-import com.mile.moim.service.dto.MoimTopicInfoListResponse;
-import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimOfUserResponse;
+import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.PopularWriterListResponse;
@@ -25,7 +31,6 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
-import com.mile.post.service.PostCreateService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
 import com.mile.topic.service.TopicService;
@@ -35,10 +40,8 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
-import com.mile.moim.service.dto.PopularWriterListResponse;
-import java.util.stream.Collectors;
-import com.mile.writername.service.dto.WriterNameInfoResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +50,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MoimService {
 
@@ -56,9 +60,10 @@ public class MoimService {
     private final MoimRepository moimRepository;
     private final PostDeleteService postCuriousService;
     private final PostAuthenticateService postAuthenticateService;
-    private final PostCreateService postCreateService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
+    private static final int WRITER_NAME_MAX_VALUE = 8;
+    private static final int MOIM_NAME_MAX_VALUE = 10;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -69,6 +74,9 @@ public class MoimService {
     }
 
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
+        if (writerName.length() > WRITER_NAME_MAX_VALUE) {
+            throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
+        }
         return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
     }
 
@@ -81,9 +89,20 @@ public class MoimService {
     }
 
     public MoimInvitationInfoResponse getMoimInvitationInfo(
+            final Long userId,
             final Long moimId
     ) {
+        isUserAlreadyInMoim(moimId, userId);
         return MoimInvitationInfoResponse.of(findById(moimId), writerNameService.findNumbersOfWritersByMoimId(moimId));
+    }
+
+    private void isUserAlreadyInMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        if (writerNameService.findMemberByMoimIdANdWriterId(moimId, userId).isPresent()) {
+            throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
+        }
     }
 
     public void authenticateOwnerOfMoim(
@@ -106,7 +125,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId));
+        return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId), isMoimOwnerEqualsUser(findById(moimId), userService.findById(userId)));
     }
 
     public Moim findById(
@@ -177,14 +196,14 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        String postId = postCreateService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
+        String postId = postGetService.getTemporaryPostExist(findById(moimId), writerNameService.findByWriterId(userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 
     public MoimTopicInfoListResponse getMoimTopicList(
-        final Long moimId,
-        final Long userId,
-        final int page
+            final Long moimId,
+            final Long userId,
+            final int page
     ) {
         getAuthenticateOwnerOfMoim(moimId, userId);
         return topicService.getTopicListFromMoim(moimId, page);
@@ -211,12 +230,24 @@ public class MoimService {
         moim.modifyMoimInfo(modifyRequest);
         authenticateOwnerOfMoim(moim, userId);
     }
+
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
+        if (moimName.length() > MOIM_NAME_MAX_VALUE) {
+            throw new BadRequestException(ErrorMessage.MOIM_NAME_LENGTH_WRONG);
+        }
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
     }
 
+    public InvitationCodeGetResponse getInvitationCode(
+            final Long moimId,
+            final Long userId
+    ) {
+        Moim moim = findById(moimId);
+        authenticateOwnerOfMoim(moim, userId);
+        return InvitationCodeGetResponse.of(moim.getIdUrl());
+    }
 
     public String createTopic(
             final Long moimId,
@@ -227,6 +258,43 @@ public class MoimService {
         authenticateOwnerOfMoim(moim, userId);
         return topicService.createTopicOfMoim(moim, createRequest).toString();
     }
+
+    @Transactional
+    public MoimCreateResponse createMoim(
+            final Long userId,
+            final MoimCreateRequest createRequest
+    ) {
+        Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
+        User user = userService.findById(userId);
+
+        setMoimOwner(moim, user, createRequest);
+        setFirstTopic(moim, userId, createRequest);
+
+        return MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl());
+    }
+
+    private void setMoimOwner(
+            final Moim moim,
+            final User user,
+            final MoimCreateRequest createRequest
+    ) {
+        WriterMemberJoinRequest joinRequest = WriterMemberJoinRequest.of(createRequest.writerName(), createRequest.writerNameDescription());
+        WriterName owner = writerNameService.getById(writerNameService.createWriterName(user, moim, joinRequest));
+        moim.setOwner(owner);
+        moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
+    }
+
+
+    private void setFirstTopic(
+            final Moim moim,
+            final Long userId,
+            final MoimCreateRequest createRequest
+    ) {
+        TopicCreateRequest topicRequest = TopicCreateRequest.of(createRequest.topic(), createRequest.topicTag(),
+                createRequest.topicDescription());
+        createTopic(moim.getId(), userId, topicRequest);
+    }
+
     public MoimInfoOwnerResponse getMoimInfoForOwner(
             final Long moimId,
             final Long userId
@@ -244,5 +312,14 @@ public class MoimService {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
         return writerNameService.getWriterNameInfoList(moimId, page);
+    }
+
+    public MoimListOfUserResponse getMoimOfUserList(
+            final Long userId
+    ) {
+        return MoimListOfUserResponse.of(writerNameService.getMoimListOfUser(userId)
+                .stream()
+                .map(moim -> MoimOfUserResponse.of(moim))
+                .collect(Collectors.toList()));
     }
 }

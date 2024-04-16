@@ -1,16 +1,18 @@
 package com.mile.writername.service;
 
+import com.mile.comment.service.CommentGetService;
+import com.mile.comment.service.CommentService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
+import com.mile.post.service.PostGetService;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,12 +21,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
+    private final PostGetService postGetService;
+    private final CommentGetService commentGetService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
 
@@ -58,6 +64,14 @@ public class WriterNameService {
                 );
     }
 
+    public Optional<WriterName> findMemberByMoimIdANdWriterId(
+            final Long moimId,
+            final Long writerId
+    ) {
+        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId);
+    }
+
+
     public WriterName getWriterNameByPostAndUserId(
             final Post post,
             final Long userId
@@ -73,6 +87,7 @@ public class WriterNameService {
     ) {
         return writerNameRepository.findByMoimId(moimId).size();
     }
+
 
     public boolean existWriterNamesByMoimAndName(
             final Moim moim,
@@ -104,6 +119,13 @@ public class WriterNameService {
         writerName.increaseTotalCuriousCount();
     }
 
+
+    public WriterName findWriterNameByMoimIdAndUserId(
+            final Long moimId,
+            final Long userId
+    ) {
+        return getById(getWriterNameIdByMoimIdAndUserId(moimId, userId));
+    }
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
         return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
     }
@@ -113,6 +135,13 @@ public class WriterNameService {
         WriterName writerName = WriterName.of(moim, joinRequest, user);
         writerNameRepository.saveAndFlush(writerName);
         return writerName.getId();
+    }
+
+    public WriterName getById(final Long writerNameId) {
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(
+                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+        );
     }
 
     private List<WriterName> findAllByMoimId(
@@ -125,11 +154,13 @@ public class WriterNameService {
             final Long moimId,
             final int page
     ) {
-        PageRequest pageRequest = PageRequest.of(page-1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page - 1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         Page<WriterName> writerNamePage = writerNameRepository.findByMoimIdOrderByIdDesc(moimId, pageRequest);
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
-                .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(), writerName.getInformation()))
+                .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
+                        postGetService.findPostCountByWriterNameId(writerName.getId()),
+                        commentGetService.findCommentCountByWriterNameId(writerName.getId())))
                 .collect(Collectors.toList());
 
         return MoimWriterNameListGetResponse.of(
@@ -137,5 +168,14 @@ public class WriterNameService {
                 findNumbersOfWritersByMoimId(moimId),
                 infoResponses
         );
+    }
+
+    public List<Moim> getMoimListOfUser(
+            final Long userId
+    ) {
+        return writerNameRepository.findAllByWriterId(userId)
+                .stream()
+                .map(writerName -> writerName.getMoim())
+                .collect(Collectors.toList());
     }
 }

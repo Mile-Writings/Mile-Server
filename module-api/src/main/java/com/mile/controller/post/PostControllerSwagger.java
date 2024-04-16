@@ -162,6 +162,23 @@ public interface PostControllerSwagger {
             @PathVariable("postId") final String postUrl
     );
 
+    @Operation(summary = "임시저장된 글 삭제")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "임시 저장 글 삭제가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 글은 존재하지 않습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "해당 사용자는 글 수정/삭제 권한이 없습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse> deleteTemporaryPost(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+           @PathVariable("postId") final String postUrl
+    );
+
     @Operation(summary = "글 삭제")
     @ApiResponses(
             value = {

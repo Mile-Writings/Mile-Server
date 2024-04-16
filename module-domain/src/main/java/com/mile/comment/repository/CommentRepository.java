@@ -21,4 +21,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     void deleteAllByPost(@Param("post")final Post post);
 
     int countByPost(final Post post);
+    int countByWriterNameId(final Long writerNameId);
 }
