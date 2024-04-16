@@ -62,6 +62,8 @@ public class MoimService {
     private final PostAuthenticateService postAuthenticateService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
+    private static final int WRITER_NAME_MAX_VALUE = 8;
+    private static final int MOIM_NAME_MAX_VALUE = 10;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -72,6 +74,9 @@ public class MoimService {
     }
 
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
+        if (writerName.length() > WRITER_NAME_MAX_VALUE) {
+            throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
+        }
         return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
     }
 
@@ -229,6 +234,9 @@ public class MoimService {
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
+        if (moimName.length() > MOIM_NAME_MAX_VALUE) {
+            throw new BadRequestException(ErrorMessage.MOIM_NAME_LENGTH_WRONG);
+        }
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
     }
 
