@@ -25,4 +25,6 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     Page<WriterName> findByMoimIdOrderByIdDesc(Long moimId, Pageable pageable);
 
     Optional<WriterName> findById(final Long id);
+
+    List<WriterName> findAllByWriterId(final Long writerId);
 }

@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -49,9 +50,9 @@ public class PostService {
     private final TopicService topicService;
     private final PostDeleteService postDeleteService;
     private final SecureUrlUtil secureUrlUtil;
+    private final PostCreateService postCreateService;
 
     private static final boolean TEMPORARY_FALSE = false;
-    private static final boolean TEMPORARY_TRUE = true;
     private static final boolean CURIOUS_FALSE = false;
     private static final boolean CURIOUS_TRUE = true;
     private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/post/KakaoTalk_Photo_2024-01-14-15-52-49.png";
@@ -179,7 +180,7 @@ public class PostService {
         Post post = postGetService.findById(postId);
         post.increaseHits();
         Moim moim = post.getTopic().getMoim();
-        return PostGetResponse.of(post, moim);
+        return PostGetResponse.of(post, moim, commentService.countByPost(post));
     }
 
 
@@ -188,6 +189,13 @@ public class PostService {
     ) {
         return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
     }
+
+    public void deleteTemporaryPost(final Long userId, final Long postId) {
+        postAuthenticateService.authenticateWriter(postId, userId);
+        Post post = postGetService.findById(postId);
+        postDeleteService.deleteTemporaryPost(post);
+    }
+
 
     @Transactional
     public WriterNameResponse createPost(
@@ -221,17 +229,9 @@ public class PostService {
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(temporaryPostCreateRequest.moimId()));
-        Post post = postRepository.saveAndFlush(Post.create(
-                topicService.findById(decodeUrlToLong(temporaryPostCreateRequest.topicId())), // Topic
-                writerNameService.findByMoimAndUser(decodeUrlToLong(temporaryPostCreateRequest.moimId()), userId), // WriterName
-                temporaryPostCreateRequest.title(),
-                temporaryPostCreateRequest.content(),
-                temporaryPostCreateRequest.imageUrl(),
-                checkContainPhoto(temporaryPostCreateRequest.imageUrl()),
-                temporaryPostCreateRequest.anonymous(),
-                TEMPORARY_TRUE
-        ));
-        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
+        WriterName writerName = writerNameService.findByMoimAndUser(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.moimId()), userId);
+        postDeleteService.deleteTemporaryPosts(topicService.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())).getMoim(), writerName);
+        postCreateService.createTemporaryPost(writerName, temporaryPostCreateRequest);
     }
 
     private boolean checkContainPhoto(final String imageUrl) {
@@ -245,6 +245,7 @@ public class PostService {
         isPostTemporary(post);
         updateTemporaryPost(postId, request);
         post.setTemporary(TEMPORARY_FALSE);
+        post.updateCratedAt(LocalDateTime.now());
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 

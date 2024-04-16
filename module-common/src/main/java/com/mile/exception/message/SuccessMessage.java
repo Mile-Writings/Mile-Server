@@ -34,7 +34,7 @@ public enum SuccessMessage {
     BEST_MOIM_POSTS_GET_SUCCESS(HttpStatus.OK.value(), "베스트 활동 모임과 글 조회가 완료되었습니다."),
     IS_TEMPORARY_POST_EXIST_GET_SUCCESS(HttpStatus.OK.value(), "임시저장 글 존재 여부 조회가 완료되었습니다."),
     MOIM_INVITE_INFO_GET_SUCCESS(HttpStatus.OK.value(), "모임의 초대 정보 조회가 완료되었습니다."),
-    IS_CONFLICT_WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "댓글 중복 여부가 조회되었습니다."),
+    IS_CONFLICT_WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "필명 중복 여부가 조회되었습니다."),
     MOIM_TOPIC_LIST_GET_SUCCESS(HttpStatus.OK.value(), "글감 리스트 조회가 완료되었습니다."),
     TOPIC_PUT_SUCCESS(HttpStatus.OK.value(), "글감 수정이 완료되었습니다."),
     TOPIC_DETAIL_GET_SUCCESS(HttpStatus.OK.value(), "글감 상세 정보 조회가 완료되었습니다."),
@@ -46,9 +46,13 @@ public enum SuccessMessage {
     MOIM_INFO_FOR_OWNER_GET_SUCCESS(HttpStatus.OK.value(), "관리자 페이지의 모임 정보가 조회되었습니다."),
     TOPIC_DELETE_SUCCESS(HttpStatus.OK.value(), "글감 삭제가 완료되었습니다."),
     MOIM_WRITERNAME_LIST_GET_SUCCESS(HttpStatus.OK.value(), "멤버 리스트 조회가 완료되었습니다."),
+    TEMPORARY_POST_DELETE_SUCCESS(HttpStatus.OK.value(), "임시 저장 글 삭제가 완료되었습니다."),
+    REPLY_DELETE_SUCCESS(HttpStatus.OK.value(), "대댓글 삭제가 완료되었습니다."),
+    MOIM_LIST_OF_USER_GET_SUCCESS(HttpStatus.OK.value(), "모임 리스트 조회가 완료되었습니다."),
     /*
     201 CREATED
      */
+    REPLY_CREATE_SUCCESS(HttpStatus.CREATED.value(), "대댓글 등록이 완료되었습니다."),
     WRITER_JOIN_SUCCESS(HttpStatus.CREATED.value(), "모임 가입에 완료되었습니다"),
     COMMENT_CREATE_SUCCESS(HttpStatus.CREATED.value(), "댓글 등록이 완료되었습니다."),
     CURIOUS_CREATE_SUCCESS(HttpStatus.CREATED.value(), "궁금해요 생성이 완료되었습니다."),

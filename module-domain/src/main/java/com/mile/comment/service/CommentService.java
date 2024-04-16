@@ -3,6 +3,8 @@ package com.mile.comment.service;
 import com.mile.comment.domain.Comment;
 import com.mile.comment.repository.CommentRepository;
 import com.mile.comment.service.dto.CommentResponse;
+import com.mile.commentreply.service.CommentReplyService;
+import com.mile.commentreply.service.dto.ReplyCreateRequest;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
@@ -29,6 +31,7 @@ public class CommentService {
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
     private final WriterNameService writerNameService;
+    private final CommentReplyService commentReplyService;
 
     @Transactional
     public void deleteComment(
@@ -37,6 +40,7 @@ public class CommentService {
     ) {
         Comment comment = findById(commentId);
         authenticateUser(comment, userId);
+        commentReplyService.deleteRepliesByComment(comment);
         delete(comment);
     }
 
@@ -74,6 +78,14 @@ public class CommentService {
         comment.setIdUrl(secureUrlUtil.encodeUrl(comment.getId()));
     }
 
+
+    public void deleteReply(
+            final Long userId,
+            final Long replyId
+    ) {
+        commentReplyService.deleteCommentReply(userId, replyId);
+    }
+
     private Comment create(
             final Post post,
             final WriterName writerName,
@@ -90,8 +102,30 @@ public class CommentService {
     ) {
         postAuthenticateService.authenticateUserWithPostId(postId, userId);
         List<Comment> commentList = findByPostId(postId);
+        Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
         return commentList.stream()
-                .map(comment -> CommentResponse.of(comment, writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId), isCommentWriterEqualWriterOfPost(comment, postId))).collect(Collectors.toList());
+                .map(comment -> CommentResponse.of(
+                        comment,
+                        writerNameId,
+                        isCommentWriterEqualWriterOfPost(comment, postId),
+                        commentReplyService.findRepliesByComment(comment, writerNameId))).collect(Collectors.toList());
+    }
+
+
+    public String createCommentReply(
+            final Long userId,
+            final Long commentId,
+            final ReplyCreateRequest replyCreateRequest
+    ) {
+        Comment comment = findById(commentId);
+        return commentReplyService.createCommentReply(
+                writerNameService.findWriterNameByMoimIdAndUserId(getMoimIdFromComment(comment), userId),
+                comment,
+                replyCreateRequest);
+    }
+
+    private Long getMoimIdFromComment(final Comment comment) {
+        return comment.getPost().getTopic().getMoim().getId();
     }
 
     private boolean isCommentWriterEqualWriterOfPost(
@@ -115,15 +149,10 @@ public class CommentService {
     }
 
 
-    private boolean isCommentListNull(
-            final List<Comment> commentList
-    ) {
-        return commentList.isEmpty();
-    }
-
     public void deleteAllByPost(
             final Post post
     ) {
+        commentRepository.findByPostId(post.getId()).forEach(commentReplyService::deleteRepliesByComment);
         commentRepository.deleteAllByPost(post);
     }
 
@@ -131,5 +160,11 @@ public class CommentService {
             final Long writerNameId
     ) {
         commentRepository.deleteAllByWriterNameId(writerNameId);
+    }
+
+    public int countByPost(
+            final Post post
+    ) {
+        return commentRepository.countByPost(post);
     }
 }

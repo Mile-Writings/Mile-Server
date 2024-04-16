@@ -13,7 +13,6 @@ import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -62,6 +63,14 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.USER_AUTHENTICATE_ERROR)
                 );
     }
+
+    public Optional<WriterName> findMemberByMoimIdANdWriterId(
+            final Long moimId,
+            final Long writerId
+    ) {
+        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId);
+    }
+
 
     public WriterName getWriterNameByPostAndUserId(
             final Post post,
@@ -110,6 +119,13 @@ public class WriterNameService {
         writerName.increaseTotalCuriousCount();
     }
 
+
+    public WriterName findWriterNameByMoimIdAndUserId(
+            final Long moimId,
+            final Long userId
+    ) {
+        return getById(getWriterNameIdByMoimIdAndUserId(moimId, userId));
+    }
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
         return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
     }
@@ -138,7 +154,7 @@ public class WriterNameService {
             final Long moimId,
             final int page
     ) {
-        PageRequest pageRequest = PageRequest.of(page-1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page - 1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         Page<WriterName> writerNamePage = writerNameRepository.findByMoimIdOrderByIdDesc(moimId, pageRequest);
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
@@ -152,5 +168,14 @@ public class WriterNameService {
                 findNumbersOfWritersByMoimId(moimId),
                 infoResponses
         );
+    }
+
+    public List<Moim> getMoimListOfUser(
+            final Long userId
+    ) {
+        return writerNameRepository.findAllByWriterId(userId)
+                .stream()
+                .map(writerName -> writerName.getMoim())
+                .collect(Collectors.toList());
     }
 }
