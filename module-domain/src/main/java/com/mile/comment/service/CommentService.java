@@ -155,4 +155,10 @@ public class CommentService {
         commentRepository.findByPostId(post.getId()).forEach(commentReplyService::deleteRepliesByComment);
         commentRepository.deleteAllByPost(post);
     }
+
+    public int countByPost(
+            final Post post
+    ) {
+        return commentRepository.countByPost(post);
+    }
 }
