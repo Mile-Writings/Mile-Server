@@ -3,6 +3,8 @@ package com.mile.writername.service;
 import com.mile.comment.service.CommentGetService;
 import com.mile.comment.service.CommentService;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
@@ -14,6 +16,7 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -33,12 +36,21 @@ public class WriterNameService {
     private final CommentGetService commentGetService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
+    private static final int WRITERNAME_MAX_SIZE = 5;
 
     public boolean isUserInMoim(
             final Long moimId,
             final Long writerId
     ) {
         return writerNameRepository.existsWriterNameByMoimIdAndWriterId(moimId, writerId);
+    }
+
+    private void checkWriterNameOverFive(
+            final User user
+    ) {
+        if (writerNameRepository.countAllByWriter(user) > WRITERNAME_MAX_SIZE) {
+            throw new BadRequestException(ErrorMessage.EXCEED_MOIM_MAX_SIZE);
+        }
     }
 
     public void deleteWriterName(
@@ -126,22 +138,28 @@ public class WriterNameService {
     ) {
         return getById(getWriterNameIdByMoimIdAndUserId(moimId, userId));
     }
+
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
         return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
     }
 
     @Transactional
     public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
-        WriterName writerName = WriterName.of(moim, joinRequest, user);
-        writerNameRepository.saveAndFlush(writerName);
+        checkWriterNameOverFive(user);
+        WriterName writerName;
+        try {
+            writerName = writerNameRepository.save(WriterName.of(moim, joinRequest, user));
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException(ErrorMessage.WRITER_NAME_ALREADY_EXIST);
+        }
         return writerName.getId();
     }
 
     public WriterName getById(final Long writerNameId) {
         return writerNameRepository.findById(writerNameId)
                 .orElseThrow(
-                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
-        );
+                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                );
     }
 
     private List<WriterName> findAllByMoimId(
