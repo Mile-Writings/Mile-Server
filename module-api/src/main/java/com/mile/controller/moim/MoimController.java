@@ -104,7 +104,7 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
-    @GetMapping("/{moimId}/mostCuriousWriters")
+    @GetMapping("/{moimId}/writers/top-rank")
     public ResponseEntity<SuccessResponse<PopularWriterListResponse>> getMostCuriousWritersOfMoim(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
@@ -134,7 +134,7 @@ public class MoimController implements MoimControllerSwagger {
     }
 
 
-    @GetMapping("/{moimId}/topicList")
+    @GetMapping("/{moimId}/topics")
     @Override
     public ResponseEntity<SuccessResponse<TopicListResponse>> getTopicList(
             @MoimIdPathVariable final Long moimId,
@@ -145,7 +145,7 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
-    @GetMapping("/{moimId}/mostCuriousPost")
+    @GetMapping("/{moimId}/posts/top-rank")
     public SuccessResponse<MoimCuriousPostListResponse> getMostCuriousPostByMoim(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
@@ -191,7 +191,7 @@ public class MoimController implements MoimControllerSwagger {
 
 
     @Override
-    @GetMapping("/{moimId}/admin/topicList")
+    @GetMapping("/{moimId}/admin/topics")
     public ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final int page,
@@ -238,21 +238,13 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
-    @GetMapping("/{moimId}/writerNameList")
+    @GetMapping("/{moimId}/writernames")
     public ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final int page,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, principalHandler.getUserIdFromPrincipal(), page)));
-    }
-
-    ;
-
-    @Override
-    @GetMapping("/moimList")
-    public ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser() {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, moimService.getMoimOfUserList(principalHandler.getUserIdFromPrincipal())));
     }
 
 }

@@ -322,12 +322,4 @@ public class MoimService {
         return writerNameService.getWriterNameInfoList(moimId, page);
     }
 
-    public MoimListOfUserResponse getMoimOfUserList(
-            final Long userId
-    ) {
-        return MoimListOfUserResponse.of(writerNameService.getMoimListOfUser(userId)
-                .stream()
-                .map(moim -> MoimOfUserResponse.of(moim))
-                .collect(Collectors.toList()));
-    }
 }

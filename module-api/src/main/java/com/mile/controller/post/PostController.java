@@ -72,7 +72,7 @@ public class PostController implements PostControllerSwagger {
     }
 
 
-    @GetMapping("/{postId}/curiousInfo")
+    @GetMapping("/{postId}/info/curious")
     @Override
     public ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @PostIdPathVariable final Long postId,
