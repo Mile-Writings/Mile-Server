@@ -3,6 +3,7 @@ package com.mile.controller.user;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.external.client.dto.UserLoginRequest;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -71,4 +72,18 @@ public interface UserControllerSwagger {
             }
     )
     SuccessResponse deleteUser();
+
+
+    @Operation(summary = "유저 글모임 리스트 조회")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임 리스트 조회가 조회되었습니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser();
 }

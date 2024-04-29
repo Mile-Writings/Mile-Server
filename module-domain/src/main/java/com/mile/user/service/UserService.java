@@ -12,6 +12,8 @@ import com.mile.external.client.service.dto.UserInfoResponse;
 import com.mile.jwt.JwtTokenProvider;
 import com.mile.jwt.redis.service.TokenService;
 import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.MoimOfUserResponse;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
@@ -21,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -150,5 +154,13 @@ public class UserService {
                 .orElseThrow(
                         () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
                 );
+    }
+    public MoimListOfUserResponse getMoimOfUserList(
+            final Long userId
+    ) {
+        return MoimListOfUserResponse.of(writerNameService.getMoimListOfUser(userId)
+                .stream()
+                .map(MoimOfUserResponse::of)
+                .collect(Collectors.toList()));
     }
 }
