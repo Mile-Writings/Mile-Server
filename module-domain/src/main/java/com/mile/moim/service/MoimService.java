@@ -182,9 +182,24 @@ public class MoimService {
         LocalDateTime endOfWeek = LocalDateTime.now();
         LocalDateTime startOfWeek = endOfWeek.minusDays(7);
         PageRequest pageRequest = PageRequest.of(0, 2);
-        List<Moim> moims = moimRepository.findTop3PrivateMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
-        System.out.println(moims);
+        List<Moim> moims = moimRepository.findTop3PublicMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
+
+        if (moims.size() < 3) {
+            int remaining = 3 - moims.size();
+            List<Moim> latestMoims = getLatestMoims(remaining, moims);
+            moims.addAll(latestMoims);
+        }
+
         return moims;
+    }
+
+    private List<Moim> getLatestMoims(int count, List<Moim> excludeMoims) {
+        PageRequest pageRequest = PageRequest.of(0, count);
+        if (excludeMoims.isEmpty()) {
+            return moimRepository.findLatestMoimsWithoutExclusion(pageRequest);
+        } else {
+            return moimRepository.findLatestMoimsWithExclusion(pageRequest, excludeMoims);
+        }
     }
 
     public BestMoimListResponse getBestMoimAndPostList() {
