@@ -1,0 +1,9 @@
+.idea/
+.DS_Store
+.gradle/
+build/
+module-api/build/
+module-common/build/
+module-domain/build/
+module-auth/build/
+module-api/src/main/resources/application.yml

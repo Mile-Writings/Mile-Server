@@ -1,0 +1,21 @@
+<configuration>
+    <property name="LOG_PATTERN"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
+    <springProperty name="DISCORD_WEBHOOK_URI" source="logging.discord.webhook-uri"/>
+    <springProfile name="local">
+        <include resource="console-appender.xml"/>
+        <include resource="discord-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_DISCORD" />
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <include resource="console-appender.xml"/>
+        <include resource="discord-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_DISCORD" />
+        </root>
+    </springProfile>
+</configuration>

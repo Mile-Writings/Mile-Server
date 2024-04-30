@@ -1,0 +1,32 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+    //Auth Module
+    implementation project(':module-common')
+
+    //External API
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
+
+    //Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    //JWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.1'
+}
+
+ext {
+    set('springCloudVersion', "2023.0.0")
+}
+dependencyManagement {
+
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+
+}
