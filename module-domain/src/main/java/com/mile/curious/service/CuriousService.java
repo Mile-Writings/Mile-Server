@@ -7,12 +7,12 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
-import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,34 +21,34 @@ public class CuriousService {
     private final CuriousRepository curiousRepository;
     private final WriterNameService writerNameService;
 
-    public void deleteCurious(final Post post, final User user) {
-        checkCuriousNotExists(post, user);
-        curiousRepository.delete(curiousRepository.findByPostAndUser(post, user));
+    public void deleteCurious(final Post post, final WriterName writerName) {
+        checkCuriousNotExists(post, writerName);
+        curiousRepository.delete(curiousRepository.findByPostAndWriterName(post, writerName));
         post.decreaseCuriousCount();
-        writerNameService.decreaseTotalCuriousCountByWriterId(user.getId());
+        writerNameService.decreaseTotalCuriousCountByWriterName(writerName);
     }
 
-    public void checkCuriousNotExists(final Post post, final User user) {
-        if (!curiousRepository.existsByPostAndUser(post, user)) {
+    public void checkCuriousNotExists(final Post post, final WriterName writerName) {
+        if (!curiousRepository.existsByPostAndWriterName(post, writerName)) {
             throw new NotFoundException(ErrorMessage.CURIOUS_NOT_FOUND);
         }
     }
 
-    public void createCurious(final Post post, final User user) {
-        checkCuriousExists(post, user);
-        curiousRepository.save(Curious.create(post, user));
+    public void createCurious(final Post post, final WriterName writerName) {
+        checkCuriousExists(post, writerName);
+        curiousRepository.save(Curious.create(post, writerName));
         post.increaseCuriousCount();
-        writerNameService.increaseTotalCuriousCountByWriterId(user.getId());
+        writerNameService.increaseTotalCuriousCountByWriterName(writerName);
     }
 
-    public void checkCuriousExists(final Post post, final User user) {
-        if (curiousRepository.existsByPostAndUser(post, user)) {
+    public void checkCuriousExists(final Post post, final WriterName writerName) {
+        if (curiousRepository.existsByPostAndWriterName(post, writerName)) {
             throw new ConflictException(ErrorMessage.CURIOUS_ALREADY_EXISTS_EXCEPTION);
         }
     }
 
-    public CuriousInfoResponse getCuriousInfoOfPostAndUser(final Post post, final User user) {
-        return CuriousInfoResponse.of(curiousRepository.existsByPostAndUser(post, user), post.getCuriousCount());
+    public CuriousInfoResponse getCuriousInfoOfPostAndWriterName(final Post post, final WriterName writerName) {
+        return CuriousInfoResponse.of(curiousRepository.existsByPostAndWriterName(post, writerName), post.getCuriousCount());
     }
 
     public void deleteAllByPost(
@@ -58,13 +58,15 @@ public class CuriousService {
     }
 
     public void deleteAllByWriterNameId(
-            final Long userId
+            final Long writerNameId
     ) {
-        List<Curious> curiousList = curiousRepository.findAllByUserId(userId);
+
+
+        WriterName writerName = writerNameService.findById(writerNameId);
+        List<Curious> curiousList = curiousRepository.findAllByWriterName(writerName);
 
         curiousList.forEach(curious -> {
             Post post = curious.getPost();
-            WriterName writerName = post.getWriterName();
 
             post.decreaseCuriousCount();
             writerName.decreaseTotalCuriousCount();

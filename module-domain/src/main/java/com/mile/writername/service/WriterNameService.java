@@ -38,6 +38,14 @@ public class WriterNameService {
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
     private static final int WRITERNAME_MAX_SIZE = 5;
 
+    public WriterName findById(
+            final Long writerNameId
+    ) {
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                );
+    }
     public boolean isUserInMoim(
             final Long moimId,
             final Long writerId
@@ -117,17 +125,15 @@ public class WriterNameService {
                 );
     }
 
-    public void decreaseTotalCuriousCountByWriterId(
-            final Long writerId
+    public void decreaseTotalCuriousCountByWriterName(
+            final WriterName writerName
     ) {
-        WriterName writerName = findByWriterId(writerId);
         writerName.decreaseTotalCuriousCount();
     }
 
-    public void increaseTotalCuriousCountByWriterId(
-            final Long writerId
+    public void increaseTotalCuriousCountByWriterName(
+            final WriterName writerName
     ) {
-        WriterName writerName = findByWriterId(writerId);
         writerName.increaseTotalCuriousCount();
     }
 
