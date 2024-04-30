@@ -21,7 +21,6 @@ import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
-import com.mile.user.service.UserService;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
@@ -46,7 +45,6 @@ public class PostService {
     private final CommentService commentService;
     private final WriterNameService writerNameService;
     private final CuriousService curiousService;
-    private final UserService userService;
     private final TopicService topicService;
     private final PostDeleteService postDeleteService;
     private final SecureUrlUtil secureUrlUtil;
@@ -95,7 +93,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameService.findByWriterId(userId));
+        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
     }
 
     @Transactional
@@ -105,7 +103,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.deleteCurious(post, writerNameService.findByWriterId(userId));
+        curiousService.deleteCurious(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
