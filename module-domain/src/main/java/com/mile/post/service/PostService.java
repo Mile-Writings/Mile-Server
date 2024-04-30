@@ -77,7 +77,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.createCurious(post, userService.findById(userId));
+        curiousService.createCurious(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
@@ -95,7 +95,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoOfPostAndUser(post, userService.findById(userId));
+        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameService.findByWriterId(userId));
     }
 
     @Transactional
@@ -105,7 +105,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.deleteCurious(post, userService.findById(userId));
+        curiousService.deleteCurious(post, writerNameService.findByWriterId(userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 

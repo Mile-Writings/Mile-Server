@@ -32,7 +32,7 @@ public class WriterNameDeleteService {
 
         postDeleteService.deleteAllPostByWriterNameId(writerNameId);
         commentService.deleteAllCommentByWriterNameId(writerNameId);
-        curiousService.deleteAllByWriterNameId(writerName.getWriter().getId());
+        curiousService.deleteAllByWriterNameId(writerNameId);
 
         writerNameRepository.delete(writerName);
     }
