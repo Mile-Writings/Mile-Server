@@ -64,6 +64,7 @@ public class MoimService {
     private final SecureUrlUtil secureUrlUtil;
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
+    private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -175,12 +176,32 @@ public class MoimService {
     }
 
     public List<Moim> getBestMoimByPostNumber() {
+
+        List<Moim> moims = findBestMoims();
+
+        if (moims.size() < BEST_MOIM_DEFAULT_NUMBER) {
+            int remaining = BEST_MOIM_DEFAULT_NUMBER - moims.size();
+            List<Moim> latestMoims = getLatestMoims(remaining, moims);
+            moims.addAll(latestMoims);
+        }
+
+        return moims;
+    }
+
+    private List<Moim> findBestMoims() {
         LocalDateTime endOfWeek = LocalDateTime.now();
         LocalDateTime startOfWeek = endOfWeek.minusDays(7);
         PageRequest pageRequest = PageRequest.of(0, 2);
-        List<Moim> moims = moimRepository.findTop3PrivateMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
-        System.out.println(moims);
-        return moims;
+        return moimRepository.findTop3PublicMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
+    }
+
+    private List<Moim> getLatestMoims(int count, List<Moim> excludeMoims) {
+        PageRequest pageRequest = PageRequest.of(0, count);
+        if (excludeMoims.isEmpty()) {
+            return moimRepository.findLatestMoimsWithoutExclusion(pageRequest);
+        } else {
+            return moimRepository.findLatestMoimsWithExclusion(pageRequest, excludeMoims);
+        }
     }
 
     public BestMoimListResponse getBestMoimAndPostList() {
