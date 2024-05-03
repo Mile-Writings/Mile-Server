@@ -3,6 +3,7 @@ package com.mile.writername.domain;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.user.domain.User;
+import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -52,6 +53,9 @@ public class WriterName {
         validateTotalCuriousCount();
     }
 
+    public void updateInformation(WriterNameDescriptionUpdateRequest request) {
+        this.information = request.description();
+    }
     @Builder
     private WriterName(
             final Moim moim,

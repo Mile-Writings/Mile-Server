@@ -50,6 +50,8 @@ public enum SuccessMessage {
     REPLY_DELETE_SUCCESS(HttpStatus.OK.value(), "대댓글 삭제가 완료되었습니다."),
     MOIM_LIST_OF_USER_GET_SUCCESS(HttpStatus.OK.value(), "모임 리스트 조회가 완료되었습니다."),
     WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "필명 조회가 완료되었습니다."),
+    WRITER_NAME_DESCRIPTION_GET_SUCCESS(HttpStatus.OK.value(), "필명 소개글 조회가 완료되었습니다."),
+    WRITER_NAME_DESCRIPTION_UPDATE_SUCCESS(HttpStatus.OK.value(), "소개글 수정이 완료 되었습니다."),
     /*
     201 CREATED
      */
