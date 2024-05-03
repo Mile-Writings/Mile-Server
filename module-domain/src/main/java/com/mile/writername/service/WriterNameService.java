@@ -69,7 +69,7 @@ public class WriterNameService {
     }
 
     private void checkWriterNameUserId(final Long userId, final WriterName writerName) {
-        if (!writerName.getId().equals(userId)) {
+        if (!writerName.getWriter().getId().equals(userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_NAME_INFO_FORBIDDEN);
         }
     }
