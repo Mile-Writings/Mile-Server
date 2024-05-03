@@ -10,6 +10,7 @@ import com.mile.post.domain.Post;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +37,11 @@ public class CuriousService {
 
     public void createCurious(final Post post, final WriterName writerName) {
         checkCuriousExists(post, writerName);
-        curiousRepository.save(Curious.create(post, writerName));
+        try {
+            curiousRepository.save(Curious.create(post, writerName));
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException(ErrorMessage.CURIOUS_ALREADY_EXISTS_EXCEPTION);
+        }
         post.increaseCuriousCount();
         writerNameService.increaseTotalCuriousCountByWriterName(writerName);
     }
