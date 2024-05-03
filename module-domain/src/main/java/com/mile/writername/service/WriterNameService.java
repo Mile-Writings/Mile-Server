@@ -1,10 +1,10 @@
 package com.mile.writername.service;
 
 import com.mile.comment.service.CommentGetService;
-import com.mile.comment.service.CommentService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ConflictException;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
@@ -14,7 +14,10 @@ import com.mile.post.service.PostGetService;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.dto.WriterNameDescriptionResponse;
+import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
+import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -48,11 +51,45 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
                 );
     }
+
     public boolean isUserInMoim(
             final Long moimId,
             final Long writerId
     ) {
         return writerNameRepository.existsWriterNameByMoimIdAndWriterId(moimId, writerId);
+    }
+
+    public WriterNameDescriptionResponse findWriterNameDescription(
+            final Long userId,
+            final Long writerNameId
+    ) {
+        WriterName writerName = findById(writerNameId);
+        checkWriterNameUserId(userId, writerName);
+        return WriterNameDescriptionResponse.of(writerName);
+    }
+
+    private void checkWriterNameUserId(final Long userId, final WriterName writerName) {
+        if (!writerName.getWriter().getId().equals(userId)) {
+            throw new ForbiddenException(ErrorMessage.WRITER_NAME_INFO_FORBIDDEN);
+        }
+    }
+
+    public WriterNameShortResponse findWriterNameInfo(
+            final Long moimId,
+            final Long userId
+    ) {
+        return WriterNameShortResponse.of(findByMoimAndUser(moimId, userId));
+    }
+
+    @Transactional
+    public void updateWriterNameDescription(
+            final Long userId,
+            final Long writerNameId,
+            final WriterNameDescriptionUpdateRequest request
+    ) {
+        WriterName writerName = findById(writerNameId);
+        checkWriterNameUserId(userId, writerName);
+        writerName.updateInformation(request);
     }
 
     private void checkWriterNameOverFive(
