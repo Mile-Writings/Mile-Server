@@ -38,6 +38,7 @@ import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -72,6 +73,13 @@ public class MoimService {
     ) {
         postAuthenticateService.authenticateUserOfMoim(moimId, userId);
         return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
+    }
+
+    public WriterNameShortResponse getWriterNameOfUser(
+            final Long moimId,
+            final Long userId
+    ) {
+        return writerNameService.findWriterNameInfo(moimId, userId);
     }
 
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
@@ -241,7 +249,7 @@ public class MoimService {
         Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
         Moim moim = findById(moimId);
         if (!moim.getOwner().getId().equals(writerNameId)) {
-            throw new ForbiddenException(ErrorMessage.OWNER_AUTHENTICATE_ERROR);
+            throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
         }
     }
 

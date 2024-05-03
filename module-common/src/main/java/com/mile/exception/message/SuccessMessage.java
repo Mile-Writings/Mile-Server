@@ -49,6 +49,7 @@ public enum SuccessMessage {
     TEMPORARY_POST_DELETE_SUCCESS(HttpStatus.OK.value(), "임시 저장 글 삭제가 완료되었습니다."),
     REPLY_DELETE_SUCCESS(HttpStatus.OK.value(), "대댓글 삭제가 완료되었습니다."),
     MOIM_LIST_OF_USER_GET_SUCCESS(HttpStatus.OK.value(), "모임 리스트 조회가 완료되었습니다."),
+    WRITER_NAME_GET_SUCCESS(HttpStatus.OK.value(), "필명 조회가 완료되었습니다."),
     /*
     201 CREATED
      */

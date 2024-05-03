@@ -54,6 +54,12 @@ public class WriterNameService {
     ) {
         return writerNameRepository.existsWriterNameByMoimIdAndWriterId(moimId, writerId);
     }
+    public WriterNameShortResponse findWriterNameInfo(
+            final Long moimId,
+            final Long userId
+    ) {
+        return WriterNameShortResponse.of(findByMoimAndUser(moimId, userId));
+    }
 
     private void checkWriterNameOverFive(
             final User user
