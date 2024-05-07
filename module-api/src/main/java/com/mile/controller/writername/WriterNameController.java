@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/writerName")
+@RequestMapping("/api/writername")
 public class WriterNameController implements WriterNameControllerSwagger {
 
     private final WriterNameDeleteService writerNameDeleteService;
