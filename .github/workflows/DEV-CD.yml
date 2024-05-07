@@ -49,7 +49,7 @@ jobs:
       - name: docker image 빌드 및 푸시
         run: |
           docker build --platform linux/amd64 -t mile1217/mile-server .
-          docker push mile1217/mile-server
+          docker push mile1217/mile-dev
         working-directory: ${{ env.working-directory }}
 
   deploy-cd:
