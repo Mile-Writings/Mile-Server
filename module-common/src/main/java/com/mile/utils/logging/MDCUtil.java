@@ -20,10 +20,6 @@ public class MDCUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final MDCAdapter mdc = MDC.getMDCAdapter();
 
-    public static void set(String key, String value) {
-        mdc.put(key, value);
-    }
-
     public static void setJsonValue(String key, Object value) throws JsonProcessingException {
         try {
             if (value != null) {
@@ -38,7 +34,4 @@ public class MDCUtil {
         }
     }
 
-    public static void clear() {
-        MDC.clear();
-    }
 }

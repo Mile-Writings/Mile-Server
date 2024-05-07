@@ -12,6 +12,8 @@ import com.mile.external.client.service.dto.UserInfoResponse;
 import com.mile.jwt.JwtTokenProvider;
 import com.mile.jwt.redis.service.TokenService;
 import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.MoimOfUserResponse;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
@@ -22,17 +24,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoSocialService kakaoSocialService;
-    private final MoimService moimService;
     private final TokenService tokenService;
     private final WriterNameService writerNameService;
 
-    private static final Long STATIC_MOIM_ID = 1L;
 
     public LoginSuccessResponse create(
             final String authorizationCode,
@@ -60,17 +62,7 @@ public class UserService {
                 userResponse.socialType()
         );
         userRepository.saveAndFlush(user);
-        createWriterNameOfUser(user);
         return user.getId();
-    }
-
-    private void createWriterNameOfUser(
-            final User user
-    ) {
-        try {
-            writerNameService.createWriterNameInMile(user, moimService.findById(STATIC_MOIM_ID));
-        } catch (DataIntegrityViolationException e) {
-        }
     }
 
     public User getBySocialId(
@@ -162,5 +154,13 @@ public class UserService {
                 .orElseThrow(
                         () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
                 );
+    }
+    public MoimListOfUserResponse getMoimOfUserList(
+            final Long userId
+    ) {
+        return MoimListOfUserResponse.of(writerNameService.getMoimListOfUser(userId)
+                .stream()
+                .map(MoimOfUserResponse::of)
+                .collect(Collectors.toList()));
     }
 }

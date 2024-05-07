@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy-ci:
+  production-deploy-ci:
     runs-on: ubuntu-22.04
     env:
       working-directory: .
@@ -52,8 +52,8 @@ jobs:
         docker push mile1217/mile-server
       working-directory: ${{ env.working-directory }}
 
-  deploy-cd:      
-    needs: deploy-ci
+  production-deploy-cd:      
+    needs: production-deploy-ci
     runs-on: ubuntu-22.04
 
     steps:    

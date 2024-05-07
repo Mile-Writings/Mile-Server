@@ -1,7 +1,9 @@
 package com.mile.writername.domain;
 
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.user.domain.User;
+import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,36 +39,47 @@ public class WriterName {
 
     public void decreaseTotalCuriousCount() {
         totalCuriousCount--;
-        setTotalCuriousCountZero();
+        validateTotalCuriousCount();
     }
 
-    private void setTotalCuriousCountZero() {
+    private void validateTotalCuriousCount() {
         if( this.totalCuriousCount < 0 ) {
             this.totalCuriousCount = 0;
         }
     }
 
+    public void decreaseTotalCuriousCountByPostDelete(final int count) {
+        this.totalCuriousCount -= count;
+        validateTotalCuriousCount();
+    }
+
+    public void updateInformation(WriterNameDescriptionUpdateRequest request) {
+        this.information = request.description();
+    }
     @Builder
     private WriterName(
             final Moim moim,
             final String name,
             final User user,
+            final String information,
             final int curiousCount
     ) {
         this.moim = moim;
         this.name = name;
         this.writer = user;
+        this.information = information;
         this.totalCuriousCount = curiousCount;
     }
 
     public static WriterName of(
             final Moim moim,
-            final String name,
+            final WriterMemberJoinRequest joinRequest,
             final User user
     ) {
         return WriterName.builder()
                 .moim(moim)
-                .name(name)
+                .name(joinRequest.writerName())
+                .information(joinRequest.writerDescription())
                 .user(user)
                 .curiousCount(0)
                 .build();

@@ -21,7 +21,6 @@ import com.mile.post.service.dto.WriterAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
-import com.mile.user.service.UserService;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
@@ -30,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -45,16 +45,15 @@ public class PostService {
     private final CommentService commentService;
     private final WriterNameService writerNameService;
     private final CuriousService curiousService;
-    private final UserService userService;
     private final TopicService topicService;
     private final PostDeleteService postDeleteService;
     private final SecureUrlUtil secureUrlUtil;
+    private final PostCreateService postCreateService;
 
     private static final boolean TEMPORARY_FALSE = false;
-    private static final boolean TEMPORARY_TRUE = true;
     private static final boolean CURIOUS_FALSE = false;
     private static final boolean CURIOUS_TRUE = true;
-    private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/post/KakaoTalk_Photo_2024-01-14-15-52-49.png";
+    private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
 
     @Transactional
     public void createCommentOnPost(
@@ -76,7 +75,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.createCurious(post, userService.findById(userId));
+        curiousService.createCurious(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
@@ -94,7 +93,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoOfPostAndUser(post, userService.findById(userId));
+        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
     }
 
     @Transactional
@@ -104,7 +103,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.deleteCurious(post, userService.findById(userId));
+        curiousService.deleteCurious(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
@@ -172,12 +171,14 @@ public class PostService {
         }
     }
 
+    @Transactional
     public PostGetResponse getPost(
             final Long postId
     ) {
         Post post = postGetService.findById(postId);
+        post.increaseHits();
         Moim moim = post.getTopic().getMoim();
-        return PostGetResponse.of(post, moim);
+        return PostGetResponse.of(post, moim, commentService.countByPost(post));
     }
 
 
@@ -186,6 +187,13 @@ public class PostService {
     ) {
         return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
     }
+
+    public void deleteTemporaryPost(final Long userId, final Long postId) {
+        postAuthenticateService.authenticateWriter(postId, userId);
+        Post post = postGetService.findById(postId);
+        postDeleteService.deleteTemporaryPost(post);
+    }
+
 
     @Transactional
     public WriterNameResponse createPost(
@@ -219,17 +227,9 @@ public class PostService {
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(temporaryPostCreateRequest.moimId()));
-        Post post = postRepository.saveAndFlush(Post.create(
-                topicService.findById(decodeUrlToLong(temporaryPostCreateRequest.topicId())), // Topic
-                writerNameService.findByMoimAndUser(decodeUrlToLong(temporaryPostCreateRequest.moimId()), userId), // WriterName
-                temporaryPostCreateRequest.title(),
-                temporaryPostCreateRequest.content(),
-                temporaryPostCreateRequest.imageUrl(),
-                checkContainPhoto(temporaryPostCreateRequest.imageUrl()),
-                temporaryPostCreateRequest.anonymous(),
-                TEMPORARY_TRUE
-        ));
-        post.setIdUrl(Base64.getUrlEncoder().encodeToString(post.getId().toString().getBytes()));
+        WriterName writerName = writerNameService.findByMoimAndUser(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.moimId()), userId);
+        postDeleteService.deleteTemporaryPosts(topicService.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())).getMoim(), writerName);
+        postCreateService.createTemporaryPost(writerName, temporaryPostCreateRequest);
     }
 
     private boolean checkContainPhoto(final String imageUrl) {
@@ -243,6 +243,7 @@ public class PostService {
         isPostTemporary(post);
         updateTemporaryPost(postId, request);
         post.setTemporary(TEMPORARY_FALSE);
+        post.updateCratedAt(LocalDateTime.now());
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 

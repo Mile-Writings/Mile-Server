@@ -5,6 +5,7 @@ import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.external.client.dto.UserLoginRequest;
 import com.mile.jwt.redis.service.TokenService;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.user.service.UserService;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
@@ -77,6 +78,10 @@ public class UserController implements UserControllerSwagger {
         return SuccessResponse.of(SuccessMessage.USER_DELETE_SUCCESS);
     }
 
-
+    @Override
+    @GetMapping("/moims")
+    public ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser() {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, userService.getMoimOfUserList(principalHandler.getUserIdFromPrincipal())));
+    }
 }
 

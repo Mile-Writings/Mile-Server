@@ -16,7 +16,6 @@ import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
 import com.mile.resolver.post.PostIdPathVariable;
 import com.mile.writername.service.dto.WriterNameResponse;
-import feign.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -73,7 +72,7 @@ public class PostController implements PostControllerSwagger {
     }
 
 
-    @GetMapping("/{postId}/curiousInfo")
+    @GetMapping("/{postId}/info/curious")
     @Override
     public ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @PostIdPathVariable final Long postId,
@@ -152,6 +151,7 @@ public class PostController implements PostControllerSwagger {
         ));
     }
 
+    @Override
     @PostMapping("/temporary")
     public SuccessResponse createTemporaryPost(
             @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest
@@ -163,6 +163,20 @@ public class PostController implements PostControllerSwagger {
         return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_CREATE_SUCCESS);
     }
 
+    @Override
+    @DeleteMapping("/temporary/{postId}")
+    public ResponseEntity<SuccessResponse> deleteTemporaryPost(
+            @PostIdPathVariable final Long postId,
+            @PathVariable("postId") final String postUrl
+    ) {
+        postService.deleteTemporaryPost(
+                principalHandler.getUserIdFromPrincipal(),
+                postId
+        );
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TEMPORARY_POST_DELETE_SUCCESS));
+    }
+
+    @Override
     @PutMapping("/temporary/{postId}")
     public ResponseEntity<SuccessResponse<WriterNameResponse>> putTemporaryToFixedPost(
             @PostIdPathVariable final Long postId,

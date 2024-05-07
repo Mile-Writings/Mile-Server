@@ -29,6 +29,7 @@ public enum ErrorMessage {
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
     RANDOM_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "랜덤 글 이름을 생성하는데 실패했습니다."),
+    REPLY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Id에 해당하는 대댓글이 없습니다."),
     /*
     Bad Request
      */
@@ -45,11 +46,16 @@ public enum ErrorMessage {
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
     IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),
     INVALID_URL_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청된 URL을 다시 확인해주세요"),
+    LEAST_TOPIC_SIZE_OF_MOIM_ERROR(HttpStatus.BAD_REQUEST.value(), "모임에는 최소 하나의 글감이 있어야 합니다."),
+    USER_MOIM_ALREADY_JOIN(HttpStatus.BAD_REQUEST.value(), "사용자는 이미 모임에 가입했습니다."),
+    WRITER_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 필명입니다."),
+    MOIM_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 모임명입니다."),
+    EXCEED_MOIM_MAX_SIZE(HttpStatus.BAD_REQUEST.value(), "최대 가입 가능 모임 개수(5개)를 초과하였습니다."),
     /*
     Conflict
      */
     CURIOUS_ALREADY_EXISTS_EXCEPTION(HttpStatus.CONFLICT.value(), "'궁금해요'는 이미 존재합니다."),
-
+    WRITER_NAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 가입한 모임입니다."),
     /*
     Unauthorized
      */
@@ -61,10 +67,10 @@ public enum ErrorMessage {
     Forbidden
      */
     USER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 모임에 접근 권한이 없습니다."),
+    REPLY_USER_FORBIDDEN(HttpStatus.UNAUTHORIZED.value(), "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
     WRITER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
-    /*
-    Forbidden
-     */
+    MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
+    WRITER_NAME_INFO_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 사용자는 필명에 접근 권한이 없습니다."),
     COMMENT_ACCESS_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 댓글에 접근 권한이 없습니다."),
     /*
     Method Not Supported
@@ -79,6 +85,7 @@ public enum ErrorMessage {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다."),
     DISCORD_LOG_APPENDER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "디스코드 로그 전송에 실패하였습니다"),
     ;
+
     final int status;
     final String message;
 }

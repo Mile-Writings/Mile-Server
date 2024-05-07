@@ -1,25 +1,56 @@
 package com.mile.writername.service;
 
+import com.mile.comment.service.CommentGetService;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.ConflictException;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
+import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.post.domain.Post;
+import com.mile.post.service.PostGetService;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.dto.WriterNameDescriptionResponse;
+import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
+import com.mile.writername.service.dto.WriterNameInfoResponse;
+import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
-    private final RandomWriterNameService randomWriterNameService;
+    private final PostGetService postGetService;
+    private final CommentGetService commentGetService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
+    private static final int WRITERNAME_PER_PAGE_SIZE = 5;
+    private static final int WRITERNAME_MAX_SIZE = 5;
+
+    public WriterName findById(
+            final Long writerNameId
+    ) {
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                );
+    }
 
     public boolean isUserInMoim(
             final Long moimId,
@@ -28,17 +59,61 @@ public class WriterNameService {
         return writerNameRepository.existsWriterNameByMoimIdAndWriterId(moimId, writerId);
     }
 
+    public WriterNameDescriptionResponse findWriterNameDescription(
+            final Long userId,
+            final Long writerNameId
+    ) {
+        WriterName writerName = findById(writerNameId);
+        checkWriterNameUserId(userId, writerName);
+        return WriterNameDescriptionResponse.of(writerName);
+    }
+
+    private void checkWriterNameUserId(final Long userId, final WriterName writerName) {
+        if (!writerName.getWriter().getId().equals(userId)) {
+            throw new ForbiddenException(ErrorMessage.WRITER_NAME_INFO_FORBIDDEN);
+        }
+    }
+
+    public WriterNameShortResponse findWriterNameInfo(
+            final Long moimId,
+            final Long userId
+    ) {
+        return WriterNameShortResponse.of(findByMoimAndUser(moimId, userId));
+    }
+
+    @Transactional
+    public void updateWriterNameDescription(
+            final Long userId,
+            final Long writerNameId,
+            final WriterNameDescriptionUpdateRequest request
+    ) {
+        WriterName writerName = findById(writerNameId);
+        checkWriterNameUserId(userId, writerName);
+        writerName.updateInformation(request);
+    }
+
+    private void checkWriterNameOverFive(
+            final User user
+    ) {
+        log.info(writerNameRepository.countAllByWriter(user).toString());
+        if (writerNameRepository.countAllByWriter(user) >= WRITERNAME_MAX_SIZE) {
+            throw new BadRequestException(ErrorMessage.EXCEED_MOIM_MAX_SIZE);
+        }
+    }
+
     public void deleteWriterName(
             final Long userId
     ) {
         writerNameRepository.delete(findByWriterId(userId));
     }
+
     public Long getWriterNameIdByMoimIdAndUserId(
             final Long moimId,
             final Long userId
     ) {
         return findByMoimAndUser(moimId, userId).getId();
     }
+
     public WriterName findByMoimAndUser(
             final Long moimId,
             final Long writerId
@@ -49,6 +124,14 @@ public class WriterNameService {
                 );
     }
 
+    public Optional<WriterName> findMemberByMoimIdAndWriterId(
+            final Long moimId,
+            final Long writerId
+    ) {
+        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId);
+    }
+
+
     public WriterName getWriterNameByPostAndUserId(
             final Post post,
             final Long userId
@@ -58,6 +141,7 @@ public class WriterNameService {
                         () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
                 );
     }
+
     public int findNumbersOfWritersByMoimId(
             final Long moimId
     ) {
@@ -65,10 +149,11 @@ public class WriterNameService {
     }
 
 
-    public List<WriterName> findWriterNamesByMoimId(
-            final Long moimId
+    public boolean existWriterNamesByMoimAndName(
+            final Moim moim,
+            final String name
     ) {
-        return writerNameRepository.findByMoimId(moimId);
+        return writerNameRepository.existsWriterNameByMoimAndName(moim, name);
     }
 
     public WriterName findByWriterId(
@@ -80,18 +165,24 @@ public class WriterNameService {
                 );
     }
 
-    public void decreaseTotalCuriousCountByWriterId(
-            final Long writerId
+    public void decreaseTotalCuriousCountByWriterName(
+            final WriterName writerName
     ) {
-        WriterName writerName = findByWriterId(writerId);
         writerName.decreaseTotalCuriousCount();
     }
 
-    public void increaseTotalCuriousCountByWriterId(
-            final Long writerId
+    public void increaseTotalCuriousCountByWriterName(
+            final WriterName writerName
     ) {
-        WriterName writerName = findByWriterId(writerId);
         writerName.increaseTotalCuriousCount();
+    }
+
+
+    public WriterName findWriterNameByMoimIdAndUserId(
+            final Long moimId,
+            final Long userId
+    ) {
+        return getById(getWriterNameIdByMoimIdAndUserId(moimId, userId));
     }
 
     public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
@@ -99,9 +190,56 @@ public class WriterNameService {
     }
 
     @Transactional
-    public void createWriterNameInMile(final User user, final Moim moim) {
-        writerNameRepository.save(
-                WriterName.of(moim, randomWriterNameService.generateRandomWriterName(), user)
+    public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
+        checkWriterNameOverFive(user);
+        WriterName writerName;
+        try {
+            writerName = writerNameRepository.save(WriterName.of(moim, joinRequest, user));
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException(ErrorMessage.WRITER_NAME_ALREADY_EXIST);
+        }
+        return writerName.getId();
+    }
+
+    public WriterName getById(final Long writerNameId) {
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                );
+    }
+
+    private List<WriterName> findAllByMoimId(
+            final Long moimId
+    ) {
+        return writerNameRepository.findByMoimId(moimId);
+    }
+
+    public MoimWriterNameListGetResponse getWriterNameInfoList(
+            final Long moimId,
+            final int page
+    ) {
+        PageRequest pageRequest = PageRequest.of(page - 1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+        Page<WriterName> writerNamePage = writerNameRepository.findByMoimIdOrderByIdDesc(moimId, pageRequest);
+        List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
+                .stream()
+                .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
+                        postGetService.findPostCountByWriterNameId(writerName.getId()),
+                        commentGetService.findCommentCountByWriterNameId(writerName.getId())))
+                .collect(Collectors.toList());
+
+        return MoimWriterNameListGetResponse.of(
+                writerNamePage.getTotalPages(),
+                findNumbersOfWritersByMoimId(moimId),
+                infoResponses
         );
+    }
+
+    public List<Moim> getMoimListOfUser(
+            final Long userId
+    ) {
+        return writerNameRepository.findAllByWriterId(userId)
+                .stream()
+                .map(writerName -> writerName.getMoim())
+                .collect(Collectors.toList());
     }
 }

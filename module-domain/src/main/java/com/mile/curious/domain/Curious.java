@@ -1,8 +1,8 @@
 package com.mile.curious.domain;
 
-import com.mile.post.domain.Post;
 import com.mile.config.BaseTimeEntity;
-import com.mile.user.domain.User;
+import com.mile.post.domain.Post;
+import com.mile.writername.domain.WriterName;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,10 +11,12 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Curious extends BaseTimeEntity {
@@ -25,16 +27,16 @@ public class Curious extends BaseTimeEntity {
     private Post post;
 
     @ManyToOne
-    private User user;
+    private WriterName writerName;
 
     public static Curious create(
             final Post post,
-            final User user
+            final WriterName writerName
     ) {
         return Curious
                 .builder()
                 .post(post)
-                .user(user)
+                .writerName(writerName)
                 .build();
     }
 
