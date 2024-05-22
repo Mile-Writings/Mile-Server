@@ -1,5 +1,6 @@
 package com.mile.config.web;
 
+import com.mile.interceptor.DuplicatedInterceptor;
 import com.mile.resolver.comment.CommentVariableResolver;
 import com.mile.resolver.moim.MoimVariableResolver;
 import com.mile.resolver.post.PostVariableResolver;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final PostVariableResolver postVariableResolver;
     private final CommentVariableResolver commentVariableResolver;
     private final ReplyVariableResolver replyVariableResolver;
+    private final DuplicatedInterceptor duplicatedInterceptor;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -28,6 +31,20 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
                 .maxAge(3000);
+    }
+
+    /*
+    - 글 임시저장 `{{base_url}}/api/post/temporary`
+- 글 작성 `{{base_url}}/api/post`
+- 댓글 작성 `{{base_url}}/api/post/:postId/comment`
+- 대댓글 작성 `{{base_url}}/api/comment/:commentId`
+- 글감 생성 `{{base_url}}/api/moim/:moimId/topic`
+     */
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(duplicatedInterceptor)
+                .addPathPatterns("/api/post/temporary", "/api/post", "/api/post/{postId}/comment","/api/comment/{commentId}", "/api/moim/{moimId}/topic");
     }
 
     @Override
