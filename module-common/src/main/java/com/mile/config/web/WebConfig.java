@@ -33,14 +33,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3000);
     }
 
-    /*
-    - 글 임시저장 `{{base_url}}/api/post/temporary`
-- 글 작성 `{{base_url}}/api/post`
-- 댓글 작성 `{{base_url}}/api/post/:postId/comment`
-- 대댓글 작성 `{{base_url}}/api/comment/:commentId`
-- 글감 생성 `{{base_url}}/api/moim/:moimId/topic`
-     */
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(duplicatedInterceptor)
