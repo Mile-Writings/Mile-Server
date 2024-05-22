@@ -7,6 +7,7 @@ import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.JwtValidationException;
 import com.mile.exception.model.NotFoundException;
+import com.mile.exception.model.TooManyRequestException;
 import com.mile.exception.model.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +88,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> handleConflictException(final ConflictException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse.of(e.getErrorMessage()));
+    }
+
+    @ExceptionHandler(TooManyRequestException.class)
+    public ResponseEntity<ErrorResponse> handleTooManyRequestException(final TooManyRequestException e) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
     @ExceptionHandler({NoHandlerFoundException.class})
