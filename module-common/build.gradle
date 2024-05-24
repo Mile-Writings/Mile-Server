@@ -11,6 +11,8 @@ dependencies {
     //Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
+    //Redisson
+    implementation "org.redisson:redisson:3.29.0"
     //Aop
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 }

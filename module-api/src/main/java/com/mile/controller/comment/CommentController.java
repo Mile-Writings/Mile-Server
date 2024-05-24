@@ -1,7 +1,7 @@
 package com.mile.controller.comment;
 
 
-import com.mile.authentication.PrincipalHandler;
+import com.mile.config.filter.PrincipalHandler;
 import com.mile.comment.service.CommentService;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
 import com.mile.dto.SuccessResponse;
