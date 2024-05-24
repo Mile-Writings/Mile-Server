@@ -10,6 +10,7 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicInfoResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
+import com.mile.post.domain.Post;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.PostListResponse;
@@ -29,6 +30,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -143,12 +145,18 @@ public class TopicService {
     }
 
     public PostListInTopicResponse getPostListByTopic(
-            final Long topicId
+            final Long topicId,
+            final String lastPostId
     ) {
         Topic topic = findById(topicId);
+        Slice<Post> posts = postGetService.findByTopicAndLastPostId(topic, secureUrlUtil.decodeIfNotNull(lastPostId));
         return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
-                postGetService.findByTopic(topic).stream().map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).collect(Collectors.toList()));
+                posts.stream().sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
+                        .map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).toList(),
+                posts.hasNext()
+        );
     }
+
 
     public MoimTopicInfoListResponse getTopicListFromMoim(
             final Long moimId,

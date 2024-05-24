@@ -10,6 +10,9 @@ import com.mile.topic.domain.Topic;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -23,6 +26,7 @@ public class PostGetService {
 
     private final PostRepository postRepository;
     private final SecureUrlUtil secureUrlUtil;
+    private static final int POST_BY_TOPIC_PER_PAGE_SIZE = 6;
 
     public Post findById(
             final Long postId
@@ -38,7 +42,6 @@ public class PostGetService {
             final Moim moim,
             final WriterName writerName
     ) {
-
         Optional<Post> post = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName);
         if (post.isEmpty()) {
             return secureUrlUtil.encodeUrl(0L);
@@ -52,13 +55,13 @@ public class PostGetService {
         return postList.isEmpty();
     }
 
-    public List<Post> findByTopic(
-            final Topic topic
+    public Slice<Post> findByTopicAndLastPostId(
+            final Topic topic,
+            final Long lastPostId
     ) {
-        List<Post> postList = postRepository.findByTopic(topic);
-        postList.removeIf(Post::isTemporary);
-        return postList.stream()
-                .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed()).collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(0, POST_BY_TOPIC_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Slice<Post> posts = postRepository.findByTopicAndLastPostId(topic, pageRequest, lastPostId);
+        return posts;
     }
 
 
