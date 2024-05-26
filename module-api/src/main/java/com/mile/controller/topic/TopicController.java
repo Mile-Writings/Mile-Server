@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -30,9 +31,10 @@ public class TopicController implements TopicControllerSwagger {
     @GetMapping("/{topicId}")
     public SuccessResponse<PostListInTopicResponse> getPostListByTopic(
             @TopicIdPathVariable Long topicId,
-            @PathVariable("topicId") final String topicUrl
+            @PathVariable("topicId") final String topicUrl,
+            @RequestParam(required = false) final String lastPostId
     ) {
-        return SuccessResponse.of(SuccessMessage.MOIM_POST_GET_SUCCESS, topicService.getPostListByTopic(topicId));
+        return SuccessResponse.of(SuccessMessage.MOIM_POST_GET_SUCCESS, topicService.getPostListByTopic(topicId, lastPostId));
     }
 
     @Override
