@@ -1,6 +1,6 @@
 package com.mile.controller.post;
 
-import com.mile.authentication.PrincipalHandler;
+import com.mile.config.filter.PrincipalHandler;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
