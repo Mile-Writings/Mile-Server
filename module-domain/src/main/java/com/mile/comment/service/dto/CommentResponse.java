@@ -41,7 +41,7 @@ public record CommentResponse(
             final WriterName writerName,
             final boolean isWriterOfPost
     ) {
-        if (isWriterOfPost) {
+        if (!comment.isAnonymous() && isWriterOfPost) {
             return AUTHOR;
         } else if (comment.isAnonymous()) {
             return ANONYMOUS + writerName.getId().toString();
