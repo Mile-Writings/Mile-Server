@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -49,7 +48,7 @@ public enum ErrorMessage {
     LEAST_TOPIC_SIZE_OF_MOIM_ERROR(HttpStatus.BAD_REQUEST.value(), "모임에는 최소 하나의 글감이 있어야 합니다."),
     USER_MOIM_ALREADY_JOIN(HttpStatus.BAD_REQUEST.value(), "사용자는 이미 모임에 가입했습니다."),
     WRITER_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 필명입니다."),
-    MOIM_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 모임명입니다."),
+    MOIM_NAME_VALIDATE_ERROR(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 모임명입니다."),
     EXCEED_MOIM_MAX_SIZE(HttpStatus.BAD_REQUEST.value(), "최대 가입 가능 모임 개수(5개)를 초과하였습니다."),
     /*
     Conflict

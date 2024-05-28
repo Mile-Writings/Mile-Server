@@ -4,6 +4,7 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.lock.AtomicValidateUniqueMoimName;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
@@ -264,13 +265,23 @@ public class MoimService {
         authenticateOwnerOfMoim(moim, userId);
     }
 
+    @AtomicValidateUniqueMoimName
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
-            throw new BadRequestException(ErrorMessage.MOIM_NAME_LENGTH_WRONG);
+            throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
+    }
+
+    private void checkMoimNameUnique(
+            final String moimName
+    ) {
+        if(moimRepository.existsByName(moimName)) {
+            log.info("------------");
+            throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
+        }
     }
 
     public InvitationCodeGetResponse getInvitationCode(
@@ -292,11 +303,13 @@ public class MoimService {
         return topicService.createTopicOfMoim(moim, createRequest).toString();
     }
 
+    @AtomicValidateUniqueMoimName
     @Transactional
     public MoimCreateResponse createMoim(
             final Long userId,
             final MoimCreateRequest createRequest
     ) {
+        checkMoimNameUnique(createRequest.moimName());
         Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
         User user = userService.findById(userId);
 
