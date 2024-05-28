@@ -62,7 +62,8 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
     public Slice<Post> findByTopicAndLastPostId(final Topic topic, final Pageable pageable, final Long lastPostId) {
         List<Post> result = jpaQueryFactory.selectFrom(post)
                 .where(post.topic.eq(topic))
-                .where(greaterThanLastPostId(lastPostId))
+                .orderBy(post.id.desc())
+                .where(lessThanLastPostId(lastPostId))
                 .where(post.isTemporary.eq(false))
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
@@ -70,8 +71,8 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return checkLastPage(pageable, result);
     }
 
-    private BooleanExpression greaterThanLastPostId(final Long lastPostId) {
-        return lastPostId != null ? post.id.gt(lastPostId) : null;
+    private BooleanExpression lessThanLastPostId(final Long lastPostId) {
+        return lastPostId != null ? post.id.lt(lastPostId) : null;
     }
 
     private Slice<Post> checkLastPage(final Pageable pageable, final List<Post> posts) {
