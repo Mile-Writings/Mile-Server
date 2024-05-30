@@ -115,7 +115,7 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
-    @GetMapping("/{moimId}/topic")
+    @GetMapping("/{moimId}/topic/today")
     public SuccessResponse<MoimTopicResponse> getTopicFromMoim(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl

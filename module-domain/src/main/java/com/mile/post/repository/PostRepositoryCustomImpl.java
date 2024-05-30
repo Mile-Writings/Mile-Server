@@ -2,9 +2,15 @@ package com.mile.post.repository;
 
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
+import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,4 +58,30 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                 .on(post.writerName.eq(requestWriterName))
                 .where(post.isTemporary.eq(true)).fetchOne());
     }
+
+    public Slice<Post> findByTopicAndLastPostId(final Topic topic, final Pageable pageable, final Long lastPostId) {
+        List<Post> result = jpaQueryFactory.selectFrom(post)
+                .where(post.topic.eq(topic))
+                .orderBy(post.id.desc())
+                .where(lessThanLastPostId(lastPostId))
+                .where(post.isTemporary.eq(false))
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+
+        return checkLastPage(pageable, result);
+    }
+
+    private BooleanExpression lessThanLastPostId(final Long lastPostId) {
+        return lastPostId != null ? post.id.lt(lastPostId) : null;
+    }
+
+    private Slice<Post> checkLastPage(final Pageable pageable, final List<Post> posts) {
+        boolean hasNext = false;
+        if (posts.size() > pageable.getPageSize()) {
+            posts.remove(pageable.getPageSize());
+            hasNext = true;
+        }
+        return new SliceImpl<>(posts, pageable, hasNext);
+    }
+
 }

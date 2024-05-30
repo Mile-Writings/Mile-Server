@@ -10,7 +10,7 @@ import java.util.Base64;
 public class SecureUrlUtil {
 
     public String encodeUrl(final Long id) {
-        return  Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
+        return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 
     public Long decodeUrl(final String url) {
@@ -19,6 +19,10 @@ public class SecureUrlUtil {
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(ErrorMessage.PATH_PARAMETER_INVALID_ERROR);
         }
+    }
+
+    public Long decodeIfNotNull(final String url) {
+        return url == null ? null : decodeUrl(url);
     }
 
 }

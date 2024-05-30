@@ -17,19 +17,13 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class CustomJwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private final ObjectMapper objectMapper;
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
         setResponse(response);
     }
 
-    private void setResponse(HttpServletResponse response) throws IOException {
-        ErrorResponse errorResponse = ErrorResponse.of(ErrorMessage.TOKEN_VALIDATION_ERROR);
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    private void setResponse(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
-
 }
