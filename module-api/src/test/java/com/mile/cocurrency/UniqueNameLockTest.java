@@ -1,4 +1,4 @@
-package com.mile;
+package com.mile.cocurrency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.authentication.UserAuthentication;
@@ -13,9 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -44,7 +42,7 @@ public class UniqueNameLockTest {
         CountDownLatch latch = new CountDownLatch(numberOfThread);
 
         MoimCreateRequest bodyDto = new
-                MoimCreateRequest("de", "string", false, "string", "string", "string", "string", "str", "string");
+                MoimCreateRequest("이정해봅시다", "string", false, "string", "string", "string", "string", "str", "string");
 
         String body = objectMapper.writeValueAsString(bodyDto);
 
