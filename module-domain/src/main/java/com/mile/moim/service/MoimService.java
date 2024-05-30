@@ -4,7 +4,6 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
-import com.mile.moim.lock.AtomicValidateUniqueMoimName;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
@@ -28,6 +27,7 @@ import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
+import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostDeleteService;
@@ -41,7 +41,6 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +51,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class MoimService {
 
@@ -275,11 +273,12 @@ public class MoimService {
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
     }
 
-    private void checkMoimNameUnique(
+
+    @AtomicValidateUniqueMoimName
+    public void checkMoimNameUnique(
             final String moimName
     ) {
-        if(moimRepository.existsByName(moimName)) {
-            log.info("------------");
+        if (moimRepository.existsByName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }
