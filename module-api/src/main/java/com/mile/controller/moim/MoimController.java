@@ -3,7 +3,6 @@ package com.mile.controller.moim;
 import com.mile.config.filter.PrincipalHandler;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.moim.lock.AtomicValidateUniqueMoimName;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
@@ -223,7 +222,6 @@ public class MoimController implements MoimControllerSwagger {
 
     @PostMapping
     @Override
-    @AtomicValidateUniqueMoimName
     public ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
             @RequestBody final MoimCreateRequest creatRequest
     ) {

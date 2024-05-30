@@ -1,4 +1,4 @@
-package com.mile.moim.lock;
+package com.mile.moim.service.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
