@@ -102,7 +102,7 @@ public class TopicService {
             final List<Topic> topicList
     ) {
         return topicList.stream()
-                .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt))
+                .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
                 .collect(Collectors.toList());
     }
 
