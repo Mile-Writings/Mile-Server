@@ -2,6 +2,8 @@ package com.mile.moim.service.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record MoimCreateRequest(
         @Max(value = 10, message = "글모임명은 최대 10자 이내로 작성해주세요.")
@@ -9,7 +11,7 @@ public record MoimCreateRequest(
         String moimName,
         @Max(value = 90, message = "글모임 소개글은 90자 이내로 작성해주세요.")
         String moimDescription,
-        @NotBlank(message = "공개 여부를 선택해 주세요.")
+        @NotNull(message = "공개 여부를 선택해 주세요.")
         Boolean isPublic,
         String imageUrl,
 
