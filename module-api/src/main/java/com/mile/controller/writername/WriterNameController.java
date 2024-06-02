@@ -7,6 +7,7 @@ import com.mile.writername.service.WriterNameDeleteService;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameDescriptionResponse;
 import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,7 +49,7 @@ public class WriterNameController implements WriterNameControllerSwagger {
     @PatchMapping("/{writerNameId}/description")
     public ResponseEntity<SuccessResponse> updateWriterNameDescription(
             @PathVariable("writerNameId") final Long writerNameId,
-            @RequestBody final WriterNameDescriptionUpdateRequest request
+            @RequestBody @Valid final WriterNameDescriptionUpdateRequest request
     ) {
         writerNameService.updateWriterNameDescription(principalHandler.getUserIdFromPrincipal(), writerNameId, request);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_DESCRIPTION_UPDATE_SUCCESS));
