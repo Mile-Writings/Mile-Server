@@ -6,5 +6,5 @@ import com.mile.user.domain.User;
 import java.util.Optional;
 
 public interface UserRepositoryCustom {
-    Optional<User> findBySocialTypeAndSocialId(final Long socialId, final SocialType socialType);
+    Optional<User> findBySocialTypeAndSocialId(final String socialId, final SocialType socialType);
 }

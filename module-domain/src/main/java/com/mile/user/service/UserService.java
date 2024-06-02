@@ -2,18 +2,16 @@ package com.mile.user.service;
 
 import com.mile.authentication.UserAuthentication;
 import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.exception.model.UnauthorizedException;
 import com.mile.external.client.SocialType;
 import com.mile.external.client.dto.UserLoginRequest;
-import com.mile.external.client.kakao.KakaoSocialService;
-import com.mile.external.client.service.dto.UserInfoResponse;
 import com.mile.jwt.JwtTokenProvider;
 import com.mile.jwt.redis.service.TokenService;
-import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.moim.service.dto.MoimOfUserResponse;
+import com.mile.service.LoginStrategyManager;
+import com.mile.service.dto.UserInfoResponse;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
@@ -31,8 +29,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final KakaoSocialService kakaoSocialService;
     private final TokenService tokenService;
+    private final LoginStrategyManager loginStrategyManager;
     private final WriterNameService writerNameService;
 
 
@@ -47,12 +45,12 @@ public class UserService {
             final String authorizationCode,
             final UserLoginRequest loginRequest
     ) {
-        switch (loginRequest.socialType()) {
-            case KAKAO:
-                return kakaoSocialService.login(authorizationCode, loginRequest);
-            default:
-                throw new BadRequestException(ErrorMessage.SOCIAL_TYPE_BAD_REQUEST);
-        }
+        return switch (loginRequest.socialType()) {
+            case KAKAO ->
+                    loginStrategyManager.getLoginStrategy(SocialType.KAKAO).login(authorizationCode, loginRequest);
+            case GOOGLE ->
+                    loginStrategyManager.getLoginStrategy(SocialType.GOOGLE).login(authorizationCode, loginRequest);
+        };
     }
 
     public Long createUser(final UserInfoResponse userResponse) {
@@ -66,7 +64,7 @@ public class UserService {
     }
 
     public User getBySocialId(
-            final Long socialId,
+            final String socialId,
             final SocialType socialType
     ) {
         User user = userRepository.findBySocialTypeAndSocialId(socialId, socialType).orElseThrow(
@@ -89,7 +87,7 @@ public class UserService {
     }
 
     public boolean isExistingUser(
-            final Long socialId,
+            final String socialId,
             final SocialType socialType
     ) {
         return userRepository.findBySocialTypeAndSocialId(socialId, socialType).isPresent();
@@ -155,6 +153,7 @@ public class UserService {
                         () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
                 );
     }
+
     public MoimListOfUserResponse getMoimOfUserList(
             final Long userId
     ) {

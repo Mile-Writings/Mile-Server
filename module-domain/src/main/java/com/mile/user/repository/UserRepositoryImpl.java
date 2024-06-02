@@ -16,7 +16,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public Optional<User> findBySocialTypeAndSocialId(
-            final Long socialId,
+            final String socialId,
             final SocialType socialType
     ) {
         return Optional.ofNullable(
