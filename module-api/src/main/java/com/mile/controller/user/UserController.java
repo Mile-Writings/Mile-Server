@@ -10,6 +10,7 @@ import com.mile.user.service.UserService;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -37,7 +38,7 @@ public class UserController implements UserControllerSwagger {
     @Override
     public ResponseEntity<SuccessResponse<AccessTokenGetSuccess>> login(
             @RequestParam final String authorizationCode,
-            @RequestBody final UserLoginRequest loginRequest,
+            @RequestBody @Valid final UserLoginRequest loginRequest,
             HttpServletResponse response
     ) {
         LoginSuccessResponse successResponse = userService.create(authorizationCode, loginRequest);

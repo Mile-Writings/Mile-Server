@@ -154,7 +154,7 @@ public class PostController implements PostControllerSwagger {
     @Override
     @PostMapping("/temporary")
     public SuccessResponse createTemporaryPost(
-            @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest
+            @RequestBody @Valid final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postService.createTemporaryPost(
                 principalHandler.getUserIdFromPrincipal(),
@@ -180,7 +180,7 @@ public class PostController implements PostControllerSwagger {
     @PutMapping("/temporary/{postId}")
     public ResponseEntity<SuccessResponse<WriterNameResponse>> putTemporaryToFixedPost(
             @PostIdPathVariable final Long postId,
-            @RequestBody final PostPutRequest request,
+            @RequestBody @Valid final PostPutRequest request,
             @PathVariable("postId") final String postUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putTemporaryToFixedPost(

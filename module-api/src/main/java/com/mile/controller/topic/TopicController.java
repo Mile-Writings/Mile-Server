@@ -8,6 +8,7 @@ import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicPutRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,7 +59,7 @@ public class TopicController implements TopicControllerSwagger {
 
     @PutMapping("/{topicId}")
     public ResponseEntity<SuccessResponse> putTopic(
-            @RequestBody final TopicPutRequest topicPutRequest,
+            @RequestBody @Valid final TopicPutRequest topicPutRequest,
             @TopicIdPathVariable final Long topicId,
             @PathVariable("topicId") final String topicUrl
     ) {
