@@ -27,6 +27,7 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writername.service.dto.WriterNameShortResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class MoimController implements MoimControllerSwagger {
     @PostMapping("{moimId}/user")
     public ResponseEntity<SuccessResponse> joinMoim(
             @MoimIdPathVariable final Long moimId,
-            @RequestBody final WriterMemberJoinRequest joinRequest,
+            @RequestBody @Valid final WriterMemberJoinRequest joinRequest,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.created(URI.create(
@@ -167,7 +168,7 @@ public class MoimController implements MoimControllerSwagger {
     @PostMapping("/{moimId}/topic")
     public ResponseEntity<SuccessResponse> createTopicOfMoim(
             @MoimIdPathVariable final Long moimId,
-            @RequestBody final TopicCreateRequest createRequest,
+            @RequestBody @Valid final TopicCreateRequest createRequest,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.created(URI.create(moimService.createTopic(moimId, principalHandler.getUserIdFromPrincipal(), createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
@@ -204,7 +205,7 @@ public class MoimController implements MoimControllerSwagger {
     @PutMapping("/{moimId}/info")
     public ResponseEntity<SuccessResponse> modifyMoimInformation(
             @MoimIdPathVariable final Long moimId,
-            @RequestBody final MoimInfoModifyRequest request,
+            @RequestBody @Valid final MoimInfoModifyRequest request,
             @PathVariable("moimId") final String moimUrl
     ) {
         moimService.modifyMoimInforation(moimId, principalHandler.getUserIdFromPrincipal(), request);
@@ -223,7 +224,7 @@ public class MoimController implements MoimControllerSwagger {
     @PostMapping
     @Override
     public ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
-            @RequestBody final MoimCreateRequest creatRequest
+            @RequestBody @Valid final MoimCreateRequest creatRequest
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_CREATE_SUCCESS, moimService.createMoim(principalHandler.getUserIdFromPrincipal(), creatRequest)));
     }
