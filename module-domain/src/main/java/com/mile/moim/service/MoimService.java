@@ -252,12 +252,13 @@ public class MoimService {
         }
     }
 
-    @Transactional
+    @AtomicValidateUniqueMoimName
     public void modifyMoimInforation(
             final Long moimId,
             final Long userId,
             final MoimInfoModifyRequest modifyRequest
     ) {
+        validateMoimName(modifyRequest.moimTitle());
         Moim moim = findById(moimId);
         moim.modifyMoimInfo(modifyRequest);
         authenticateOwnerOfMoim(moim, userId);
@@ -303,7 +304,6 @@ public class MoimService {
     }
 
     @AtomicValidateUniqueMoimName
-    @Transactional
     public MoimCreateResponse createMoim(
             final Long userId,
             final MoimCreateRequest createRequest
