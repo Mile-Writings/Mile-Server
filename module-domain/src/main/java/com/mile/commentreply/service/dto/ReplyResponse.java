@@ -39,12 +39,8 @@ public record ReplyResponse(
             final WriterName writerName,
             final boolean isWriterOfPost
     ) {
-        if (isWriterOfPost) {
-            return AUTHOR;
-        } else if (commentReply.isAnonymous()) {
-            return ANONYMOUS + writerName.getId().toString();
-        } else {
-            return writerName.getName();
-        }
+        if (commentReply.isAnonymous()) return ANONYMOUS + writerName.getId().toString();
+        if (isWriterOfPost) return AUTHOR;
+        return writerName.getName();
     }
 }
