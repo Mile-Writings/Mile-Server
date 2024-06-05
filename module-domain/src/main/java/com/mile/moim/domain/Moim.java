@@ -38,7 +38,9 @@ public class Moim extends BaseTimeEntity {
             final MoimInfoModifyRequest moimInfoModifyRequest
     ) {
         this.name = moimInfoModifyRequest.moimTitle();
-        this.imageUrl = moimInfoModifyRequest.imageUrl();
+        if (moimInfoModifyRequest.imageUrl() != null) {
+            this.imageUrl = moimInfoModifyRequest.imageUrl();
+        }
         this.information = moimInfoModifyRequest.description();
         this.isPublic = moimInfoModifyRequest.isPublic();
     }
@@ -59,9 +61,11 @@ public class Moim extends BaseTimeEntity {
     public static Moim create(
             final MoimCreateRequest moimCreateRequest
     ) {
+        String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
+
         return Moim.builder()
                 .name(moimCreateRequest.moimName())
-                .imageUrl(moimCreateRequest.imageUrl())
+                .imageUrl(moimCreateRequest.imageUrl() == null ? DEFAULT_IMG_URL : moimCreateRequest.imageUrl())
                 .information(moimCreateRequest.moimDescription())
                 .isPublic(moimCreateRequest.isPublic())
                 .build();
