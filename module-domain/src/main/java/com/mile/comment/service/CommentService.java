@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -142,10 +143,15 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
-    public int findCommentCountByPost(
+
+    private int findCommentReplyByPost(
             final Post post
     ) {
-        return findByPostId(post.getId()).size();
+        AtomicInteger result = new AtomicInteger();
+        findByPostId(post.getId()).iterator().forEachRemaining(
+                c -> result.addAndGet(commentReplyService.findRepliesCountByComment(c))
+        );
+        return result.intValue();
     }
 
 
@@ -165,6 +171,6 @@ public class CommentService {
     public int countByPost(
             final Post post
     ) {
-        return commentRepository.countByPost(post);
+        return commentRepository.countByPost(post) + findCommentReplyByPost(post);
     }
 }
