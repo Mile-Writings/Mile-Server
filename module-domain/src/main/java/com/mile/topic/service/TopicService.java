@@ -152,7 +152,7 @@ public class TopicService {
         Slice<Post> posts = postGetService.findByTopicAndLastPostId(topic, secureUrlUtil.decodeIfNotNull(lastPostId));
         return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
                 posts.stream().sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
-                        .map(p -> PostListResponse.of(p, commentService.findCommentCountByPost(p))).toList(),
+                        .map(p -> PostListResponse.of(p, commentService.countByPost(p))).toList(),
                 posts.hasNext()
         );
     }
