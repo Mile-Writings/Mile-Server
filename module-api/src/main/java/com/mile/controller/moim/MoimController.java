@@ -16,6 +16,7 @@ import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
@@ -27,6 +28,13 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writername.service.dto.WriterNameShortResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -103,6 +111,7 @@ public class MoimController implements MoimControllerSwagger {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS,
                 moimService.getAuthenticateUserOfMoim(moimId, principalHandler.getUserIdFromPrincipal()));
     }
+
 
     @Override
     @GetMapping("/{moimId}/writers/top-rank")
@@ -255,6 +264,16 @@ public class MoimController implements MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(moimId, principalHandler.getUserIdFromPrincipal())));
+    }
+
+    @Override
+    @GetMapping("/{moimId}/public-status")
+    public SuccessResponse<MoimPublicStatusResponse> getPublicStatusOfMoim(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return SuccessResponse.of(SuccessMessage.MOIM_PUBLIC_STATUS_GET_SUCCESS,
+                moimService.getPublicStatusOfMoim(moimId));
     }
 
 }

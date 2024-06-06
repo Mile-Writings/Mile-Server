@@ -18,6 +18,7 @@ import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
@@ -347,4 +348,9 @@ public class MoimService {
         return writerNameService.getWriterNameInfoList(moimId, page);
     }
 
+    public MoimPublicStatusResponse getPublicStatusOfMoim(
+            final Long moimId
+    ) {
+        return MoimPublicStatusResponse.of(findById(moimId).isPublic());
+    }
 }
