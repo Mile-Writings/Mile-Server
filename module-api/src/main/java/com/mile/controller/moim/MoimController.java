@@ -1,7 +1,6 @@
 package com.mile.controller.moim;
 
 import com.mile.config.filter.PrincipalHandler;
-import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
