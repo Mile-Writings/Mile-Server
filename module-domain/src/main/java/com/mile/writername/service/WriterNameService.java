@@ -208,23 +208,20 @@ public class WriterNameService {
                 );
     }
 
-    private List<WriterName> findAllByMoimId(
-            final Long moimId
-    ) {
-        return writerNameRepository.findByMoimId(moimId);
-    }
 
     public MoimWriterNameListGetResponse getWriterNameInfoList(
-            final Long moimId,
+            final Moim moim,
             final int page
     ) {
+        final Long moimId = moim.getId();
         PageRequest pageRequest = PageRequest.of(page - 1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         Page<WriterName> writerNamePage = writerNameRepository.findByMoimIdOrderByIdDesc(moimId, pageRequest);
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
                 .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
                         postGetService.findPostCountByWriterNameId(writerName.getId()),
-                        commentGetService.findCommentCountByWriterNameId(writerName.getId())))
+                        commentGetService.findCommentCountByWriterNameId(writerName.getId()),
+                        writerName.equals(moim.getOwner())))
                 .collect(Collectors.toList());
 
         return MoimWriterNameListGetResponse.of(
