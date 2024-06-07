@@ -345,7 +345,7 @@ public class MoimService {
     ) {
         Moim moim = findById(moimId);
         authenticateOwnerOfMoim(moim, userId);
-        return writerNameService.getWriterNameInfoList(moimId, page);
+        return writerNameService.getWriterNameInfoList(moim, page);
     }
 
     public MoimPublicStatusResponse getPublicStatusOfMoim(

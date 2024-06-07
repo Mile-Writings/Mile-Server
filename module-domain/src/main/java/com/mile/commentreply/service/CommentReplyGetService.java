@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CommentReplyRetriever {
+public class CommentReplyGetService {
 
     private final CommentReplyRepository commentReplyRepository;
 
