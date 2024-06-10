@@ -12,7 +12,6 @@ public record TopicCreateRequest(
         @NotBlank(message = "글감 태그가 비어있습니다.")
         String topicTag,
         @Size(max = 5, message = "글감 설명은 최대 90자 이내로 작성해주세요.")
-        @NotBlank(message = "글감 설명은 비어있습니다.")
         String topicDescription
 ) {
         public static TopicCreateRequest of(
