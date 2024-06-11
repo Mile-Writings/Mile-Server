@@ -87,6 +87,7 @@ public enum ErrorMessage {
     IMAGE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷으로부터 이미지를 삭제하는 데 실패했습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다."),
     DISCORD_LOG_APPENDER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "디스코드 로그 전송에 실패하였습니다"),
+    TIME_OUT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR.value(), "락을 획득하는 과정에서 Time Out이 발생했습니다."),
     ;
 
     final int status;

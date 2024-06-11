@@ -1,5 +1,7 @@
 package com.mile.moim.service.lock;
 
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.MileException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -38,7 +40,7 @@ public class MoimNameRequestAspect {
     }
 
     public void checkAvailability(final Boolean available) {
-        if (!available) throw new RuntimeException("Lock is Unavailable");
+        if (!available) throw new MileException(ErrorMessage.TIME_OUT_EXCEPTION);
     }
 
 }
