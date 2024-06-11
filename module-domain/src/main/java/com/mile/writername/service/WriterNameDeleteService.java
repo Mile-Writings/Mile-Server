@@ -4,6 +4,7 @@ import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.domain.Moim;
 import com.mile.moim.service.MoimService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.writername.domain.WriterName;
@@ -43,5 +44,11 @@ public class WriterNameDeleteService {
         return writerNameRepository.findById(writerNameId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
         );
+    }
+
+    public void deleteWriterNamesByMoim(
+            final Moim moim
+    ) {
+        writerNameRepository.deleteAllByMoim(moim);
     }
 }

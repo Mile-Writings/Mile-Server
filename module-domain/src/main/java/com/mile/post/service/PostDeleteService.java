@@ -56,6 +56,12 @@ public class PostDeleteService {
         postRepository.delete(post);
     }
 
+    public void deletePosts(
+            final List<Post> posts
+    ) {
+        posts.forEach(post -> delete(post));
+    }
+
     private void deleteRelatedData(
             final Post post
     ) {

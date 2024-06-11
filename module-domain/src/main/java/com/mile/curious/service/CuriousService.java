@@ -62,6 +62,12 @@ public class CuriousService {
         curiousRepository.deleteAllByPost(post);
     }
 
+    public void deleteAllByPosts(
+            final List<Post> posts
+    ) {
+        posts.forEach(post -> deleteAllByPost(post));
+    }
+
     public void deleteAllByWriterNameId(
             final Long writerNameId
     ) {

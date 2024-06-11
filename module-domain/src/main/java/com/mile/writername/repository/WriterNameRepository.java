@@ -32,4 +32,6 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     List<WriterName> findAllByWriterId(final Long writerId);
 
     Integer countAllByWriter(final User user);
+
+    void deleteAllByMoim(final Moim moim);
 }

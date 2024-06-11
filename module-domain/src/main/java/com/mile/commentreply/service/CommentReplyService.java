@@ -83,4 +83,8 @@ public class CommentReplyService {
                 () -> new NotFoundException(ErrorMessage.REPLY_NOT_FOUND)
         );
     }
+
+    public void deleteRepliesByComments(final List<Comment> comments) {
+        comments.forEach(comment -> deleteRepliesByComment(comment));
+    }
 }

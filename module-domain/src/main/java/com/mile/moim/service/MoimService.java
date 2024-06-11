@@ -1,5 +1,11 @@
 package com.mile.moim.service;
 
+import com.mile.comment.domain.Comment;
+import com.mile.comment.service.CommentService;
+import com.mile.commentreply.domain.CommentReply;
+import com.mile.commentreply.service.CommentReplyService;
+import com.mile.curious.domain.Curious;
+import com.mile.curious.service.CuriousService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
@@ -32,12 +38,14 @@ import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
+import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameDeleteService;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
@@ -60,10 +68,14 @@ public class MoimService {
     private final TopicService topicService;
     private final UserService userService;
     private final MoimRepository moimRepository;
-    private final PostDeleteService postCuriousService;
+    private final PostDeleteService postDeleteService;
     private final PostAuthenticateService postAuthenticateService;
+    private final CommentReplyService commentReplyService;
+    private final CuriousService curiousService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
+    private final CommentService commentService;
+    private final WriterNameDeleteService writerNameDeleteService;
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
@@ -175,7 +187,7 @@ public class MoimService {
     }
 
     public MoimCuriousPostListResponse getMostCuriousPostFromMoim(final Long moimId) {
-        return postCuriousService.getMostCuriousPostByMoim(findById(moimId));
+        return postDeleteService.getMostCuriousPostByMoim(findById(moimId));
     }
 
     public TopicListResponse getTopicList(
@@ -352,5 +364,26 @@ public class MoimService {
             final Long moimId
     ) {
         return MoimPublicStatusResponse.of(findById(moimId).isPublic());
+    }
+
+    @Transactional
+    public void deleteMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        getAuthenticateOwnerOfMoim(moimId, userId);
+        Moim moim = findById(moimId);
+        List<Topic> topics = topicService.findTopicListByMoimId(moimId);
+        List<Post> posts = postGetService.findAllByTopics(topics);
+        List<Comment> comments = commentService.findAllByPosts(posts);
+
+        commentReplyService.deleteRepliesByComments(comments);
+        commentService.deleteComments(comments);
+        curiousService.deleteAllByPosts(posts);
+        postDeleteService.deletePosts(posts);
+        topicService.deleteTopics(topics);
+        writerNameDeleteService.deleteWriterNamesByMoim(moim);
+        moimRepository.delete(moim);
+
     }
 }

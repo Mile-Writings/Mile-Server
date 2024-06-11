@@ -92,7 +92,7 @@ public class TopicService {
         }
     }
 
-    private List<Topic> findTopicListByMoimId(
+    public List<Topic> findTopicListByMoimId(
             final Long moimId
     ) {
         return topicRepository.findByMoimId(moimId);
@@ -249,6 +249,12 @@ public class TopicService {
     ) {
         postGetService.findAllByTopic(topic)
                 .forEach(postDeleteService::delete);
+    }
+
+    public void deleteTopics(
+            final List<Topic> topics
+    ) {
+        topicRepository.deleteAll(topics);
     }
 }
 
