@@ -26,8 +26,7 @@ public class MoimNameRequestAspect {
 
     @Around("uniqueMoimNameCut()")
     public Object validateUniqueName(final ProceedingJoinPoint joinPoint) throws Throwable {
-        final String key = MOIM_NAME_LOCK + joinPoint.getSignature().getName();
-        final RLock lock = redissonClient.getLock(key);
+        final RLock lock = redissonClient.getLock(MOIM_NAME_LOCK);
         try {
             checkAvailability(lock.tryLock(3, 4, TimeUnit.SECONDS));
             return aopForTransaction.proceed(joinPoint);
