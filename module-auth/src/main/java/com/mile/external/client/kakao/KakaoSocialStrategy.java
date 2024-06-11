@@ -4,29 +4,32 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.external.client.SocialType;
 import com.mile.external.client.dto.UserLoginRequest;
-import com.mile.external.client.kakao.response.KakaoAccessTokenResponse;
-import com.mile.external.client.kakao.response.KakaoUserResponse;
-import com.mile.external.client.service.SocialService;
-import com.mile.external.client.service.dto.UserInfoResponse;
-import com.mile.jwt.redis.service.TokenService;
+import com.mile.external.client.kakao.api.KakaoAccessTokenClient;
+import com.mile.external.client.kakao.api.KakaoUserClient;
+import com.mile.external.client.kakao.api.dto.KakaoAccessTokenResponse;
+import com.mile.external.client.kakao.api.dto.KakaoUserResponse;
+import com.mile.service.LoginStrategy;
+import com.mile.service.dto.UserInfoResponse;
 import feign.FeignException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
-@Service
+
+@Component
 @RequiredArgsConstructor
-public class KakaoSocialService extends SocialService {
+public class KakaoSocialStrategy implements LoginStrategy {
 
     private static final String AUTH_CODE = "authorization_code";
     @Value("${kakao.clientId}")
     private String clientId;
-    private final KakaoApiClient kakaoApiClient;
-    private final KakaoAuthApiClient kakaoAuthApiClient;
+    private final KakaoUserClient kakaoApiClient;
+    private final KakaoAccessTokenClient kakaoAuthApiClient;
+    @Getter
+    private final SocialType socialType = SocialType.KAKAO;
+
 
 
     @Transactional
@@ -37,13 +40,12 @@ public class KakaoSocialService extends SocialService {
     ) {
         String accessToken;
         try {
-            // 인가 코드로 Access Token + Refresh Token 받아오기
             accessToken = getOAuth2Authentication(loginRequest.redirectUri(), authorizationCode);
         } catch (FeignException e) {
             throw new BadRequestException(ErrorMessage.AUTHENTICATION_CODE_EXPIRED);
         }
-        // Access Token으로 유저 정보 불러오기
-        return getLoginDto(loginRequest.socialType(), getUserInfo(accessToken));
+        KakaoUserResponse response = getUserInfo(accessToken);
+        return getLoginDto(loginRequest.socialType(), response.id(), response.kakaoAccount().profile().accountEmail());
     }
 
     private String getOAuth2Authentication(
@@ -65,14 +67,15 @@ public class KakaoSocialService extends SocialService {
         return kakaoApiClient.getUserInformation("Bearer " + accessToken);
     }
 
-    private UserInfoResponse getLoginDto(
+    public UserInfoResponse getLoginDto(
             final SocialType socialType,
-            final KakaoUserResponse userResponse
+            final Long socialId,
+            final String email
     ) {
         return UserInfoResponse.of(
-                userResponse.id(),
+                socialId.toString(),
                 socialType,
-                userResponse.kakaoAccount().profile().accountEmail()
+                email
         );
     }
 

@@ -1,14 +1,14 @@
-package com.mile.external.client.service.dto;
+package com.mile.service.dto;
 
 import com.mile.external.client.SocialType;
 
 public record UserInfoResponse(
-        Long socialId,
+        String socialId,
         SocialType socialType,
         String email
 ) {
     public static UserInfoResponse of(
-            final Long socialId,
+            final String socialId,
             final SocialType socialType,
             final String email
     ) {
