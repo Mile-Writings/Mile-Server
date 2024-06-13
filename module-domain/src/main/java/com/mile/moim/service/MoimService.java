@@ -87,7 +87,8 @@ public class MoimService {
         if (writerName.length() > WRITER_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
         }
-        return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
+        String normalizedWriterName = writerName.replaceAll("\\s+", "").toLowerCase();
+        return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), normalizedWriterName));
     }
 
     public Long joinMoim(
@@ -268,10 +269,11 @@ public class MoimService {
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
+        String normalizedMoimName = moimName.replaceAll("\\s+", "").toLowerCase();
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_LENGTH_WRONG);
         }
-        return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
+        return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(normalizedMoimName));
     }
 
     public InvitationCodeGetResponse getInvitationCode(
