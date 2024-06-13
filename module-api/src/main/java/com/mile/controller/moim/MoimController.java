@@ -3,6 +3,7 @@ package com.mile.controller.moim;
 import com.mile.config.filter.PrincipalHandler;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
+import com.mile.moim.service.MoimDeleteService;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
@@ -57,6 +58,7 @@ import java.net.URI;
 public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
+    private final MoimDeleteService moimDeleteService;
     private final PrincipalHandler principalHandler;
 
     @Override
@@ -283,9 +285,8 @@ public class MoimController implements MoimControllerSwagger {
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        moimService.deleteMoim(moimId, principalHandler.getUserIdFromPrincipal());
+        moimDeleteService.deleteMoim(moimId, principalHandler.getUserIdFromPrincipal());
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
-
     }
 
 }

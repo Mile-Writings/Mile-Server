@@ -70,12 +70,8 @@ public class MoimService {
     private final MoimRepository moimRepository;
     private final PostDeleteService postDeleteService;
     private final PostAuthenticateService postAuthenticateService;
-    private final CommentReplyService commentReplyService;
-    private final CuriousService curiousService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
-    private final CommentService commentService;
-    private final WriterNameDeleteService writerNameDeleteService;
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
@@ -255,7 +251,7 @@ public class MoimService {
         return topicService.getTopicListFromMoim(moimId, page);
     }
 
-    private void getAuthenticateOwnerOfMoim(
+    public void getAuthenticateOwnerOfMoim(
             final Long moimId,
             final Long userId
     ) {
@@ -366,24 +362,4 @@ public class MoimService {
         return MoimPublicStatusResponse.of(findById(moimId).isPublic());
     }
 
-    @Transactional
-    public void deleteMoim(
-            final Long moimId,
-            final Long userId
-    ) {
-        getAuthenticateOwnerOfMoim(moimId, userId);
-        Moim moim = findById(moimId);
-        List<Topic> topics = topicService.findTopicListByMoimId(moimId);
-        List<Post> posts = postGetService.findAllByTopics(topics);
-        List<Comment> comments = commentService.findAllByPosts(posts);
-
-        commentReplyService.deleteRepliesByComments(comments);
-        commentService.deleteComments(comments);
-        curiousService.deleteAllByPosts(posts);
-        postDeleteService.deletePosts(posts);
-        topicService.deleteTopics(topics);
-        writerNameDeleteService.deleteWriterNamesByMoim(moim);
-        moimRepository.delete(moim);
-
-    }
 }
