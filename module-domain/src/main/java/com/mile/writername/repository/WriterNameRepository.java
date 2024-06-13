@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
@@ -18,8 +20,8 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     List<WriterName> findByMoimId(final Long moimId);
 
-
-    boolean existsWriterNameByMoimAndName(final Moim moim, final String name);
+    @Query("SELECT CASE WHEN COUNT(w) > 0 THEN TRUE ELSE FALSE END FROM WriterName w WHERE w.moim = :moim AND w.normalizedName = :normalizedName")
+    boolean existsWriterNameByMoimAndName(@Param("moim") Moim moim, @Param("normalizedName") String normalizedName);
 
     Optional<WriterName> findByWriterId(final Long userId);
 

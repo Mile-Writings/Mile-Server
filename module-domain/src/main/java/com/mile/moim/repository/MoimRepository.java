@@ -12,7 +12,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface MoimRepository extends JpaRepository<Moim, Long>, MoimRepositoryCustom {
     List<Post> getPostsById(final Long id);
-    Boolean existsByName(final String name);
+
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Moim m WHERE m.normalizedName = :name")
+    Boolean existsByName(@Param("name") String name);
 
     @Query("SELECT m FROM Post p JOIN p.topic t JOIN t.moim m WHERE m.isPublic = true AND p.createdAt BETWEEN :startOfWeek AND :endOfWeek GROUP BY m ORDER BY COUNT(p) DESC")
     List<Moim> findTop3PublicMoimsWithMostPostsLastWeek(Pageable pageable, @Param("startOfWeek") LocalDateTime startOfWeek, @Param("endOfWeek") LocalDateTime endOfWeek);
