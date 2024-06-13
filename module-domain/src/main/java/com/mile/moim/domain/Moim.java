@@ -4,6 +4,7 @@ import com.mile.config.BaseTimeEntity;
 import com.mile.moim.service.dto.MoimCreateRequest;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.writername.domain.WriterName;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,7 +25,7 @@ public class Moim extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private WriterName owner;
     private String name;
     private String imageUrl;

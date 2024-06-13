@@ -3,7 +3,6 @@ package com.mile.controller.moim;
 import com.mile.config.filter.PrincipalHandler;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.moim.service.MoimDeleteService;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
@@ -29,13 +28,6 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writername.service.dto.WriterNameShortResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -58,7 +50,6 @@ import java.net.URI;
 public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
-    private final MoimDeleteService moimDeleteService;
     private final PrincipalHandler principalHandler;
 
     @Override
@@ -285,7 +276,7 @@ public class MoimController implements MoimControllerSwagger {
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        moimDeleteService.deleteMoim(moimId, principalHandler.getUserIdFromPrincipal());
+        moimService.deleteMoim(moimId, principalHandler.getUserIdFromPrincipal());
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
     }
 

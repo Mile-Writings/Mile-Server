@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
@@ -33,5 +36,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     Integer countAllByWriter(final User user);
 
-    void deleteAllByMoim(final Moim moim);
+    @Modifying
+    @Query("DELETE FROM Moim m WHERE m = :moim")
+    void deleteAllByMoim(final @Param("moim") Moim moim);
 }

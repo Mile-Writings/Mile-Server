@@ -15,15 +15,14 @@ import com.mile.writername.service.WriterNameDeleteService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
-public class MoimDeleteService {
+public class MoimRemover {
 
-    private final MoimService moimService;
     private final TopicService topicService;
     private final PostGetService postGetService;
     private final CommentReplyService commentReplyService;
@@ -32,14 +31,15 @@ public class MoimDeleteService {
     private final CuriousService curiousService;
     private final MoimRepository moimRepository;
     private final WriterNameDeleteService writerNameDeleteService;
+    private final MoimRetriever moimRetriever;
 
     @Transactional
     public void deleteMoim(
             final Long moimId,
             final Long userId
     ) {
-        moimService.getAuthenticateOwnerOfMoim(moimId, userId);
-        Moim moim = moimService.findById(moimId);
+        moimRetriever.getAuthenticateOwnerOfMoim(moimId, userId);
+        Moim moim = moimRetriever.findById(moimId);
         List<Topic> topics = topicService.findTopicListByMoimId(moimId);
         List<Post> posts = postGetService.findAllByTopics(topics);
         List<Comment> comments = commentService.findAllByPosts(posts);
@@ -49,7 +49,6 @@ public class MoimDeleteService {
         curiousService.deleteAllByPosts(posts);
         postDeleteService.deletePosts(posts);
         topicService.deleteTopics(topics);
-        writerNameDeleteService.deleteWriterNamesByMoim(moim);
         moimRepository.delete(moim);
 
     }

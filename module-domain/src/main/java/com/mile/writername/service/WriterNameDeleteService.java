@@ -5,6 +5,7 @@ import com.mile.curious.service.CuriousService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.MoimRetriever;
 import com.mile.moim.service.MoimService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.writername.domain.WriterName;
@@ -21,7 +22,7 @@ public class WriterNameDeleteService {
     private final PostDeleteService postDeleteService;
     private final CommentService commentService;
     private final CuriousService curiousService;
-    private final MoimService moimService;
+    private final MoimRetriever moimRetriever;
 
     @Transactional
     public void deleteWriterNameById(
@@ -29,7 +30,7 @@ public class WriterNameDeleteService {
             final Long userId
     ) {
         WriterName writerName = findById(writerNameId);
-        moimService.authenticateOwnerOfMoim(writerName.getMoim(), userId);
+        moimRetriever.authenticateOwnerOfMoim(writerName.getMoim(), userId);
 
         postDeleteService.deleteAllPostByWriterNameId(writerNameId);
         commentService.deleteAllCommentByWriterNameId(writerNameId);
