@@ -30,7 +30,7 @@ public record PostGetResponse(
         }
         return new PostGetResponse(
                 post.getTopic().getContent(),
-                DateUtil.getKoreanStringOfLocalDate(post.getCreatedAt()),
+                DateUtil.getStringWithTimeOfLocalDate(post.getCreatedAt()),
                 post.getTitle(),
                 post.getContent(),
                 post.getImageUrl(),
