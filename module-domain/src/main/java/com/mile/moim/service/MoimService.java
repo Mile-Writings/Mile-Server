@@ -86,7 +86,8 @@ public class MoimService {
         if (writerName.length() > WRITER_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
         }
-        return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), writerName));
+        String normalizedWriterName = writerName.replaceAll("\\s+", "").toLowerCase();
+        return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(findById(moimId), normalizedWriterName));
     }
 
     public Long joinMoim(
@@ -265,14 +266,16 @@ public class MoimService {
         authenticateOwnerOfMoim(moim, userId);
     }
 
+
     @AtomicValidateUniqueMoimName
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
+        String normalizedMoimName = moimName.replaceAll("\\s+", "").toLowerCase();
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
-        return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
+        return MoimNameConflictCheckResponse.of(!moimRepository.existsByNormalizedName(normalizedMoimName));
     }
 
 
@@ -280,7 +283,7 @@ public class MoimService {
     public void checkMoimNameUnique(
             final String moimName
     ) {
-        if (moimRepository.existsByName(moimName)) {
+        if (moimRepository.existsByNormalizedName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }
