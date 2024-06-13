@@ -28,6 +28,7 @@ import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
+import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostDeleteService;
@@ -41,7 +42,6 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class MoimService {
 
@@ -254,24 +253,36 @@ public class MoimService {
         }
     }
 
-    @Transactional
+    @AtomicValidateUniqueMoimName
     public void modifyMoimInforation(
             final Long moimId,
             final Long userId,
             final MoimInfoModifyRequest modifyRequest
     ) {
+        validateMoimName(modifyRequest.moimTitle());
         Moim moim = findById(moimId);
         moim.modifyMoimInfo(modifyRequest);
         authenticateOwnerOfMoim(moim, userId);
     }
 
+    @AtomicValidateUniqueMoimName
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
-            throw new BadRequestException(ErrorMessage.MOIM_NAME_LENGTH_WRONG);
+            throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
         return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(moimName));
+    }
+
+
+    @AtomicValidateUniqueMoimName
+    public void checkMoimNameUnique(
+            final String moimName
+    ) {
+        if (moimRepository.existsByName(moimName)) {
+            throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
+        }
     }
 
     public InvitationCodeGetResponse getInvitationCode(
@@ -293,11 +304,12 @@ public class MoimService {
         return topicService.createTopicOfMoim(moim, createRequest).toString();
     }
 
-    @Transactional
+    @AtomicValidateUniqueMoimName
     public MoimCreateResponse createMoim(
             final Long userId,
             final MoimCreateRequest createRequest
     ) {
+        checkMoimNameUnique(createRequest.moimName());
         Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
         User user = userService.findById(userId);
 
