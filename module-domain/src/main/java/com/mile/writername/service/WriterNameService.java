@@ -153,7 +153,7 @@ public class WriterNameService {
             final Moim moim,
             final String name
     ) {
-        return writerNameRepository.existsWriterNameByMoimAndName(moim, name);
+        return writerNameRepository.existsWriterNameByMoimAndNormalizedName(moim, name);
     }
 
     public WriterName findByWriterId(

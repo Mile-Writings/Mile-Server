@@ -273,7 +273,7 @@ public class MoimService {
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_LENGTH_WRONG);
         }
-        return MoimNameConflictCheckResponse.of(!moimRepository.existsByName(normalizedMoimName));
+        return MoimNameConflictCheckResponse.of(!moimRepository.existsByNormalizedName(normalizedMoimName));
     }
 
     public InvitationCodeGetResponse getInvitationCode(

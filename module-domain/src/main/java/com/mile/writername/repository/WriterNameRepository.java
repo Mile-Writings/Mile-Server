@@ -20,8 +20,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     List<WriterName> findByMoimId(final Long moimId);
 
-    @Query("SELECT CASE WHEN COUNT(w) > 0 THEN TRUE ELSE FALSE END FROM WriterName w WHERE w.moim = :moim AND w.normalizedName = :normalizedName")
-    boolean existsWriterNameByMoimAndName(@Param("moim") Moim moim, @Param("normalizedName") String normalizedName);
+    boolean existsWriterNameByMoimAndNormalizedName(final Moim moim, final String normalizedName);
 
     Optional<WriterName> findByWriterId(final Long userId);
 
