@@ -12,6 +12,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +24,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "moim", uniqueConstraints = @UniqueConstraint(columnNames = "normalizedName"))
 public class Moim extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +33,7 @@ public class Moim extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private WriterName owner;
     private String name;
+    private String normalizedName;
     private String imageUrl;
     @Column(length = 500)
     private String information;
@@ -35,10 +41,17 @@ public class Moim extends BaseTimeEntity {
     private String idUrl;
     private boolean isPublic;
 
+    @PrePersist
+    @PreUpdate
+    public void normalizeName() {
+        this.normalizedName = this.name.replaceAll("\\s+", "").toLowerCase();
+    }
+
     public void modifyMoimInfo(
             final MoimInfoModifyRequest moimInfoModifyRequest
     ) {
         this.name = moimInfoModifyRequest.moimTitle();
+        this.normalizedName = this.name.replaceAll("\\s+", "").toLowerCase();
         if (moimInfoModifyRequest.imageUrl() != null) {
             this.imageUrl = moimInfoModifyRequest.imageUrl();
         }
@@ -54,6 +67,7 @@ public class Moim extends BaseTimeEntity {
             final boolean isPublic
     ) {
         this.name = name;
+        this.normalizedName = name.replaceAll("\\s+", "").toLowerCase();
         this.imageUrl = imageUrl;
         this.information = information;
         this.isPublic = isPublic;

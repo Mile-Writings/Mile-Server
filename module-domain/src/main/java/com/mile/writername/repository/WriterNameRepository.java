@@ -21,8 +21,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     List<WriterName> findByMoimId(final Long moimId);
 
-
-    boolean existsWriterNameByMoimAndName(final Moim moim, final String name);
+    boolean existsWriterNameByMoimAndNormalizedName(final Moim moim, final String normalizedName);
 
     Optional<WriterName> findByWriterId(final Long userId);
 
