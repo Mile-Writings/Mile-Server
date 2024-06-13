@@ -266,6 +266,7 @@ public class MoimService {
         authenticateOwnerOfMoim(moim, userId);
     }
 
+
     public MoimNameConflictCheckResponse validateMoimName(
             final String moimName
     ) {
