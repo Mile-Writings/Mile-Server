@@ -17,6 +17,16 @@ public class DateUtil {
     private static final String YEAR_DATE_STRING = "yyyy-MM-dd";
 
     /*
+        yyyy년 MM월 dd일 hh:mm 이 필요할 때 사용
+     */
+
+    public static String getKoreanStringOfLocalDateWithTime(
+            final LocalDateTime localDateTime
+    ) {
+        return getKoreanStringWithTime(localDateTime);
+    }
+
+    /*
         yyyy년 MM월 dd일 이 필요할 때 사용
     */
     public static String getKoreanStringOfLocalDate(
@@ -64,6 +74,15 @@ public class DateUtil {
         return localDateTime.format(formatter);
     }
 
+    private static String getKoreanStringWithTime(
+            final LocalDateTime localDateTime
+    ) {
+        return getKoreanString(localDateTime) + " "
+                + getHourStringValueOfLocalDate(localDateTime) + ":"
+                + getMinuteStringValueOfLocalDate(localDateTime);
+    }
+
+
     private static String getKoreanString(
             final LocalDateTime localDateTime
     ) {
@@ -88,5 +107,17 @@ public class DateUtil {
             final LocalDateTime localDateTime
     ) {
         return String.valueOf(localDateTime.getDayOfMonth());
+    }
+
+    private static String getHourStringValueOfLocalDate(
+            final LocalDateTime localDateTime
+    ) {
+        return String.valueOf(localDateTime.getHour());
+    }
+
+    private static String getMinuteStringValueOfLocalDate(
+            final LocalDateTime localDateTime
+    ) {
+        return String.valueOf(localDateTime.getMinute());
     }
 }
