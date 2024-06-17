@@ -100,4 +100,8 @@ public class WriterName {
                 .curiousCount(0)
                 .build();
     }
+
+    public void setMoimNull() {
+        this.moim = null;
+    }
 }

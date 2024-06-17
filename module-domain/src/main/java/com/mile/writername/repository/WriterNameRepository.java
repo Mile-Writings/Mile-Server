@@ -36,6 +36,6 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     Integer countAllByWriter(final User user);
 
     @Modifying
-    @Query("DELETE FROM Moim m WHERE m = :moim")
-    void deleteAllByMoim(final @Param("moim") Moim moim);
+    @Query("DELETE FROM WriterName w WHERE w.moim = :moim AND w != :owner")
+    void deleteWritersExceptOwner(@Param("moim") Moim moim, @Param("owner") WriterName owner);
 }

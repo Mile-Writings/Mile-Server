@@ -56,7 +56,7 @@ public class CommentReplyService {
     public void deleteRepliesByComment(
             final Comment comment
     ) {
-        commentReplyRepository.deleteAll(commentReplyRepository.findByComment(comment));
+        commentReplyRepository.deleteCommentRepliesByComment(comment);
     }
 
     public List<ReplyResponse> findRepliesByComment(
@@ -85,6 +85,6 @@ public class CommentReplyService {
     }
 
     public void deleteRepliesByComments(final List<Comment> comments) {
-        comments.forEach(comment -> deleteRepliesByComment(comment));
+        comments.forEach(this::deleteRepliesByComment);
     }
 }

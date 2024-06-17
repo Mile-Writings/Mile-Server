@@ -13,6 +13,8 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.writername.service.WriterNameDeleteService;
 import java.util.List;
+
+import com.mile.writername.service.WriterNameRemover;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,7 +32,7 @@ public class MoimRemover {
     private final CommentService commentService;
     private final CuriousService curiousService;
     private final MoimRepository moimRepository;
-    private final WriterNameDeleteService writerNameDeleteService;
+    private final WriterNameRemover writerNameRemover;
     private final MoimRetriever moimRetriever;
 
     @Transactional
@@ -43,12 +45,13 @@ public class MoimRemover {
         List<Topic> topics = topicService.findTopicListByMoimId(moimId);
         List<Post> posts = postGetService.findAllByTopics(topics);
         List<Comment> comments = commentService.findAllByPosts(posts);
-
         commentReplyService.deleteRepliesByComments(comments);
-        commentService.deleteComments(comments);
+        commentService.deleteComments(posts);
         curiousService.deleteAllByPosts(posts);
-        postDeleteService.deletePosts(posts);
-        topicService.deleteTopics(topics);
+        postDeleteService.deletePostsByTopic(topics);
+        writerNameRemover.deleteWriterNamesByMoim(moim);
+        topicService.deleteTopicsByMoim(moim);
+        writerNameRemover.setWriterNameMoimNull(moim.getOwner());
         moimRepository.delete(moim);
 
     }

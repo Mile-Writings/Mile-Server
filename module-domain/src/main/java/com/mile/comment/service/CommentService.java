@@ -182,7 +182,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteComments(final List<Comment> comments) {
-        comments.forEach(comment -> delete(comment));
+    public void deleteComments(final List<Post> posts) {
+        posts.forEach(this::deleteAllByPost);
     }
 }

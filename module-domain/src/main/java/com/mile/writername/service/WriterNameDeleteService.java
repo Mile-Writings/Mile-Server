@@ -46,10 +46,4 @@ public class WriterNameDeleteService {
                 () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
         );
     }
-
-    public void deleteWriterNamesByMoim(
-            final Moim moim
-    ) {
-        writerNameRepository.deleteAllByMoim(moim);
-    }
 }

@@ -65,7 +65,7 @@ public class CuriousService {
     public void deleteAllByPosts(
             final List<Post> posts
     ) {
-        posts.forEach(post -> deleteAllByPost(post));
+        posts.forEach(this::deleteAllByPost);
     }
 
     public void deleteAllByWriterNameId(
