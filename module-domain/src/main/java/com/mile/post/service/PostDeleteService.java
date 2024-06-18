@@ -8,6 +8,7 @@ import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,12 @@ public class PostDeleteService {
     ) {
         deleteRelatedData(post);
         postRepository.delete(post);
+    }
+
+    public void deletePostsByTopic(
+            final List<Topic> topics
+    ) {
+        topics.forEach(postRepository::deleteByTopic);
     }
 
     private void deleteRelatedData(

@@ -56,7 +56,7 @@ public class CommentReplyService {
     public void deleteRepliesByComment(
             final Comment comment
     ) {
-        commentReplyRepository.deleteAll(commentReplyRepository.findByComment(comment));
+        commentReplyRepository.deleteCommentRepliesByComment(comment);
     }
 
     public List<ReplyResponse> findRepliesByComment(
@@ -82,5 +82,9 @@ public class CommentReplyService {
         return commentReplyRepository.findById(replyId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.REPLY_NOT_FOUND)
         );
+    }
+
+    public void deleteRepliesByComments(final List<Comment> comments) {
+        comments.forEach(this::deleteRepliesByComment);
     }
 }

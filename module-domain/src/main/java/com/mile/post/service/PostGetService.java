@@ -81,4 +81,12 @@ public class PostGetService {
         return postRepository.countByWriterNameId(writerNameId);
     }
 
+    public List<Post> findAllByTopics(
+            final List<Topic> topics
+    ) {
+        return topics.stream()
+                .flatMap(topic -> postRepository.findByTopic(topic).stream())
+                .collect(Collectors.toList());
+    }
+
 }

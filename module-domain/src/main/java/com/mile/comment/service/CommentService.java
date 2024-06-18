@@ -137,7 +137,7 @@ public class CommentService {
         return post.getWriterName().equals(comment.getWriterName());
     }
 
-    private List<Comment> findByPostId(
+    public List<Comment> findByPostId(
             final Long postId
     ) {
         return commentRepository.findByPostId(postId);
@@ -172,5 +172,17 @@ public class CommentService {
             final Post post
     ) {
         return commentRepository.countByPost(post) + findCommentReplyByPost(post);
+    }
+
+    public List<Comment> findAllByPosts(
+            final List<Post> posts
+    ) {
+        return posts.stream()
+                .flatMap(post -> findByPostId(post.getId()).stream())
+                .collect(Collectors.toList());
+    }
+
+    public void deleteComments(final List<Post> posts) {
+        posts.forEach(this::deleteAllByPost);
     }
 }

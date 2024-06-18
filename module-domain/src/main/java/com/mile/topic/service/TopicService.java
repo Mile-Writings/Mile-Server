@@ -66,7 +66,7 @@ public class TopicService {
             final Topic topic,
             final User user
     ) {
-        if(!topic.getMoim().getOwner().getWriter().equals(user)){
+        if (!topic.getMoim().getOwner().getWriter().equals(user)) {
             throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
         }
     }
@@ -92,7 +92,7 @@ public class TopicService {
         }
     }
 
-    private List<Topic> findTopicListByMoimId(
+    public List<Topic> findTopicListByMoimId(
             final Long moimId
     ) {
         return topicRepository.findByMoimId(moimId);
@@ -163,7 +163,7 @@ public class TopicService {
             final int page
     ) {
 
-        PageRequest pageRequest = PageRequest.of(page-1, TOPIC_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(page - 1, TOPIC_PER_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Topic> topicPage = topicRepository.findByMoimIdOrderByCreatedAtDesc(moimId, pageRequest);
 
         isContentsEmpty(topicPage.getContent());
@@ -213,7 +213,7 @@ public class TopicService {
     public void deleteTopic(
             final Long userId,
             final Long topicId
-    ){
+    ) {
         Topic topic = findById(topicId);
         User user = userService.findById(userId);
         authenticateTopicWithUser(topic, user);
@@ -245,10 +245,16 @@ public class TopicService {
     }
 
     private void deletePostsOfTopic(
-        final Topic topic
+            final Topic topic
     ) {
         postGetService.findAllByTopic(topic)
                 .forEach(postDeleteService::delete);
+    }
+
+    public void deleteTopicsByMoim(
+            final Moim moim
+    ) {
+        topicRepository.deleteByMoim(moim);
     }
 }
 
