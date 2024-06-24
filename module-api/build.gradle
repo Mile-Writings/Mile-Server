@@ -1,47 +1,18 @@
-repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-}
+
 dependencies {
     implementation project(':module-domain')
     implementation project(':module-common')
     implementation project(':module-auth')
     implementation project(':module-external')
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
     implementation 'mysql:mysql-connector-java:8.0.33'
-
-    //External API
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'
-
-    //Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-
+    //Redisson
+    implementation "org.redisson:redisson:3.29.0"
     //Health Check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    
-    //Discord
-    implementation('com.github.napstr:logback-discord-appender:1.0.0')
-
-    //Aop
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-
-    //Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
 
-ext {
-    set('springCloudVersion', "2023.0.0")
-}
-dependencyManagement {
-
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-
-}
 tasks.named('test') {
     useJUnitPlatform()
 }
