@@ -1,4 +1,4 @@
-package com.mile.config.swagger;
+package com.mile.swagger;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.models.Components;
