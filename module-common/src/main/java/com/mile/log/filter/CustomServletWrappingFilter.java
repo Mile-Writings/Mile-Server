@@ -1,14 +1,12 @@
-package com.mile.filter;
+package com.mile.log.filter;
 
-import com.mile.filter.wrapper.CachedBodyRequestWrapper;
+import com.mile.log.filter.wrapper.CachedBodyRequestWrapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 

@@ -1,8 +1,6 @@
-package com.mile.config.filter;
+package com.mile.log.filter;
 
 
-import com.mile.filter.CustomServletWrappingFilter;
-import com.mile.filter.MDCFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

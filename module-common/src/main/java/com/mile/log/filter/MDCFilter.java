@@ -1,7 +1,7 @@
-package com.mile.filter;
+package com.mile.log.filter;
 
-import com.mile.utils.logging.HttpRequestUtil;
-import com.mile.utils.logging.MDCUtil;
+import com.mile.log.utils.HttpRequestUtil;
+import com.mile.log.utils.MDCUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

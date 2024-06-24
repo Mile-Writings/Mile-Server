@@ -1,8 +1,7 @@
-package com.mile.utils.logging;
+package com.mile.log.utils;
 
 
-import com.mile.filter.CustomServletWrappingFilter;
-import com.mile.filter.wrapper.CachedBodyRequestWrapper;
+import com.mile.log.filter.wrapper.CachedBodyRequestWrapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
