@@ -1,4 +1,4 @@
-package com.mile.config.filter;
+package com.mile.common;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.UnauthorizedException;

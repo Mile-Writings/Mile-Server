@@ -1,8 +1,7 @@
-package com.mile.resolver.topic;
+package com.mile.common.resolver.post;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.resolver.post.PostIdPathVariable;
 import com.mile.utils.SecureUrlUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +15,15 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Map;
 
-
 @Component
 @RequiredArgsConstructor
-public class TopicVariableResolver implements HandlerMethodArgumentResolver {
-    private static final String TOPIC_PATH_VARIABLE = "topicId";
+public class PostVariableResolver implements HandlerMethodArgumentResolver {
+    private static final String POST_PATH_VARIABLE = "postId";
     private final SecureUrlUtil secureUrlUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(TopicIdPathVariable.class);
+        return parameter.hasParameterAnnotation(PostIdPathVariable.class);
     }
 
     @Override
@@ -33,12 +31,11 @@ public class TopicVariableResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        final String topicId = pathVariables.get(TOPIC_PATH_VARIABLE);
+        final String postId = pathVariables.get(POST_PATH_VARIABLE);
         try {
-            return secureUrlUtil.decodeUrl(topicId);
+            return secureUrlUtil.decodeUrl(postId);
         } catch (NumberFormatException e) {
             throw new BadRequestException(ErrorMessage.INVALID_URL_EXCEPTION);
         }
     }
 }
-

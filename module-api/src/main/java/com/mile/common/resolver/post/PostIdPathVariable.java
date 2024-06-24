@@ -1,4 +1,4 @@
-package com.mile.resolver.reply;
+package com.mile.common.resolver.post;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReplyIdPathVariable {
+public @interface PostIdPathVariable {
 }

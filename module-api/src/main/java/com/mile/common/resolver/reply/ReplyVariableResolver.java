@@ -1,4 +1,4 @@
-package com.mile.resolver.post;
+package com.mile.common.resolver.reply;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
@@ -17,13 +17,13 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class PostVariableResolver implements HandlerMethodArgumentResolver {
-    private static final String POST_PATH_VARIABLE = "postId";
+public class ReplyVariableResolver implements HandlerMethodArgumentResolver {
+    private static final String REPLY_PATH_VARIABLE = "replyId";
     private final SecureUrlUtil secureUrlUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(PostIdPathVariable.class);
+        return parameter.hasParameterAnnotation(ReplyIdPathVariable.class);
     }
 
     @Override
@@ -31,9 +31,10 @@ public class PostVariableResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        final String postId = pathVariables.get(POST_PATH_VARIABLE);
+        final String replyId = pathVariables.get(REPLY_PATH_VARIABLE);
+        System.out.println(replyId);
         try {
-            return secureUrlUtil.decodeUrl(postId);
+            return secureUrlUtil.decodeUrl(replyId);
         } catch (NumberFormatException e) {
             throw new BadRequestException(ErrorMessage.INVALID_URL_EXCEPTION);
         }

@@ -1,6 +1,6 @@
-package com.mile.interceptor;
+package com.mile.common.interceptor;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.PrincipalHandler;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.TooManyRequestException;
 import jakarta.servlet.http.HttpServletRequest;

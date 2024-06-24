@@ -1,4 +1,4 @@
-package com.mile.resolver.comment;
+package com.mile.common.resolver.topic;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
@@ -18,13 +18,13 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class CommentVariableResolver implements HandlerMethodArgumentResolver {
-    private static final String COMMENT_PATH_VARIABLE = "commentId";
+public class TopicVariableResolver implements HandlerMethodArgumentResolver {
+    private static final String TOPIC_PATH_VARIABLE = "topicId";
     private final SecureUrlUtil secureUrlUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(CommentIdPathVariable.class);
+        return parameter.hasParameterAnnotation(TopicIdPathVariable.class);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class CommentVariableResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        final String id = pathVariables.get(COMMENT_PATH_VARIABLE);
+        final String topicId = pathVariables.get(TOPIC_PATH_VARIABLE);
         try {
-            return secureUrlUtil.decodeUrl(id);
+            return secureUrlUtil.decodeUrl(topicId);
         } catch (NumberFormatException e) {
             throw new BadRequestException(ErrorMessage.INVALID_URL_EXCEPTION);
         }

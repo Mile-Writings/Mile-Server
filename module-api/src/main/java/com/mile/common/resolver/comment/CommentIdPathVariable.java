@@ -1,4 +1,4 @@
-package com.mile.resolver.topic;
+package com.mile.common.resolver.comment;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TopicIdPathVariable {
+public @interface CommentIdPathVariable {
 
 }

@@ -1,4 +1,4 @@
-package com.mile.resolver.reply;
+package com.mile.common.resolver.moim;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
@@ -15,15 +15,16 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Map;
 
+
 @Component
 @RequiredArgsConstructor
-public class ReplyVariableResolver implements HandlerMethodArgumentResolver {
-    private static final String REPLY_PATH_VARIABLE = "replyId";
+public class MoimVariableResolver implements HandlerMethodArgumentResolver {
+    private static final String MOIM_PATH_VARIABLE = "moimId";
     private final SecureUrlUtil secureUrlUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(ReplyIdPathVariable.class);
+        return parameter.hasParameterAnnotation(MoimIdPathVariable.class);
     }
 
     @Override
@@ -31,12 +32,12 @@ public class ReplyVariableResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        final String replyId = pathVariables.get(REPLY_PATH_VARIABLE);
-        System.out.println(replyId);
+        final String moimId = pathVariables.get(MOIM_PATH_VARIABLE);
         try {
-            return secureUrlUtil.decodeUrl(replyId);
+            return secureUrlUtil.decodeUrl(moimId);
         } catch (NumberFormatException e) {
             throw new BadRequestException(ErrorMessage.INVALID_URL_EXCEPTION);
         }
     }
 }
+
