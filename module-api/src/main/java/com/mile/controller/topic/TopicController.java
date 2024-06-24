@@ -1,9 +1,9 @@
 package com.mile.controller.topic;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.PrincipalHandler;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.resolver.topic.TopicIdPathVariable;
+import com.mile.common.resolver.topic.TopicIdPathVariable;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;

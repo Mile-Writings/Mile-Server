@@ -1,6 +1,6 @@
 package com.mile.controller.moim;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.PrincipalHandler;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
@@ -26,7 +26,7 @@ import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
-import com.mile.resolver.moim.MoimIdPathVariable;
+import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

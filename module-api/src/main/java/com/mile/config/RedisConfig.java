@@ -1,4 +1,4 @@
-package com.mile.config.redis;
+package com.mile.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

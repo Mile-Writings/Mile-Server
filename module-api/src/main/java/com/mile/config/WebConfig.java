@@ -1,11 +1,12 @@
-package com.mile.config.web;
+package com.mile.config;
 
-import com.mile.interceptor.DuplicatedInterceptor;
-import com.mile.resolver.comment.CommentVariableResolver;
-import com.mile.resolver.moim.MoimVariableResolver;
-import com.mile.resolver.post.PostVariableResolver;
-import com.mile.resolver.reply.ReplyVariableResolver;
-import com.mile.resolver.topic.TopicVariableResolver;
+
+import com.mile.common.interceptor.DuplicatedInterceptor;
+import com.mile.common.resolver.comment.CommentVariableResolver;
+import com.mile.common.resolver.moim.MoimVariableResolver;
+import com.mile.common.resolver.post.PostVariableResolver;
+import com.mile.common.resolver.reply.ReplyVariableResolver;
+import com.mile.common.resolver.topic.TopicVariableResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
