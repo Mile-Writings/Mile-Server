@@ -1,4 +1,4 @@
-package com.mile.service.dto;
+package com.mile.strategy.dto;
 
 import com.mile.external.client.SocialType;
 

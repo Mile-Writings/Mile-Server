@@ -1,4 +1,4 @@
-package com.mile.service;
+package com.mile.strategy;
 
 
 import com.mile.external.client.SocialType;
