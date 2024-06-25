@@ -3,6 +3,7 @@ package com.mile.post.service;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
+import com.mile.topic.service.TopicRetriever;
 import com.mile.topic.service.TopicService;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
@@ -15,7 +16,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class PostCreateService {
     private final PostRepository postRepository;
-    private final TopicService topicService;
+    private final TopicRetriever topicRetriever;
     private final SecureUrlUtil secureUrlUtil;
     private static final boolean TEMPORARY_TRUE = true;
     private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
@@ -30,7 +31,7 @@ public class PostCreateService {
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         Post post = postRepository.save(Post.create(
-                topicService.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())), // Topic
+                topicRetriever.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())), // Topic
                 writerName, // WriterName
                 temporaryPostCreateRequest.title(),
                 temporaryPostCreateRequest.content(),
