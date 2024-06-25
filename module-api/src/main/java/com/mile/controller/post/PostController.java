@@ -1,6 +1,6 @@
 package com.mile.controller.post;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.PrincipalHandler;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
@@ -14,7 +14,7 @@ import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
-import com.mile.resolver.post.PostIdPathVariable;
+import com.mile.common.resolver.post.PostIdPathVariable;
 import com.mile.writername.service.dto.WriterNameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

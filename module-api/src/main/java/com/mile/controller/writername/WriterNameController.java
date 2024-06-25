@@ -1,6 +1,6 @@
 package com.mile.controller.writername;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.PrincipalHandler;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.writername.service.WriterNameDeleteService;

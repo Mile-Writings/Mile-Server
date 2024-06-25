@@ -2,8 +2,6 @@ package com.mile.moim.service;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.exception.model.ForbiddenException;
-import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
@@ -44,7 +42,6 @@ import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;

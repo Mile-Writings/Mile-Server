@@ -1,13 +1,13 @@
 package com.mile.controller.comment;
 
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.PrincipalHandler;
 import com.mile.comment.service.CommentService;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.resolver.comment.CommentIdPathVariable;
-import com.mile.resolver.reply.ReplyIdPathVariable;
+import com.mile.common.resolver.comment.CommentIdPathVariable;
+import com.mile.common.resolver.reply.ReplyIdPathVariable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
