@@ -10,12 +10,14 @@ import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicPutRequest;
 import com.mile.topic.service.dto.TopicResponse;
-import com.mile.topic.service.dto.TopicUpdator;
+import com.mile.user.domain.User;
+import com.mile.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,8 @@ public class TopicService {
     private final TopicRemover topicRemover;
     private final TopicUpdator topicUpdator;
     private final TopicCreator topicCreator;
+    private final UserService userService;
+
 
     public List<ContentResponse> getContentsFromMoim(
             final Long moimId
@@ -95,11 +99,16 @@ public class TopicService {
         return topicCreator.createTopicOfMoim(moim, createRequest);
     }
 
+    @Transactional
     public void deleteTopic(
             final Long userId,
             final Long topicId
     ) {
-        topicRemover.deleteTopic(userId, topicId);
+        Topic topic = topicRetriever.findById(topicId);
+        User user = userService.findById(userId);
+        topicRetriever.authenticateTopicWithUser(topic, user);
+        topicRetriever.checkSingleTopicDeletion(topic);
+        topicRemover.deleteTopic(topic, user);
     }
 
     public void putTopic(

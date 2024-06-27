@@ -25,27 +25,14 @@ public class TopicRemover {
     private final PostDeleteService postDeleteService;
     private final TopicRepository topicRepository;
 
-    @Transactional
     public void deleteTopic(
-            final Long userId,
-            final Long topicId
+            final Topic topic,
+            final User user
     ) {
-        Topic topic = topicRetriever.findById(topicId);
-        User user = userService.findById(userId);
-        topicRetriever.authenticateTopicWithUser(topic, user);
-        checkSingleTopicDeletion(topic);
-
         deletePostsOfTopic(topic);
         topicRepository.deleteById(topic.getId());
     }
 
-    private void checkSingleTopicDeletion(
-            final Topic topic
-    ) {
-        if (topicRepository.countByMoimId(topic.getMoim().getId()) <= 1) {
-            throw new BadRequestException(ErrorMessage.LEAST_TOPIC_SIZE_OF_MOIM_ERROR);
-        }
-    }
 
     private void deletePostsOfTopic(
             final Topic topic

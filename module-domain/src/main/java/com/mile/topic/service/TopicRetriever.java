@@ -3,6 +3,7 @@ package com.mile.topic.service;
 import com.mile.comment.service.CommentService;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
@@ -191,5 +192,13 @@ public class TopicRetriever {
         return topicList.stream()
                 .map(topic -> ContentWithIsSelectedResponse.of(topic, topic.getId().equals(selectedTopicId)))
                 .collect(Collectors.toList());
+    }
+
+    public void checkSingleTopicDeletion(
+            final Topic topic
+    ) {
+        if (topicRepository.countByMoimId(topic.getMoim().getId()) <= 1) {
+            throw new BadRequestException(ErrorMessage.LEAST_TOPIC_SIZE_OF_MOIM_ERROR);
+        }
     }
 }

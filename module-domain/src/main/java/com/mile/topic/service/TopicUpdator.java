@@ -1,7 +1,8 @@
-package com.mile.topic.service.dto;
+package com.mile.topic.service;
 
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicRetriever;
+import com.mile.topic.service.dto.TopicPutRequest;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import jakarta.transaction.Transactional;
