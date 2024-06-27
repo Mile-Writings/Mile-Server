@@ -1,5 +1,6 @@
 package com.mile.controller.writername;
 
+import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.writername.service.dto.WriterNameDescriptionResponse;
@@ -26,7 +27,8 @@ public interface WriterNameControllerSwagger {
             }
     )
     ResponseEntity<SuccessResponse> deleteMember(
-            @PathVariable("writerNameId") final Long writerNameId
+            @PathVariable("writerNameId") final Long writerNameId,
+            @UserId final Long userId
     );
 
     @Operation(summary = "필명, 소개글 조회")
@@ -40,7 +42,8 @@ public interface WriterNameControllerSwagger {
             }
     )
     ResponseEntity<SuccessResponse<WriterNameDescriptionResponse>> getWriterNameDescription(
-            final Long writerNameId
+            final Long writerNameId,
+            @UserId final Long userId
     );
 
     @Operation(summary = "소개글 수정")
@@ -58,7 +61,8 @@ public interface WriterNameControllerSwagger {
     )
     ResponseEntity<SuccessResponse> updateWriterNameDescription(
             final Long writerNameId,
-            final WriterNameDescriptionUpdateRequest request
+            final WriterNameDescriptionUpdateRequest request,
+            @UserId final Long userId
     );
 }
 

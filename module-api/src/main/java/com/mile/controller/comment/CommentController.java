@@ -1,13 +1,13 @@
 package com.mile.controller.comment;
 
 
-import com.mile.common.PrincipalHandler;
 import com.mile.comment.service.CommentService;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
-import com.mile.dto.SuccessResponse;
-import com.mile.exception.message.SuccessMessage;
 import com.mile.common.resolver.comment.CommentIdPathVariable;
 import com.mile.common.resolver.reply.ReplyIdPathVariable;
+import com.mile.common.resolver.user.UserId;
+import com.mile.dto.SuccessResponse;
+import com.mile.exception.message.SuccessMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,26 +26,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController implements CommentControllerSwagger {
 
     private final CommentService commentService;
-    private final PrincipalHandler principalHandler;
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<SuccessResponse> deleteComment(
             @CommentIdPathVariable final Long commentId,
+            @UserId final Long userId,
             @PathVariable("commentId") final String commentUrl
     ) {
-        commentService.deleteComment(commentId, principalHandler.getUserIdFromPrincipal());
+        commentService.deleteComment(commentId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.COMMENT_DELETE_SUCCESS));
     }
 
     @PostMapping("/{commentId}")
     public ResponseEntity<SuccessResponse> createCommentReply(
             @CommentIdPathVariable final Long commentId,
+            @UserId final Long userId,
             @RequestBody final ReplyCreateRequest createRequest,
             @PathVariable("commentId") final String commentUrl
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).header("Location",
                 commentService.createCommentReply(
-                        principalHandler.getUserIdFromPrincipal(),
+                        userId,
                         commentId, createRequest
                 )).body(SuccessResponse.of(SuccessMessage.REPLY_CREATE_SUCCESS));
     }
@@ -53,9 +54,10 @@ public class CommentController implements CommentControllerSwagger {
     @DeleteMapping("/reply/{replyId}")
     public ResponseEntity<SuccessResponse> deleteCommentReply(
             @ReplyIdPathVariable final Long replyId,
+            @UserId final Long userId,
             @PathVariable("replyId") final String replyUrl
     ) {
-        commentService.deleteReply(principalHandler.getUserIdFromPrincipal(), replyId);
+        commentService.deleteReply(userId, replyId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.REPLY_DELETE_SUCCESS));
     }
 }

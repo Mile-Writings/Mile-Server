@@ -1,11 +1,14 @@
 package com.mile.controller.user;
 
+import com.mile.client.dto.UserLoginRequest;
+import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
-import com.mile.external.client.dto.UserLoginRequest;
 import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,8 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.security.Principal;
 
 @Tag(name = "User", description = "User 관련 API")
 public interface UserControllerSwagger {
@@ -47,6 +48,7 @@ public interface UserControllerSwagger {
             }
     )
     SuccessResponse<AccessTokenGetSuccess> refreshToken(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId Long userId,
             @RequestParam final String refreshToken
     );
 
@@ -58,7 +60,7 @@ public interface UserControllerSwagger {
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse logout();
+    SuccessResponse logout(@Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId);
 
     @Operation(summary = "회원 탈퇴")
     @ApiResponses(
@@ -71,7 +73,7 @@ public interface UserControllerSwagger {
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse deleteUser();
+    SuccessResponse deleteUser(@Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId);
 
 
     @Operation(summary = "유저 글모임 리스트 조회")
@@ -85,5 +87,5 @@ public interface UserControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser();
+    ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser(@Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId);
 }

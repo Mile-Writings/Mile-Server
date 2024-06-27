@@ -1,6 +1,6 @@
 package com.mile.controller.post;
 
-import com.mile.common.PrincipalHandler;
+import com.mile.common.resolver.user.UserId;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
@@ -35,18 +35,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController implements PostControllerSwagger {
 
     private final PostService postService;
-    private final PrincipalHandler principalHandler;
 
     @PostMapping("/{postId}/comment")
     @Override
     public SuccessResponse postComment(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
         postService.createCommentOnPost(
                 postId,
-                principalHandler.getUserIdFromPrincipal(),
+                userId,
                 commentCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.COMMENT_CREATE_SUCCESS);
@@ -57,18 +57,20 @@ public class PostController implements PostControllerSwagger {
     @Override
     public SuccessResponse<PostCuriousResponse> postCurious(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal()));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, userId));
     }
 
     @GetMapping("/{postId}/comment")
     @Override
     public ResponseEntity<SuccessResponse<CommentListResponse>> getComments(
             @PostIdPathVariable final Long postId,
+            @UserId Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, userId)));
     }
 
 
@@ -76,27 +78,30 @@ public class PostController implements PostControllerSwagger {
     @Override
     public ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfoOfPost(postId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfoOfPost(postId, userId)));
     }
 
     @DeleteMapping("/{postId}/curious")
     @Override
     public SuccessResponse<PostCuriousResponse> deleteCurious(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, principalHandler.getUserIdFromPrincipal()));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, userId));
     }
 
     @GetMapping("/{postId}/authenticate")
     @Override
     public ResponseEntity<SuccessResponse> getAuthenticateWrite(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_AUTHENTIACTE_SUCCESS, postService.getAuthenticateWriter(postId, userId)));
     }
 
     @PutMapping("/{postId}")
@@ -104,9 +109,10 @@ public class PostController implements PostControllerSwagger {
     public ResponseEntity<SuccessResponse> putPost(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final PostPutRequest putRequest,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        postService.updatePost(postId, principalHandler.getUserIdFromPrincipal(), putRequest);
+        postService.updatePost(postId, userId, putRequest);
         return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_PUT_SUCCESS));
     }
 
@@ -114,9 +120,10 @@ public class PostController implements PostControllerSwagger {
     @Override
     public ResponseEntity<SuccessResponse> deletePost(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        postService.deletePost(postId, principalHandler.getUserIdFromPrincipal());
+        postService.deletePost(postId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS));
     }
 
@@ -124,10 +131,11 @@ public class PostController implements PostControllerSwagger {
     @GetMapping("/temporary/{postId}")
     public SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_GET_SUCCESS,
-                postService.getTemporaryPost(postId, principalHandler.getUserIdFromPrincipal()));
+                postService.getTemporaryPost(postId, userId));
     }
 
     @Override
@@ -143,10 +151,11 @@ public class PostController implements PostControllerSwagger {
     @Override
     @PostMapping
     public SuccessResponse<WriterNameResponse> createPost(
-            @Valid @RequestBody final PostCreateRequest postCreateRequest
+            @Valid @RequestBody final PostCreateRequest postCreateRequest,
+            @UserId final Long userId
     ) {
         return SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.createPost(
-                principalHandler.getUserIdFromPrincipal(),
+                userId,
                 postCreateRequest
         ));
     }
@@ -154,10 +163,11 @@ public class PostController implements PostControllerSwagger {
     @Override
     @PostMapping("/temporary")
     public SuccessResponse createTemporaryPost(
-            @RequestBody @Valid final TemporaryPostCreateRequest temporaryPostCreateRequest
+            @RequestBody @Valid final TemporaryPostCreateRequest temporaryPostCreateRequest,
+            @UserId final Long userId
     ) {
         postService.createTemporaryPost(
-                principalHandler.getUserIdFromPrincipal(),
+                userId,
                 temporaryPostCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.TEMPORARY_POST_CREATE_SUCCESS);
@@ -167,10 +177,11 @@ public class PostController implements PostControllerSwagger {
     @DeleteMapping("/temporary/{postId}")
     public ResponseEntity<SuccessResponse> deleteTemporaryPost(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
         postService.deleteTemporaryPost(
-                principalHandler.getUserIdFromPrincipal(),
+                userId,
                 postId
         );
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TEMPORARY_POST_DELETE_SUCCESS));
@@ -181,10 +192,11 @@ public class PostController implements PostControllerSwagger {
     public ResponseEntity<SuccessResponse<WriterNameResponse>> putTemporaryToFixedPost(
             @PostIdPathVariable final Long postId,
             @RequestBody @Valid final PostPutRequest request,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.POST_CREATE_SUCCESS, postService.putTemporaryToFixedPost(
-                principalHandler.getUserIdFromPrincipal(),
+                userId,
                 request,
                 postId
         )));
@@ -194,10 +206,11 @@ public class PostController implements PostControllerSwagger {
     @GetMapping("/modify/{postId}")
     public SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @PostIdPathVariable final Long postId,
+            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MODIFY_POST_GET_SUCCESS,
-                postService.getPostForModifying(postId, principalHandler.getUserIdFromPrincipal()));
+                postService.getPostForModifying(postId, userId));
     }
 
 }
