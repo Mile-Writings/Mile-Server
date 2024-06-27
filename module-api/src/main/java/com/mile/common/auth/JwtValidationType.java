@@ -1,4 +1,4 @@
-package com.mile.jwt;
+package com.mile.common.auth;
 
 public enum JwtValidationType {
     VALID_JWT,              // 유효한 JWT

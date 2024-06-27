@@ -1,5 +1,7 @@
-package com.mile.jwt;
+package com.mile.common.auth;
 
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -9,8 +11,8 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -33,17 +35,26 @@ public class JwtTokenProvider {
         JWT_SECRET = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String issueAccessToken(final Authentication authentication) {
-        return issueToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
+    private String getTokenFromHeader(final String token) {
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring("Bearer ".length());
+        } else if (StringUtils.hasText(token) && !token.startsWith("Bearer ")) {
+            throw new BadRequestException(ErrorMessage.BEARER_LOST_ERROR);
+        }
+        return null;
+    }
+
+    public String issueAccessToken(final Long userId) {
+        return issueToken(userId, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 
 
-    public String issueRefreshToken(final Authentication authentication) {
-        return issueToken(authentication, REFRESH_TOKEN_EXPIRATION_TIME);
+    public String issueRefreshToken(final Long userId) {
+        return issueToken(userId, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     private String issueToken(
-            final Authentication authentication,
+            final Long userId,
             final Long expiredTime
     ) {
         final Date now = new Date();
@@ -52,7 +63,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expiredTime));  // 만료 시간 설정
 
-        claims.put(MEMBER_ID, authentication.getPrincipal());
+        claims.put(MEMBER_ID, userId);
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // Header
                 .setClaims(claims) // Claim
@@ -65,9 +76,9 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(encodedKey.getBytes());   //일반적으로 HMAC (Hash-based Message Authentication Code) 알고리즘 사용
     }
 
-    public JwtValidationType validateToken(String token) {
+    public JwtValidationType validateToken(final String token) {
         try {
-            final Claims claims = getBody(token);
+            final Claims claims = getBody(getTokenFromHeader(token));
             return JwtValidationType.VALID_JWT;
         } catch (MalformedJwtException ex) {
             return JwtValidationType.INVALID_JWT_TOKEN;
@@ -88,8 +99,8 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    public Long getUserFromJwt(String token) {
-        Claims claims = getBody(token);
+    public Long getUserFromJwt(final String token) {
+        Claims claims = getBody(getTokenFromHeader(token));
         return Long.valueOf(claims.get(MEMBER_ID).toString());
     }
 }
