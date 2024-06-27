@@ -2,6 +2,7 @@ package com.mile.common.auth;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -36,12 +37,12 @@ public class JwtTokenProvider {
     }
 
     private String getTokenFromHeader(final String token) {
-        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            return token.substring("Bearer ".length());
+        if (!StringUtils.hasText(token)) {
+            throw new UnauthorizedException(ErrorMessage.UN_LOGIN_EXCEPTION);
         } else if (StringUtils.hasText(token) && !token.startsWith("Bearer ")) {
             throw new BadRequestException(ErrorMessage.BEARER_LOST_ERROR);
         }
-        return null;
+        return token.substring("Bearer ".length());
     }
 
     public String issueAccessToken(final Long userId) {
