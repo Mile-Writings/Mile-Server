@@ -1,6 +1,6 @@
-package com.mile.external.client.dto;
+package com.mile.client.dto;
 
-import com.mile.external.client.SocialType;
+import com.mile.client.SocialType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,12 +1,12 @@
-package com.mile.external.client.google;
+package com.mile.client.google;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.external.client.SocialType;
-import com.mile.external.client.dto.UserLoginRequest;
-import com.mile.external.client.google.api.GoogleAccessTokenClient;
-import com.mile.external.client.google.api.GoogleUserClient;
-import com.mile.external.client.google.api.dto.GoogleUserInfoResponse;
+import com.mile.client.SocialType;
+import com.mile.client.dto.UserLoginRequest;
+import com.mile.client.google.api.GoogleAccessTokenClient;
+import com.mile.client.google.api.GoogleUserClient;
+import com.mile.client.google.api.dto.GoogleUserInfoResponse;
 import com.mile.strategy.LoginStrategy;
 import com.mile.strategy.dto.UserInfoResponse;
 import feign.FeignException;

@@ -1,6 +1,6 @@
-package com.mile.external.client.google.api;
+package com.mile.client.google.api;
 
-import com.mile.external.client.google.api.dto.GoogleAccessTokenResponse;
+import com.mile.client.google.api.dto.GoogleAccessTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

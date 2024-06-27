@@ -1,4 +1,4 @@
-package com.mile.external.client.google.api.dto;
+package com.mile.client.google.api.dto;
 
 public record GoogleUserInfoResponse(
         String id,

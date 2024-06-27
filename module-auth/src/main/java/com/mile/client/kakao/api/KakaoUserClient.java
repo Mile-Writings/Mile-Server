@@ -1,6 +1,6 @@
-package com.mile.external.client.kakao.api;
+package com.mile.client.kakao.api;
 
-import com.mile.external.client.kakao.api.dto.KakaoUserResponse;
+import com.mile.client.kakao.api.dto.KakaoUserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;

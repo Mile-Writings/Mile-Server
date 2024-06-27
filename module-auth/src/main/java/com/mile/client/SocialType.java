@@ -1,4 +1,4 @@
-package com.mile.external.client;
+package com.mile.client;
 
 
 import lombok.AllArgsConstructor;

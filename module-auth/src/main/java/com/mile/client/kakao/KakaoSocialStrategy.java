@@ -1,13 +1,13 @@
-package com.mile.external.client.kakao;
+package com.mile.client.kakao;
 
+import com.mile.client.dto.UserLoginRequest;
+import com.mile.client.kakao.api.KakaoUserClient;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.external.client.SocialType;
-import com.mile.external.client.dto.UserLoginRequest;
-import com.mile.external.client.kakao.api.KakaoAccessTokenClient;
-import com.mile.external.client.kakao.api.KakaoUserClient;
-import com.mile.external.client.kakao.api.dto.KakaoAccessTokenResponse;
-import com.mile.external.client.kakao.api.dto.KakaoUserResponse;
+import com.mile.client.SocialType;
+import com.mile.client.kakao.api.KakaoAccessTokenClient;
+import com.mile.client.kakao.api.dto.KakaoAccessTokenResponse;
+import com.mile.client.kakao.api.dto.KakaoUserResponse;
 import com.mile.strategy.LoginStrategy;
 import com.mile.strategy.dto.UserInfoResponse;
 import feign.FeignException;
