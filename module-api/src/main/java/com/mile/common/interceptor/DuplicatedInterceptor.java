@@ -1,14 +1,14 @@
 package com.mile.common.interceptor;
 
-import com.mile.common.PrincipalHandler;
+import com.mile.common.utils.ContextHolderUtil;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.TooManyRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
-import org.redisson.api.RMap;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,7 +19,7 @@ public class DuplicatedInterceptor implements HandlerInterceptor {
     private static final String REDIS_KEY = "MILE_REDIS";
     private static final String RMAP_VALUE = "MILE";
     private final RedissonClient redissonClient;
-    private final PrincipalHandler principalHandler;
+    private final ContextHolderUtil contextHolderUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -40,7 +40,7 @@ public class DuplicatedInterceptor implements HandlerInterceptor {
     }
 
     private String getRmapKey() {
-        return principalHandler.getUserIdFromPrincipal().toString();
+        return contextHolderUtil.getUserIdFromContextHolder();
     }
 
     private boolean lock() {
