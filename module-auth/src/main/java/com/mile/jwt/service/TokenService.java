@@ -1,9 +1,9 @@
-package com.mile.jwt.redis.service;
+package com.mile.jwt.service;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
-import com.mile.jwt.redis.domain.Token;
-import com.mile.jwt.redis.repository.TokenRepository;
+import com.mile.jwt.domain.Token;
+import com.mile.jwt.repository.TokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

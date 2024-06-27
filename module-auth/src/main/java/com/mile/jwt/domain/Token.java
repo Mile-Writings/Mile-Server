@@ -1,4 +1,4 @@
-package com.mile.jwt.redis.domain;
+package com.mile.jwt.domain;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

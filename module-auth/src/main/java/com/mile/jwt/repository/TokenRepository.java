@@ -1,6 +1,6 @@
-package com.mile.jwt.redis.repository;
+package com.mile.jwt.repository;
 
-import com.mile.jwt.redis.domain.Token;
+import com.mile.jwt.domain.Token;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
