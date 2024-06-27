@@ -120,7 +120,7 @@ public class WriterNameService {
     ) {
         return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId)
                 .orElseThrow(
-                        () -> new NotFoundException(ErrorMessage.USER_AUTHENTICATE_ERROR)
+                        () -> new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR)
                 );
     }
 
