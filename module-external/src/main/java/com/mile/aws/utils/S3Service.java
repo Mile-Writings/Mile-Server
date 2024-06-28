@@ -30,7 +30,7 @@ public class S3Service {
     private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("image/jpeg", "image/png", "image/jpg", "image/webp");
     private static final Long MAX_FILE_SIZE = 5 * 1024 * 1024L;
 
-    private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1L;  // 만료시간 1분
+    private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 120L;  // 만료시간 2시간
 
     private final String bucketName;
     private final AwsConfig awsConfig;
@@ -38,30 +38,6 @@ public class S3Service {
     public S3Service(@Value("${aws-property.s3-bucket-name}") final String bucketName, AwsConfig awsConfig) {
         this.bucketName = bucketName;
         this.awsConfig = awsConfig;
-    }
-
-    // Multipart 요청을 통한 이미지 업로드
-    public String uploadImage(final S3BucketDirectory directoryPath,
-                              final MultipartFile image) throws IOException {
-        validateExtension(image);
-        validateFileSize(image);
-
-        String key = directoryPath.value() + generateImageFileName();
-        try {
-            final S3Client s3Client = awsConfig.getS3Client();
-            PutObjectRequest request = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .contentType(image.getContentType())
-                    .contentDisposition("inline").build();
-
-            RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
-            s3Client.putObject(request, requestBody);
-            key = s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucketName).key(key).build()).toString();
-            return key;
-        } catch (RuntimeException e) {
-            throw new MileException(ErrorMessage.INVALID_BUCKET_PREFIX);
-        }
     }
 
 
@@ -103,18 +79,5 @@ public class S3Service {
 
     private String generateImageFileName() {
         return UUID.randomUUID().toString() + ".jpg";
-    }
-
-    private void validateExtension(MultipartFile image) {
-        String contentType = image.getContentType();
-        if (!IMAGE_EXTENSIONS.contains(contentType)) {
-            throw new BadRequestException(ErrorMessage.IMAGE_EXTENSION_INVALID_ERROR);
-        }
-    }
-
-    private void validateFileSize(MultipartFile image) {
-        if (image.getSize() > MAX_FILE_SIZE) {
-            throw new BadRequestException(ErrorMessage.IMAGE_SIZE_INVALID_ERROR);
-        }
     }
 }
