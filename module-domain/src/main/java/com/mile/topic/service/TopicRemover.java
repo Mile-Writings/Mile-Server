@@ -1,15 +1,11 @@
 package com.mile.topic.service;
 
-import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.BadRequestException;
 import com.mile.moim.domain.Moim;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
-import com.mile.user.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,8 +15,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TopicRemover {
 
-    private final TopicRetriever topicRetriever;
-    private final UserService userService;
     private final PostGetService postGetService;
     private final PostDeleteService postDeleteService;
     private final TopicRepository topicRepository;
