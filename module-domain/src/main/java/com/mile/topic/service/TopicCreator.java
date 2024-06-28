@@ -7,11 +7,9 @@ import com.mile.topic.repository.TopicRepository;
 import com.mile.utils.SecureUrlUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
 public class TopicCreator {
 
