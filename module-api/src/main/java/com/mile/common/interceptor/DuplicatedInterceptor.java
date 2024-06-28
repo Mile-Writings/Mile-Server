@@ -45,12 +45,18 @@ public class DuplicatedInterceptor implements HandlerInterceptor {
 
     private boolean lock() {
         final String rmapKey = getRmapKey();
+        if (rmapKey == null) {
+            return true;
+        }
         RMap<String, String> redissonClientMap = redissonClient.getMap(REDIS_KEY);
         return redissonClientMap.putIfAbsent(rmapKey, RMAP_VALUE) == null;
     }
 
     private void unlock() {
         final String rmapKey = getRmapKey();
+        if (rmapKey == null) {
+            return;
+        }
         RMap<String, String> redissonClientMap = redissonClient.getMap(REDIS_KEY);
         redissonClientMap.remove(rmapKey);
     }
