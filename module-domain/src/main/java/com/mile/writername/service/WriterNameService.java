@@ -19,7 +19,6 @@ import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
 
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
@@ -95,13 +93,12 @@ public class WriterNameService {
     private void checkWriterNameOverFive(
             final User user
     ) {
-        log.info(writerNameRepository.countAllByWriter(user).toString());
         if (writerNameRepository.countAllByWriter(user) >= WRITERNAME_MAX_SIZE) {
             throw new BadRequestException(ErrorMessage.EXCEED_MOIM_MAX_SIZE);
         }
     }
 
-    public void deleteWriterName(
+    public void deleteWriterNameByUserId(
             final Long userId
     ) {
         writerNameRepository.delete(findByWriterId(userId));

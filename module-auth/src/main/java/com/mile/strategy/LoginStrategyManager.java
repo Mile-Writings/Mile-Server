@@ -1,7 +1,7 @@
 package com.mile.strategy;
 
 
-import com.mile.external.client.SocialType;
+import com.mile.client.SocialType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

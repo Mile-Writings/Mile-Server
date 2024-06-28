@@ -1,6 +1,6 @@
 package com.mile.controller.topic;
 
-import com.mile.common.PrincipalHandler;
+import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.common.resolver.topic.TopicIdPathVariable;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TopicController implements TopicControllerSwagger {
 
     private final TopicService topicService;
-    private final PrincipalHandler principalHandler;
 
     @Override
     @GetMapping("/{topicId}")
@@ -42,18 +41,20 @@ public class TopicController implements TopicControllerSwagger {
     @GetMapping("/{topicId}/details")
     public ResponseEntity<SuccessResponse<TopicDetailResponse>> getTopicDetail(
             @TopicIdPathVariable final Long topicId,
+            @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DETAIL_GET_SUCCESS ,topicService.getTopicDetail(principalHandler.getUserIdFromPrincipal(), topicId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DETAIL_GET_SUCCESS ,topicService.getTopicDetail(userId, topicId)));
     }
 
     @Override
     @DeleteMapping("/{topicId}")
     public ResponseEntity<SuccessResponse> deleteTopic(
             @TopicIdPathVariable final Long topicId,
+            @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     ) {
-        topicService.deleteTopic(principalHandler.getUserIdFromPrincipal(), topicId);
+        topicService.deleteTopic(userId, topicId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DELETE_SUCCESS));
     }
 
@@ -61,9 +62,10 @@ public class TopicController implements TopicControllerSwagger {
     public ResponseEntity<SuccessResponse> putTopic(
             @RequestBody @Valid final TopicPutRequest topicPutRequest,
             @TopicIdPathVariable final Long topicId,
+            @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     ) {
-        topicService.putTopic(principalHandler.getUserIdFromPrincipal(), topicId, topicPutRequest);
+        topicService.putTopic(userId, topicId, topicPutRequest);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_PUT_SUCCESS));
     }
 }

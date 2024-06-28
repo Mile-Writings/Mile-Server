@@ -1,6 +1,6 @@
 package com.mile.strategy.dto;
 
-import com.mile.external.client.SocialType;
+import com.mile.client.SocialType;
 
 public record UserInfoResponse(
         String socialId,

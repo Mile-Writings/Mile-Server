@@ -1,6 +1,6 @@
 package com.mile.user.domain;
 
-import com.mile.external.client.SocialType;
+import com.mile.client.SocialType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

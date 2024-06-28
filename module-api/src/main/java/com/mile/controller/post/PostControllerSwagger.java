@@ -1,5 +1,6 @@
 package com.mile.controller.post;
 
+import com.mile.common.resolver.user.UserId;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
@@ -46,6 +47,7 @@ public interface PostControllerSwagger {
     SuccessResponse postComment(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -62,6 +64,7 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostCuriousResponse> postCurious(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -79,6 +82,7 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse<CommentListResponse>> getComments(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -95,6 +99,7 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -111,6 +116,7 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostCuriousResponse> deleteCurious(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -130,6 +136,7 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse> getAuthenticateWrite(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -159,6 +166,7 @@ public interface PostControllerSwagger {
     ResponseEntity<SuccessResponse> putPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest putRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -176,7 +184,8 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deleteTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-           @PathVariable("postId") final String postUrl
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
+            @PathVariable("postId") final String postUrl
     );
 
     @Operation(summary = "글 삭제")
@@ -193,6 +202,7 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deletePost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -208,6 +218,7 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -243,7 +254,8 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse createTemporaryPost(
-            @Valid @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest
+            @Valid @RequestBody final TemporaryPostCreateRequest temporaryPostCreateRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId
     );
 
 
@@ -264,7 +276,8 @@ public interface PostControllerSwagger {
             }
     )
     SuccessResponse createPost(
-            @Valid @RequestBody final PostCreateRequest postCreateRequest
+            @Valid @RequestBody final PostCreateRequest postCreateRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId
     );
 
 
@@ -282,6 +295,7 @@ public interface PostControllerSwagger {
     ResponseEntity<SuccessResponse<WriterNameResponse>> putTemporaryToFixedPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest request,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -297,6 +311,7 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 }

@@ -1,0 +1,97 @@
+package com.mile.controller.user.facade;
+
+
+import com.mile.client.SocialType;
+import com.mile.client.dto.UserLoginRequest;
+import com.mile.common.auth.JwtTokenProvider;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.UnauthorizedException;
+import com.mile.jwt.service.TokenService;
+import com.mile.strategy.LoginStrategyManager;
+import com.mile.strategy.dto.UserInfoResponse;
+import com.mile.user.service.UserService;
+import com.mile.user.service.dto.AccessTokenGetSuccess;
+import com.mile.user.service.dto.LoginSuccessResponse;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class AuthFacade {
+
+    private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final LoginStrategyManager loginStrategyManager;
+    private final TokenService tokenService;
+
+    public AccessTokenGetSuccess refreshToken(
+            final Long userId,
+            final String refreshToken
+    ) {
+        if (!userId.equals(tokenService.findIdByRefreshToken(refreshToken))) {
+            throw new UnauthorizedException(ErrorMessage.TOKEN_INCORRECT_ERROR);
+        }
+        return AccessTokenGetSuccess.of(
+                jwtTokenProvider.issueAccessToken(userId)
+        );
+    }
+
+    public LoginSuccessResponse create(
+            final String authorizationCode,
+            final UserLoginRequest loginRequest
+    ) {
+        return getTokenDto(getUserInfoResponse(authorizationCode, loginRequest));
+    }
+
+    public void deleteUser(final Long userId) {
+        tokenService.deleteRefreshToken(userId);
+        userService.deleteUser(userId);
+    }
+
+    public void deleteRefreshToken(
+            final Long id
+    ) {
+        tokenService.deleteRefreshToken(id);
+    }
+
+    private LoginSuccessResponse getTokenDto(
+            final UserInfoResponse userResponse
+    ) {
+        try {
+            if (userService.isExistingUser(userResponse.socialId(), userResponse.socialType())) {
+                return getTokenByUserId(userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
+            } else {
+                Long id = userService.createuser(userResponse.socialId(), userResponse.socialType(), userResponse.email());
+                return getTokenByUserId(id);
+            }
+        } catch (DataIntegrityViolationException e) {
+            return getTokenByUserId(userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
+        }
+    }
+
+    public UserInfoResponse getUserInfoResponse(
+            final String authorizationCode,
+            final UserLoginRequest loginRequest
+    ) {
+        return switch (loginRequest.socialType()) {
+            case KAKAO ->
+                    loginStrategyManager.getLoginStrategy(SocialType.KAKAO).login(authorizationCode, loginRequest);
+            case GOOGLE ->
+                    loginStrategyManager.getLoginStrategy(SocialType.GOOGLE).login(authorizationCode, loginRequest);
+        };
+    }
+
+
+    public LoginSuccessResponse getTokenByUserId(
+            final Long id
+    ) {
+        String refreshToken = jwtTokenProvider.issueRefreshToken(id);
+        tokenService.saveRefreshToken(id, refreshToken);
+        return LoginSuccessResponse.of(
+                jwtTokenProvider.issueAccessToken(id),
+                refreshToken
+        );
+    }
+}

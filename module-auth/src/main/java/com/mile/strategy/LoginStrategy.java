@@ -1,7 +1,7 @@
 package com.mile.strategy;
 
-import com.mile.external.client.SocialType;
-import com.mile.external.client.dto.UserLoginRequest;
+import com.mile.client.SocialType;
+import com.mile.client.dto.UserLoginRequest;
 import com.mile.strategy.dto.UserInfoResponse;
 
 public interface LoginStrategy {
