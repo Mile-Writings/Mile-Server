@@ -7,6 +7,7 @@ import com.mile.common.resolver.moim.MoimVariableResolver;
 import com.mile.common.resolver.post.PostVariableResolver;
 import com.mile.common.resolver.reply.ReplyVariableResolver;
 import com.mile.common.resolver.topic.TopicVariableResolver;
+import com.mile.common.resolver.user.UserIdHeaderResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -25,6 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final CommentVariableResolver commentVariableResolver;
     private final ReplyVariableResolver replyVariableResolver;
     private final DuplicatedInterceptor duplicatedInterceptor;
+    private final UserIdHeaderResolver userIdHeaderResolver;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -47,5 +49,6 @@ public class WebConfig implements WebMvcConfigurer {
         resolvers.add(commentVariableResolver);
         resolvers.add(postVariableResolver);
         resolvers.add(replyVariableResolver);
+        resolvers.add(userIdHeaderResolver);
     }
 }
