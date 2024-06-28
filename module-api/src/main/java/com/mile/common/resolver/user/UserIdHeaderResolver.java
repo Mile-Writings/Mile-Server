@@ -16,7 +16,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @RequiredArgsConstructor
 @Component
-public class UserIdResolver implements HandlerMethodArgumentResolver {
+public class UserIdHeaderResolver implements HandlerMethodArgumentResolver {
 
     private final JwtTokenProvider jwtTokenProvider;
 
