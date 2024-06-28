@@ -1,6 +1,6 @@
 package com.mile.controller.writername;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.writername.service.WriterNameDeleteService;
@@ -25,14 +25,14 @@ public class WriterNameController implements WriterNameControllerSwagger {
 
     private final WriterNameDeleteService writerNameDeleteService;
     private final WriterNameService writerNameService;
-    private final PrincipalHandler principalHandler;
 
     @Override
     @DeleteMapping("/{writerNameId}")
     public ResponseEntity<SuccessResponse> deleteMember(
-            @PathVariable("writerNameId") final Long writerNameId
+            @PathVariable("writerNameId") final Long writerNameId,
+            @UserId final Long userId
     ) {
-        writerNameDeleteService.deleteWriterNameById(writerNameId, principalHandler.getUserIdFromPrincipal());
+        writerNameDeleteService.deleteWriterNameById(writerNameId, userId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_MEMBER_DELETE_SUCCESS));
     }
 
@@ -40,18 +40,20 @@ public class WriterNameController implements WriterNameControllerSwagger {
     @Override
     @GetMapping("/{writerNameId}/profile")
     public ResponseEntity<SuccessResponse<WriterNameDescriptionResponse>> getWriterNameDescription(
-            @PathVariable("writerNameId") final Long writerNameId
+            @PathVariable("writerNameId") final Long writerNameId,
+            @UserId final Long userId
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, writerNameService.findWriterNameDescription(principalHandler.getUserIdFromPrincipal(), writerNameId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, writerNameService.findWriterNameDescription(userId, writerNameId)));
     }
 
     @Override
     @PatchMapping("/{writerNameId}/description")
     public ResponseEntity<SuccessResponse> updateWriterNameDescription(
             @PathVariable("writerNameId") final Long writerNameId,
-            @RequestBody @Valid final WriterNameDescriptionUpdateRequest request
+            @RequestBody @Valid final WriterNameDescriptionUpdateRequest request,
+            @UserId final Long userId
     ) {
-        writerNameService.updateWriterNameDescription(principalHandler.getUserIdFromPrincipal(), writerNameId, request);
+        writerNameService.updateWriterNameDescription(userId, writerNameId, request);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_DESCRIPTION_UPDATE_SUCCESS));
     }
 }

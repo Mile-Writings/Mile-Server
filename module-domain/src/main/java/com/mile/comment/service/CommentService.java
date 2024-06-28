@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,16 +137,21 @@ public class CommentService {
         return post.getWriterName().equals(comment.getWriterName());
     }
 
-    private List<Comment> findByPostId(
+    public List<Comment> findByPostId(
             final Long postId
     ) {
         return commentRepository.findByPostId(postId);
     }
 
-    public int findCommentCountByPost(
+
+    private int findCommentReplyByPost(
             final Post post
     ) {
-        return findByPostId(post.getId()).size();
+        AtomicInteger result = new AtomicInteger();
+        findByPostId(post.getId()).iterator().forEachRemaining(
+                c -> result.addAndGet(commentReplyService.findRepliesCountByComment(c))
+        );
+        return result.intValue();
     }
 
 
@@ -165,6 +171,18 @@ public class CommentService {
     public int countByPost(
             final Post post
     ) {
-        return commentRepository.countByPost(post);
+        return commentRepository.countByPost(post) + findCommentReplyByPost(post);
+    }
+
+    public List<Comment> findAllByPosts(
+            final List<Post> posts
+    ) {
+        return posts.stream()
+                .flatMap(post -> findByPostId(post.getId()).stream())
+                .collect(Collectors.toList());
+    }
+
+    public void deleteComments(final List<Post> posts) {
+        posts.forEach(this::deleteAllByPost);
     }
 }

@@ -17,18 +17,6 @@ bootJar { enabled = false }
 jar { enabled = true }
 
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    //Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-
-    //Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-}
 
 subprojects {
     apply plugin: "org.springframework.boot"
@@ -55,12 +43,16 @@ subprojects {
         annotationProcessor "org.projectlombok:lombok"
         testCompileOnly("org.projectlombok:lombok")
         testAnnotationProcessor("org.projectlombok:lombok")
+
+        //Test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+        //Swagger
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
         // VALIDATION
         implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-        //Security
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        testImplementation 'org.springframework.security:spring-security-test'
 
     }
 
@@ -69,8 +61,4 @@ subprojects {
         useJUnitPlatform()
     }
 }
-project(':module-api') {
-    dependencies {
-        implementation project(':module-domain')
-    }
-}
+

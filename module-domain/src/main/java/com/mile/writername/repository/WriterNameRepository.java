@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
@@ -18,8 +21,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     List<WriterName> findByMoimId(final Long moimId);
 
-
-    boolean existsWriterNameByMoimAndName(final Moim moim, final String name);
+    boolean existsWriterNameByMoimAndNormalizedName(final Moim moim, final String normalizedName);
 
     Optional<WriterName> findByWriterId(final Long userId);
 
@@ -32,4 +34,8 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     List<WriterName> findAllByWriterId(final Long writerId);
 
     Integer countAllByWriter(final User user);
+
+    @Modifying
+    @Query("DELETE FROM WriterName w WHERE w.moim = :moim AND w != :owner")
+    void deleteWritersExceptOwner(@Param("moim") Moim moim, @Param("owner") WriterName owner);
 }

@@ -1,6 +1,5 @@
 package com.mile.post.service;
 
-import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,6 +77,14 @@ public class PostGetService {
             final Long writerNameId
     ) {
         return postRepository.countByWriterNameId(writerNameId);
+    }
+
+    public List<Post> findAllByTopics(
+            final List<Topic> topics
+    ) {
+        return topics.stream()
+                .flatMap(topic -> postRepository.findByTopic(topic).stream())
+                .collect(Collectors.toList());
     }
 
 }

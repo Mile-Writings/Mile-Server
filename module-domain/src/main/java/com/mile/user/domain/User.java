@@ -1,6 +1,6 @@
 package com.mile.user.domain;
 
-import com.mile.external.client.SocialType;
+import com.mile.client.SocialType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,13 +22,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long socialId;
+    private String socialId;
     private String email;
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
     public static User of(
-            final Long socialId,
+            final String socialId,
             final String email,
             final SocialType socialType
     ) {

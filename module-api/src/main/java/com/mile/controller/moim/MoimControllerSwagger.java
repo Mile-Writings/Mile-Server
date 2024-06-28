@@ -1,5 +1,7 @@
 package com.mile.controller.moim;
 
+import com.mile.common.resolver.moim.MoimIdPathVariable;
+import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
 import com.mile.moim.service.dto.BestMoimListResponse;
@@ -22,7 +24,6 @@ import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
-import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,6 +54,7 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -70,6 +72,7 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse getAuthenticationOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -170,6 +173,7 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -185,6 +189,7 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<MoimInvitationInfoResponse>> getInvitationInfo(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -221,6 +226,7 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> joinMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final WriterMemberJoinRequest joinRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -237,6 +243,7 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             final int page,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -255,6 +262,7 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> modifyMoimInformation(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final MoimInfoModifyRequest request,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -285,6 +293,7 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
             @MoimIdPathVariable final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -301,7 +310,8 @@ public interface MoimControllerSwagger {
             }
     )
     ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
-            @RequestBody final MoimCreateRequest creatRequest
+            @RequestBody final MoimCreateRequest creatRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId
     );
 
 
@@ -326,6 +336,7 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> createTopicOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final TopicCreateRequest createRequest,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -346,6 +357,7 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -367,6 +379,7 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestParam final int page,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -383,6 +396,38 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<WriterNameShortResponse>> getWriterNameOfUser(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "글모임 공개여부 조회 API")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임 공개여부 조회가 완료되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    SuccessResponse getPublicStatusOfMoim(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "글모임 삭제 API")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임 삭제가 완료되었습니다."),
+                    @ApiResponse(responseCode = "403", description = "사용자는 해당 모임의 모임장이 아닙니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse> deleteMoim(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 }

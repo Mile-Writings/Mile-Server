@@ -48,7 +48,7 @@ public class CommentReplyService {
             final Long userId,
             final CommentReply commentReply
     ) {
-        if(!commentReply.getWriterName().getWriter().getId().equals(userId)) {
+        if (!commentReply.getWriterName().getWriter().getId().equals(userId)) {
             throw new UnauthorizedException(ErrorMessage.REPLY_USER_FORBIDDEN);
         }
     }
@@ -56,13 +56,20 @@ public class CommentReplyService {
     public void deleteRepliesByComment(
             final Comment comment
     ) {
-        commentReplyRepository.deleteAll(commentReplyRepository.findByComment(comment));
+        commentReplyRepository.deleteCommentRepliesByComment(comment);
     }
+
     public List<ReplyResponse> findRepliesByComment(
             final Comment comment,
             final Long writerNameId
     ) {
         return commentReplyRepository.findByComment(comment).stream().map(c -> ReplyResponse.of(c, writerNameId, isWriterOfPost(c))).collect(Collectors.toList());
+    }
+
+    public int findRepliesCountByComment(
+            final Comment comment
+    ) {
+        return commentReplyRepository.findByComment(comment).size();
     }
 
     private boolean isWriterOfPost(final CommentReply commentReply) {
@@ -75,5 +82,9 @@ public class CommentReplyService {
         return commentReplyRepository.findById(replyId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.REPLY_NOT_FOUND)
         );
+    }
+
+    public void deleteRepliesByComments(final List<Comment> comments) {
+        comments.forEach(this::deleteRepliesByComment);
     }
 }

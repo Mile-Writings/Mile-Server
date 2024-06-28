@@ -1,10 +1,10 @@
 package com.mile.controller.user;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.client.dto.UserLoginRequest;
+import com.mile.common.resolver.user.UserId;
+import com.mile.controller.user.facade.AuthFacade;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.external.client.dto.UserLoginRequest;
-import com.mile.jwt.redis.service.TokenService;
 import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.user.service.UserService;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
@@ -29,8 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements UserControllerSwagger {
 
     private final UserService userService;
-    private final TokenService tokenService;
-    private final PrincipalHandler principalHandler;
+    private final AuthFacade authFacade;
     private final static int COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
     private final static String REFRESH_TOKEN = "refreshToken";
 
@@ -41,7 +40,7 @@ public class UserController implements UserControllerSwagger {
             @RequestBody @Valid final UserLoginRequest loginRequest,
             HttpServletResponse response
     ) {
-        LoginSuccessResponse successResponse = userService.create(authorizationCode, loginRequest);
+        LoginSuccessResponse successResponse = authFacade.create(authorizationCode, loginRequest);
         ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, successResponse.refreshToken())
                 .maxAge(COOKIE_MAX_AGE)
                 .path("/")
@@ -57,32 +56,37 @@ public class UserController implements UserControllerSwagger {
     @GetMapping("/refresh-token")
     @Override
     public SuccessResponse<AccessTokenGetSuccess> refreshToken(
+            @UserId Long userId,
             @RequestParam final String refreshToken
     ) {
-        return SuccessResponse.of(SuccessMessage.ISSUE_ACCESS_TOKEN_SUCCESS, userService.refreshToken(refreshToken));
+        return SuccessResponse.of(SuccessMessage.ISSUE_ACCESS_TOKEN_SUCCESS, authFacade.refreshToken(userId, refreshToken));
     }
 
 
     @PostMapping("/logout")
     @Override
     public SuccessResponse logout(
+            @UserId final Long userId
     ) {
-        tokenService.deleteRefreshToken(principalHandler.getUserIdFromPrincipal());
+        authFacade.deleteRefreshToken(userId);
         return SuccessResponse.of(SuccessMessage.LOGOUT_SUCCESS);
     }
 
     @DeleteMapping("/delete")
     @Override
     public SuccessResponse deleteUser(
+            @UserId final Long userId
     ) {
-        userService.deleteUser(principalHandler.getUserIdFromPrincipal());
+        authFacade.deleteUser(userId);
         return SuccessResponse.of(SuccessMessage.USER_DELETE_SUCCESS);
     }
 
     @Override
     @GetMapping("/moims")
-    public ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser() {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, userService.getMoimOfUserList(principalHandler.getUserIdFromPrincipal())));
+    public ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser(
+            @UserId final Long userId
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, userService.getMoimOfUserList(userId)));
     }
 }
 

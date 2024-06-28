@@ -1,6 +1,7 @@
 package com.mile.controller.moim;
 
-import com.mile.config.filter.PrincipalHandler;
+import com.mile.common.resolver.moim.MoimIdPathVariable;
+import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
@@ -16,6 +17,7 @@ import com.mile.moim.service.dto.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.MoimInfoResponse;
 import com.mile.moim.service.dto.MoimInvitationInfoResponse;
 import com.mile.moim.service.dto.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicResponse;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
@@ -25,12 +27,12 @@ import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.TopicListResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
-import com.mile.resolver.moim.MoimIdPathVariable;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,16 +50,16 @@ import java.net.URI;
 public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
-    private final PrincipalHandler principalHandler;
 
     @Override
     @GetMapping("/{moimId}")
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TOPIC_SEARCH_SUCCESS,
-                moimService.getContentsFromMoim(moimId, principalHandler.getUserIdFromPrincipal()));
+                moimService.getContentsFromMoim(moimId, userId));
     }
 
 
@@ -77,10 +79,11 @@ public class MoimController implements MoimControllerSwagger {
     public ResponseEntity<SuccessResponse> joinMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final WriterMemberJoinRequest joinRequest,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.created(URI.create(
-                        moimService.joinMoim(moimId, principalHandler.getUserIdFromPrincipal(), joinRequest).toString()))
+                        moimService.joinMoim(moimId, userId, joinRequest).toString()))
                 .body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS));
     }
 
@@ -88,21 +91,24 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/invite")
     public ResponseEntity<SuccessResponse<MoimInvitationInfoResponse>> getInvitationInfo(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INVITE_INFO_GET_SUCCESS,
-                moimService.getMoimInvitationInfo(principalHandler.getUserIdFromPrincipal(), moimId)));
+                moimService.getMoimInvitationInfo(userId, moimId)));
     }
 
     @Override
     @GetMapping("/{moimId}/authenticate")
     public SuccessResponse<MoimAuthenticateResponse> getAuthenticationOfMoim(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS,
-                moimService.getAuthenticateUserOfMoim(moimId, principalHandler.getUserIdFromPrincipal()));
+                moimService.getAuthenticateUserOfMoim(moimId, userId));
     }
+
 
     @Override
     @GetMapping("/{moimId}/writers/top-rank")
@@ -159,9 +165,10 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/info/owner")
     public ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, userId)));
     }
 
     @Override
@@ -169,9 +176,10 @@ public class MoimController implements MoimControllerSwagger {
     public ResponseEntity<SuccessResponse> createTopicOfMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final TopicCreateRequest createRequest,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(moimService.createTopic(moimId, principalHandler.getUserIdFromPrincipal(), createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
+        return ResponseEntity.created(URI.create(moimService.createTopic(moimId, userId, createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
     }
 
     @GetMapping("/best")
@@ -184,10 +192,11 @@ public class MoimController implements MoimControllerSwagger {
     @GetMapping("/{moimId}/temporary")
     public SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS,
-                moimService.getTemporaryPost(moimId, principalHandler.getUserIdFromPrincipal()));
+                moimService.getTemporaryPost(moimId, userId));
     }
 
 
@@ -196,9 +205,10 @@ public class MoimController implements MoimControllerSwagger {
     public ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final int page,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, principalHandler.getUserIdFromPrincipal(), page)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, userId, page)));
     }
 
     @Override
@@ -206,9 +216,10 @@ public class MoimController implements MoimControllerSwagger {
     public ResponseEntity<SuccessResponse> modifyMoimInformation(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final MoimInfoModifyRequest request,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        moimService.modifyMoimInforation(moimId, principalHandler.getUserIdFromPrincipal(), request);
+        moimService.modifyMoimInforation(moimId, userId, request);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFORMATION_PUT_SUCCESS));
     }
 
@@ -224,18 +235,20 @@ public class MoimController implements MoimControllerSwagger {
     @PostMapping
     @Override
     public ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
-            @RequestBody @Valid final MoimCreateRequest creatRequest
+            @RequestBody @Valid final MoimCreateRequest creatRequest,
+            @UserId final Long userId
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_CREATE_SUCCESS, moimService.createMoim(principalHandler.getUserIdFromPrincipal(), creatRequest)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_CREATE_SUCCESS, moimService.createMoim(userId, creatRequest)));
     }
 
     @GetMapping("/{moimId}/invitation-code")
     @Override
     public ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.INVITATION_CODE_GET_SUCCESS, moimService.getInvitationCode(moimId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.INVITATION_CODE_GET_SUCCESS, moimService.getInvitationCode(moimId, userId)));
     }
 
     @Override
@@ -243,18 +256,41 @@ public class MoimController implements MoimControllerSwagger {
     public ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final int page,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, principalHandler.getUserIdFromPrincipal(), page)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, userId, page)));
     }
 
     @Override
     @GetMapping("/{moimId}/writername")
     public ResponseEntity<SuccessResponse<WriterNameShortResponse>> getWriterNameOfUser(
             @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(moimId, principalHandler.getUserIdFromPrincipal())));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(moimId, userId)));
+    }
+
+    @Override
+    @GetMapping("/{moimId}/public-status")
+    public SuccessResponse<MoimPublicStatusResponse> getPublicStatusOfMoim(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return SuccessResponse.of(SuccessMessage.MOIM_PUBLIC_STATUS_GET_SUCCESS,
+                moimService.getPublicStatusOfMoim(moimId));
+    }
+
+    @Override
+    @DeleteMapping("/{moimId}")
+    public ResponseEntity<SuccessResponse> deleteMoim(
+            @MoimIdPathVariable final Long moimId,
+            @UserId final Long userId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        moimService.deleteMoim(moimId, userId);
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
     }
 
 }

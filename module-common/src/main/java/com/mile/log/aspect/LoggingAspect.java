@@ -1,7 +1,7 @@
 package com.mile.log.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.filter.wrapper.CachedBodyRequestWrapper;
+import com.mile.log.filter.wrapper.CachedBodyRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.ContentCachingRequestWrapper;
 
 
 import java.util.Enumeration;
