@@ -28,6 +28,11 @@ public class UserIdHeaderResolver implements HandlerMethodArgumentResolver {
     @Override
     public Long resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer modelAndViewContainer, @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+
+        if (request.getMethod().equals("OPTIONS")) {
+            return null;
+        }
+
         final String token = request.getHeader("Authorization");
 
         if (!jwtTokenProvider.validateToken(token).equals(JwtValidationType.VALID_JWT)) {
