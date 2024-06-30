@@ -1,9 +1,13 @@
 package com.mile.moim.service;
 
+import com.mile.comment.domain.Comment;
+import com.mile.comment.service.CommentService;
+import com.mile.commentreply.service.CommentReplyService;
+import com.mile.curious.service.CuriousService;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
-import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.BestMoimListResponse;
 import com.mile.moim.service.dto.ContentListResponse;
 import com.mile.moim.service.dto.InvitationCodeGetResponse;
@@ -31,19 +35,20 @@ import com.mile.post.domain.Post;
 import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostDeleteService;
 import com.mile.post.service.PostGetService;
+import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.domain.User;
-import com.mile.user.service.UserService;
+import com.mile.user.service.UserRetriever;
 import com.mile.utils.DateUtil;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameRemover;
+import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,15 +58,21 @@ import java.util.stream.Collectors;
 public class MoimService {
 
     private final WriterNameService writerNameService;
+    private final WriterNameRetriever writerNameRetriever;
     private final TopicService topicService;
-    private final UserService userService;
-    private final MoimRepository moimRepository;
+    private final UserRetriever userRetriever;
     private final PostDeleteService postDeleteService;
     private final PostAuthenticateService postAuthenticateService;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
     private final MoimRemover moimRemover;
     private final MoimRetriever moimRetriever;
+    private final MoimCreator moimCreator;
+    private final CommentReplyService commentReplyService;
+    private final CommentService commentService;
+    private final CuriousService curiousService;
+    private final WriterNameRemover writerNameRemover;
+
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
@@ -86,7 +97,7 @@ public class MoimService {
             throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
         }
         String normalizedWriterName = writerName.replaceAll("\\s+", "").toLowerCase();
-        return WriterNameConflictCheckResponse.of(writerNameService.existWriterNamesByMoimAndName(moimRetriever.findById(moimId), normalizedWriterName));
+        return WriterNameConflictCheckResponse.of(writerNameRetriever.existWriterNamesByMoimAndName(moimRetriever.findById(moimId), normalizedWriterName));
     }
 
     public Long joinMoim(
@@ -94,7 +105,7 @@ public class MoimService {
             final Long userId,
             final WriterMemberJoinRequest joinRequest
     ) {
-        return writerNameService.createWriterName(userService.findById(userId), moimRetriever.findById(moimId), joinRequest);
+        return writerNameService.createWriterName(userRetriever.findById(userId), moimRetriever.findById(moimId), joinRequest);
     }
 
     public MoimInvitationInfoResponse getMoimInvitationInfo(
@@ -102,14 +113,14 @@ public class MoimService {
             final Long moimId
     ) {
         isUserAlreadyInMoim(moimId, userId);
-        return MoimInvitationInfoResponse.of(moimRetriever.findById(moimId), writerNameService.findNumbersOfWritersByMoimId(moimId));
+        return MoimInvitationInfoResponse.of(moimRetriever.findById(moimId), writerNameRetriever.findNumbersOfWritersByMoimId(moimId));
     }
 
     private void isUserAlreadyInMoim(
             final Long moimId,
             final Long userId
     ) {
-        if (writerNameService.findMemberByMoimIdAndWriterId(moimId, userId).isPresent()) {
+        if (writerNameRetriever.findMemberByMoimIdAndWriterId(moimId, userId).isPresent()) {
             throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
         }
     }
@@ -119,13 +130,13 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        return MoimAuthenticateResponse.of(writerNameService.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userService.findById(userId)));
+        return MoimAuthenticateResponse.of(writerNameRetriever.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userRetriever.findById(userId)));
     }
 
     public PopularWriterListResponse getMostCuriousWritersOfMoim(
             final Long moimId
     ) {
-        List<WriterName> writers = writerNameService.findTop2ByCuriousCount(moimId);
+        List<WriterName> writers = writerNameRetriever.findTop2ByCuriousCount(moimId);
         return PopularWriterListResponse.of(writers);
     }
 
@@ -145,7 +156,7 @@ public class MoimService {
                 moim.getName(),
                 moim.getOwner().getName(),
                 moim.getInformation(),
-                writerNameService.findNumbersOfWritersByMoimId(moimId),
+                writerNameRetriever.findNumbersOfWritersByMoimId(moimId),
                 DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
         );
     }
@@ -160,33 +171,29 @@ public class MoimService {
         return TopicListResponse.of(topicService.getKeywordsFromMoim(moimId));
     }
 
+    public void getAuthenticateOwnerOfMoim(
+            final Long moimId,
+            final Long userId
+    ) {
+        Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+        Moim moim = moimRetriever.findById(moimId);
+        if (!moim.getOwner().getId().equals(writerNameId)) {
+            throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
+        }
+    }
+
+
     public List<Moim> getBestMoimByPostNumber() {
 
-        List<Moim> moims = findBestMoims();
+        List<Moim> moims = moimRetriever.findBestMoims();
 
         if (moims.size() < BEST_MOIM_DEFAULT_NUMBER) {
             int remaining = BEST_MOIM_DEFAULT_NUMBER - moims.size();
-            List<Moim> latestMoims = getLatestMoims(remaining, moims);
+            List<Moim> latestMoims = moimRetriever.getLatestMoims(remaining, moims);
             moims.addAll(latestMoims);
         }
 
         return moims;
-    }
-
-    private List<Moim> findBestMoims() {
-        LocalDateTime endOfWeek = LocalDateTime.now();
-        LocalDateTime startOfWeek = endOfWeek.minusDays(7);
-        PageRequest pageRequest = PageRequest.of(0, 2);
-        return moimRepository.findTop3PublicMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
-    }
-
-    private List<Moim> getLatestMoims(int count, List<Moim> excludeMoims) {
-        PageRequest pageRequest = PageRequest.of(0, count);
-        if (excludeMoims.isEmpty()) {
-            return moimRepository.findLatestMoimsWithoutExclusion(pageRequest);
-        } else {
-            return moimRepository.findLatestMoimsWithExclusion(pageRequest, excludeMoims);
-        }
     }
 
     public BestMoimListResponse getBestMoimAndPostList() {
@@ -206,7 +213,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        String postId = postGetService.getTemporaryPostExist(moimRetriever.findById(moimId), writerNameService.findByMoimAndUser(moimId, userId));
+        String postId = postGetService.getTemporaryPostExist(moimRetriever.findById(moimId), writerNameRetriever.findByMoimAndUser(moimId, userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 
@@ -215,7 +222,7 @@ public class MoimService {
             final Long userId,
             final int page
     ) {
-        moimRetriever.getAuthenticateOwnerOfMoim(moimId, userId);
+        getAuthenticateOwnerOfMoim(moimId, userId);
         return topicService.getTopicListFromMoim(moimId, page);
     }
 
@@ -228,8 +235,8 @@ public class MoimService {
     ) {
         validateMoimName(modifyRequest.moimTitle());
         Moim moim = moimRetriever.findById(moimId);
+        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         moim.modifyMoimInfo(modifyRequest);
-        moimRetriever.authenticateOwnerOfMoim(moim, userId);
     }
 
 
@@ -241,7 +248,7 @@ public class MoimService {
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
-        return MoimNameConflictCheckResponse.of(!moimRepository.existsByNormalizedName(normalizedMoimName));
+        return MoimNameConflictCheckResponse.of(moimRetriever.checkNormalizeName(normalizedMoimName));
     }
 
 
@@ -249,7 +256,7 @@ public class MoimService {
     public void checkMoimNameUnique(
             final String moimName
     ) {
-        if (moimRepository.existsByNormalizedName(moimName)) {
+        if (moimRetriever.checkNormalizeName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }
@@ -259,7 +266,7 @@ public class MoimService {
             final Long userId
     ) {
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userId);
+        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         return InvitationCodeGetResponse.of(moim.getIdUrl());
     }
 
@@ -269,7 +276,7 @@ public class MoimService {
             final TopicCreateRequest createRequest
     ) {
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userId);
+        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         return topicService.createTopicOfMoim(moim, createRequest).toString();
     }
 
@@ -279,8 +286,8 @@ public class MoimService {
             final MoimCreateRequest createRequest
     ) {
         checkMoimNameUnique(createRequest.moimName());
-        Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
-        User user = userService.findById(userId);
+        Moim moim = moimCreator.createMoim(createRequest);
+        User user = userRetriever.findById(userId);
 
         setMoimOwner(moim, user, createRequest);
         setFirstTopic(moim, userId, createRequest);
@@ -294,7 +301,7 @@ public class MoimService {
             final MoimCreateRequest createRequest
     ) {
         WriterMemberJoinRequest joinRequest = WriterMemberJoinRequest.of(createRequest.writerName(), createRequest.writerNameDescription());
-        WriterName owner = writerNameService.getById(writerNameService.createWriterName(user, moim, joinRequest));
+        WriterName owner = writerNameRetriever.findById(writerNameService.createWriterName(user, moim, joinRequest));
         moim.setOwner(owner);
         moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
     }
@@ -315,7 +322,7 @@ public class MoimService {
             final Long userId
     ) {
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userId);
+        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         return MoimInfoOwnerResponse.of(moim);
     }
 
@@ -325,7 +332,7 @@ public class MoimService {
             final int page
     ) {
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userId);
+        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         return writerNameService.getWriterNameInfoList(moim, page);
     }
 
@@ -339,7 +346,20 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        moimRemover.deleteMoim(moimId, userId);
+
+        Moim moim = moimRetriever.findById(moimId);
+        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
+        List<Topic> topics = topicService.findTopicListByMoimId(moimId);
+        List<Post> posts = postGetService.findAllByTopics(topics);
+        List<Comment> comments = commentService.findAllByPosts(posts);
+        commentReplyService.deleteRepliesByComments(comments);
+        commentService.deleteComments(posts);
+        curiousService.deleteAllByPosts(posts);
+        postDeleteService.deletePostsByTopic(topics);
+        writerNameRemover.deleteWriterNamesByMoim(moim);
+        topicService.deleteTopicsByMoim(moim);
+        writerNameRemover.setWriterNameMoimNull(moim.getOwner());
+        moimRemover.deleteMoim(moim);
     }
 
 }
