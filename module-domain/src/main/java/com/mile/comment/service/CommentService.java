@@ -14,6 +14,7 @@ import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostGetService postGetService;
     private final SecureUrlUtil secureUrlUtil;
-    private final WriterNameService writerNameService;
+    private final WriterNameRetriever  writerNameRetriever;
     private final CommentReplyService commentReplyService;
 
     @Transactional
@@ -103,7 +104,7 @@ public class CommentService {
     ) {
         postAuthenticateService.authenticateUserWithPostId(postId, userId);
         List<Comment> commentList = findByPostId(postId);
-        Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+        Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
         return commentList.stream()
                 .map(comment -> CommentResponse.of(
                         comment,
@@ -120,7 +121,7 @@ public class CommentService {
     ) {
         Comment comment = findById(commentId);
         return commentReplyService.createCommentReply(
-                writerNameService.findWriterNameByMoimIdAndUserId(getMoimIdFromComment(comment), userId),
+                writerNameRetriever.findWriterNameByMoimIdAndUserId(getMoimIdFromComment(comment), userId),
                 comment,
                 replyCreateRequest);
     }
@@ -160,12 +161,6 @@ public class CommentService {
     ) {
         commentRepository.findByPostId(post.getId()).forEach(commentReplyService::deleteRepliesByComment);
         commentRepository.deleteAllByPost(post);
-    }
-
-    public void deleteAllCommentByWriterNameId(
-            final Long writerNameId
-    ) {
-        commentRepository.deleteAllByWriterNameId(writerNameId);
     }
 
     public int countByPost(
