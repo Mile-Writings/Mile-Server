@@ -12,13 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class WriterNameRemover {
 
     private final WriterNameRepository writerNameRepository;
+    private final WriterNameRetriever writerNameRetriever;
 
     public void deleteWriterNamesByMoim(
             final Moim moim
     ) {
         writerNameRepository.deleteWritersExceptOwner(moim, moim.getOwner());
     }
+    public void deleteWriterNameByUserId(
+            final Long userId
+    ) {
+        writerNameRepository.delete(writerNameRetriever.findByWriterId(userId));
+    }
 
+    public void deleteWriterName(final WriterName writerName) {
+        writerNameRepository.delete(writerName);
+    }
     @Transactional
     public void setWriterNameMoimNull(final WriterName writerName) {
         writerName.setMoimNull();
