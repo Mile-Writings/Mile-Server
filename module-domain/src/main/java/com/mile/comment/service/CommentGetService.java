@@ -1,7 +1,7 @@
 package com.mile.comment.service;
 
 import com.mile.comment.repository.CommentRepository;
-import com.mile.commentreply.service.CommentReplyGetService;
+import com.mile.commentreply.service.CommentReplyRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class CommentGetService {
 
     private final CommentRepository commentRepository;
-    private final CommentReplyGetService commentReplyRetriever;
+    private final CommentReplyRetriever commentReplyRetriever;
 
     public int findCommentCountByWriterNameId(
             final Long writerNameId
