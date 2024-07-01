@@ -3,7 +3,6 @@ package com.mile.controller.writername;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.writername.service.WriterNameDeleteService;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameDescriptionResponse;
 import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/writername")
 public class WriterNameController implements WriterNameControllerSwagger {
 
-    private final WriterNameDeleteService writerNameDeleteService;
     private final WriterNameService writerNameService;
 
     @Override
@@ -32,7 +30,7 @@ public class WriterNameController implements WriterNameControllerSwagger {
             @PathVariable("writerNameId") final Long writerNameId,
             @UserId final Long userId
     ) {
-        writerNameDeleteService.deleteWriterNameById(writerNameId, userId);
+        writerNameService.deleteWriterNameById(writerNameId, userId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_MEMBER_DELETE_SUCCESS));
     }
 
