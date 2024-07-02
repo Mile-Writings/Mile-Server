@@ -8,7 +8,6 @@ import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.writername.domain.WriterName;
-import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.WriterNameUpdator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +21,7 @@ public class CuriousService {
 
     private final CuriousRepository curiousRepository;
     private final WriterNameUpdator writerNameUpdator;
+    private final CuriousRemover curiousRemover;
 
     public void deleteCurious(final Post post, final WriterName writerName) {
         checkCuriousNotExists(post, writerName);
@@ -57,16 +57,11 @@ public class CuriousService {
         return CuriousInfoResponse.of(curiousRepository.existsByPostAndWriterName(post, writerName), post.getCuriousCount());
     }
 
-    public void deleteAllByPost(
-            final Post post
-    ) {
-        curiousRepository.deleteAllByPost(post);
-    }
 
     public void deleteAllByPosts(
             final List<Post> posts
     ) {
-        posts.forEach(this::deleteAllByPost);
+        posts.forEach(curiousRemover::deleteAllByPost);
     }
 
 }

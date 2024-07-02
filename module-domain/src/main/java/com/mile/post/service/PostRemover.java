@@ -1,8 +1,8 @@
 package com.mile.post.service;
 
 import com.mile.aws.utils.S3Service;
-import com.mile.comment.service.CommentService;
-import com.mile.curious.service.CuriousService;
+import com.mile.comment.service.CommentRemover;
+import com.mile.curious.service.CuriousRemover;
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
@@ -19,9 +19,9 @@ import java.util.List;
 public class PostRemover {
 
     private final PostRepository postRepository;
-    private final CuriousService curiousService;
-    private final CommentService commentService;
     private final S3Service s3Service;
+    private final CommentRemover commentRemover;
+    private final CuriousRemover curiousRemover;
 
 
     public void deleteTemporaryPosts(
@@ -59,8 +59,8 @@ public class PostRemover {
         WriterName writerName = post.getWriterName();
         writerName.decreaseTotalCuriousCountByPostDelete(post.getCuriousCount());
 
-        curiousService.deleteAllByPost(post);
-        commentService.deleteAllByPost(post);
+        curiousRemover.deleteAllByPost(post);
+        commentRemover.deleteAllByPost(post);
     }
 
     private void deleteS3File(

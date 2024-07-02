@@ -1,7 +1,6 @@
 package com.mile.comment.service;
 
 import com.mile.comment.domain.Comment;
-import com.mile.comment.repository.CommentRepository;
 import com.mile.comment.service.dto.CommentResponse;
 import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.commentreply.service.CommentReplyService;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final PostRetriever postRetriever;
-    private final CommentRepository commentRepository;
     private final WriterNameRetriever writerNameRetriever;
     private final CommentReplyService commentReplyService;
     private final CommentRetriever commentRetriever;
@@ -74,19 +72,6 @@ public class CommentService {
                 writerNameRetriever.findWriterNameByMoimIdAndUserId(commentRetriever.getMoimIdFromComment(comment), userId),
                 comment,
                 replyCreateRequest);
-    }
-
-    public void deleteAllByPost(
-            final Post post
-    ) {
-        commentRepository.findByPostId(post.getId()).forEach(commentReplyService::deleteRepliesByComment);
-        commentRemover.deleteAllByPost(post);
-    }
-
-    public void deleteAllCommentByWriterNameId(
-            final Long writerNameId
-    ) {
-        commentRemover.deleteAllCommentByWriterNameId(writerNameId);
     }
 
     public int countByPost(
