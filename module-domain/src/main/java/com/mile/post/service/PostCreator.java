@@ -5,7 +5,6 @@ import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.topic.domain.Topic;
-import com.mile.topic.service.TopicRetriever;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
