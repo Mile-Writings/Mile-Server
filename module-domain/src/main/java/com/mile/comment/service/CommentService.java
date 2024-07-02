@@ -11,7 +11,7 @@ import com.mile.post.service.PostAuthenticateService;
 import com.mile.post.service.PostGetService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.writername.domain.WriterName;
-import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +26,13 @@ public class CommentService {
 
     private final PostAuthenticateService postAuthenticateService;
     private final CommentRepository commentRepository;
-    private final WriterNameService writerNameService;
+    private final PostGetService postGetService;
+    private final WriterNameRetriever  writerNameRetriever;
     private final CommentReplyService commentReplyService;
     private final CommentRetriever commentRetriever;
     private final CommentRemover commentRemover;
     private final CommentCreator commentCreator;
     private final CommentReplyRemover commentReplyRemover;
-    private final PostGetService postGetService;
 
 
     @Transactional
@@ -69,7 +69,7 @@ public class CommentService {
     ) {
         postAuthenticateService.authenticateUserWithPostId(postId, userId);
         List<Comment> commentList = commentRetriever.findByPostId(postId);
-        Long writerNameId = writerNameService.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+        Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
         return commentList.stream()
                 .map(comment -> CommentResponse.of(
                         comment,
@@ -85,7 +85,7 @@ public class CommentService {
     ) {
         Comment comment = commentRetriever.findById(commentId);
         return commentReplyService.createCommentReply(
-                writerNameService.findWriterNameByMoimIdAndUserId(commentRetriever.getMoimIdFromComment(comment), userId),
+                writerNameRetriever.findWriterNameByMoimIdAndUserId(commentRetriever.getMoimIdFromComment(comment), userId),
                 comment,
                 replyCreateRequest);
     }

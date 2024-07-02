@@ -24,6 +24,7 @@ import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
 import com.mile.writername.service.dto.WriterNameResponse;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ public class PostService {
     private final PostAuthenticateService postAuthenticateService;
     private final CommentService commentService;
     private final WriterNameService writerNameService;
+    private final WriterNameRetriever writerNameRetriever;
     private final CuriousService curiousService;
     private final TopicService topicService;
     private final TopicRetriever topicRetriever;
@@ -67,7 +69,7 @@ public class PostService {
         Post post = postGetService.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        commentService.createComment(post, writerNameService.findByMoimAndUser(moimId, userId), commentCreateRequest);
+        commentService.createComment(post, writerNameRetriever.findByMoimAndUser(moimId, userId), commentCreateRequest);
     }
 
     @Transactional
@@ -77,7 +79,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.createCurious(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
+        curiousService.createCurious(post, writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
@@ -95,7 +97,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
+        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
     }
 
     @Transactional
@@ -105,7 +107,7 @@ public class PostService {
     ) {
         Post post = postGetService.findById(postId);
         postAuthenticateService.authenticateUserWithPost(post, userId);
-        curiousService.deleteCurious(post, writerNameService.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
+        curiousService.deleteCurious(post, writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
@@ -134,7 +136,7 @@ public class PostService {
             final Long userId
     ) {
         return WriterAuthenticateResponse.of(postAuthenticateService.existsPostByWriterWithPost(postId,
-                writerNameService.getWriterNameByPostAndUserId(postGetService.findById(postId), userId).getId()));
+                writerNameRetriever.getWriterNameByPostAndUserId(postGetService.findById(postId), userId).getId()));
     }
 
     @Transactional
@@ -203,7 +205,7 @@ public class PostService {
             final PostCreateRequest postCreateRequest
     ) {
         postAuthenticateService.authenticateUserOfMoim(decodeUrlToLong(postCreateRequest.moimId()), userId);
-        WriterName writerName = writerNameService.findByMoimAndUser(decodeUrlToLong(postCreateRequest.moimId()), userId);
+        WriterName writerName = writerNameRetriever.findByMoimAndUser(decodeUrlToLong(postCreateRequest.moimId()), userId);
         Post post = createPost(postCreateRequest, writerName);
         postRepository.saveAndFlush(post);
         post.setIdUrl(secureUrlUtil.encodeUrl(post.getId()));
@@ -229,7 +231,7 @@ public class PostService {
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
         postAuthenticateService.authenticateWriterOfMoim(userId, decodeUrlToLong(temporaryPostCreateRequest.moimId()));
-        WriterName writerName = writerNameService.findByMoimAndUser(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.moimId()), userId);
+        WriterName writerName = writerNameRetriever.findByMoimAndUser(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.moimId()), userId);
         postDeleteService.deleteTemporaryPosts(topicRetriever.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())).getMoim(), writerName);
         postCreateService.createTemporaryPost(writerName, temporaryPostCreateRequest);
     }

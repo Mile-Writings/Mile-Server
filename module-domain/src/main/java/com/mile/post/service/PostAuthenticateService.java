@@ -6,7 +6,7 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.writername.domain.WriterName;
-import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PostAuthenticateService {
     private final PostRepository postRepository;
-    private final WriterNameService writerNameService;
+    private final WriterNameRetriever writerNameRetriever;
 
     public void authenticateUserWithPostId(
             final Long postId,
@@ -36,7 +36,7 @@ public class PostAuthenticateService {
             final Long moimId,
             final Long userId
     ) {
-        if (!writerNameService.isUserInMoim(moimId, userId)) {
+        if (!writerNameRetriever.isUserInMoim(moimId, userId)) {
             throw new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR);
         }
     }
@@ -70,7 +70,7 @@ public class PostAuthenticateService {
             final Long postId,
             final Long userId
     ) {
-        WriterName writerName = writerNameService.getWriterNameByPostAndUserId(findById(postId), userId);
+        WriterName writerName = writerNameRetriever.getWriterNameByPostAndUserId(findById(postId), userId);
         authenticateWriterWithPost(postId, writerName.getId());
         return writerName;
     }
@@ -80,7 +80,7 @@ public class PostAuthenticateService {
             final Long userId,
             final Long moimId
     ) {
-        if (!writerNameService.isUserInMoim(moimId, userId)) {
+        if (!writerNameRetriever.isUserInMoim(moimId, userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
     }

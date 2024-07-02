@@ -9,6 +9,7 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.WriterNameUpdator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,13 @@ import java.util.List;
 public class CuriousService {
 
     private final CuriousRepository curiousRepository;
-    private final WriterNameService writerNameService;
+    private final WriterNameUpdator writerNameUpdator;
 
     public void deleteCurious(final Post post, final WriterName writerName) {
         checkCuriousNotExists(post, writerName);
         curiousRepository.delete(curiousRepository.findByPostAndWriterName(post, writerName));
         post.decreaseCuriousCount();
-        writerNameService.decreaseTotalCuriousCountByWriterName(writerName);
+        writerNameUpdator.decreaseTotalCuriousCountByWriterName(writerName);
     }
 
     public void checkCuriousNotExists(final Post post, final WriterName writerName) {
@@ -43,7 +44,7 @@ public class CuriousService {
             throw new ConflictException(ErrorMessage.CURIOUS_ALREADY_EXISTS_EXCEPTION);
         }
         post.increaseCuriousCount();
-        writerNameService.increaseTotalCuriousCountByWriterName(writerName);
+        writerNameUpdator.increaseTotalCuriousCountByWriterName(writerName);
     }
 
     public void checkCuriousExists(final Post post, final WriterName writerName) {
@@ -68,21 +69,4 @@ public class CuriousService {
         posts.forEach(this::deleteAllByPost);
     }
 
-    public void deleteAllByWriterNameId(
-            final Long writerNameId
-    ) {
-
-
-        WriterName writerName = writerNameService.findById(writerNameId);
-        List<Curious> curiousList = curiousRepository.findAllByWriterName(writerName);
-
-        curiousList.forEach(curious -> {
-            Post post = curious.getPost();
-
-            post.decreaseCuriousCount();
-            writerName.decreaseTotalCuriousCount();
-        });
-
-        curiousRepository.deleteAll(curiousList);
-    }
 }
