@@ -4,17 +4,15 @@ import com.mile.aws.utils.S3Service;
 import com.mile.comment.service.CommentService;
 import com.mile.curious.service.CuriousService;
 import com.mile.moim.domain.Moim;
-import com.mile.moim.service.dto.MoimCuriousPostListResponse;
-import com.mile.moim.service.dto.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +73,9 @@ public class PostRemover {
     public void deleteAllPostByWriterNameId(final Long writerNameId) {
         List<Post> posts = postRepository.findByWriterNameId(writerNameId);
         posts.forEach(this::delete);
+    }
+
+    public void deletePostsByTopic(final List<Topic> topics) {
+        topics.forEach(postRepository::deleteByTopic);
     }
 }

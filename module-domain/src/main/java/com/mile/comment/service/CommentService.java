@@ -8,8 +8,6 @@ import com.mile.commentreply.service.CommentReplyService;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostRetriever;
-import com.mile.post.service.dto.CommentCreateRequest;
-import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +23,10 @@ public class CommentService {
 
     private final PostRetriever postRetriever;
     private final CommentRepository commentRepository;
-    private final PostGetService postGetService;
-    private final WriterNameRetriever  writerNameRetriever;
+    private final WriterNameRetriever writerNameRetriever;
     private final CommentReplyService commentReplyService;
     private final CommentRetriever commentRetriever;
     private final CommentRemover commentRemover;
-    private final CommentCreator commentCreator;
     private final CommentReplyRemover commentReplyRemover;
 
 
@@ -45,15 +41,6 @@ public class CommentService {
         commentRemover.delete(comment);
     }
 
-    @Transactional
-    public void createComment(
-            final Post post,
-            final WriterName writerName,
-            final CommentCreateRequest commentCreateRequest
-    ) {
-        commentCreator.createComment(post, writerName, commentCreateRequest);
-    }
-
     public void deleteReply(
             final Long userId,
             final Long replyId
@@ -66,14 +53,14 @@ public class CommentService {
             final Long postId,
             final Long userId
     ) {
-        postAuthenticateService.authenticateUserWithPostId(postId, userId);
+        postRetriever.authenticateUserWithPostId(postId, userId);
         List<Comment> commentList = commentRetriever.findByPostId(postId);
         Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
         return commentList.stream()
                 .map(comment -> CommentResponse.of(
                         comment,
                         writerNameId,
-                        commentRetriever.isCommentWriterEqualWriterOfPost(comment, postGetService.findById(postId)),
+                        commentRetriever.isCommentWriterEqualWriterOfPost(comment, postRetriever.findById(postId)),
                         commentReplyService.findRepliesByComment(comment, writerNameId))).collect(Collectors.toList());
     }
 

@@ -11,6 +11,7 @@ import com.mile.post.repository.PostRepository;
 import com.mile.topic.domain.Topic;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -28,6 +29,7 @@ public class PostRetriever {
     private final PostRepository postRepository;
     private final SecureUrlUtil secureUrlUtil;
     private static final int POST_BY_TOPIC_PER_PAGE_SIZE = 6;
+    private final WriterNameRetriever writerNameRetriever;
 
     public Post findById(
             final Long postId
@@ -89,7 +91,7 @@ public class PostRetriever {
             final Long userId
     ) {
         Long moimId = post.getTopic().getMoim().getId();
-        authenticateUserOfMoim(moimId, userId);
+        authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
     }
 
     public void authenticateUserOfMoim(

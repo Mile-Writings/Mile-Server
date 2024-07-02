@@ -32,6 +32,7 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.post.domain.Post;
+import com.mile.post.service.PostRemover;
 import com.mile.post.service.PostRetriever;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
@@ -68,6 +69,7 @@ public class MoimService {
     private final CommentService commentService;
     private final CuriousService curiousService;
     private final WriterNameRemover writerNameRemover;
+    private final PostRemover postRemover;
 
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
@@ -199,7 +201,7 @@ public class MoimService {
         Map<Moim, List<Post>> bestMoimAndPostMap = bestMoimsByPostNumber.stream()
                 .collect(Collectors.toMap(
                         moim -> moim,
-                        postGetService::getLatestPostsByMoim
+                        postRetriever::getLatestPostsByMoim
                 ));
 
         return BestMoimListResponse.of(bestMoimAndPostMap);
@@ -209,7 +211,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        String postId = postGetService.getTemporaryPostExist(moimRetriever.findById(moimId), writerNameRetriever.findByMoimAndUser(moimId, userId));
+        String postId = postRetriever.getTemporaryPostExist(moimRetriever.findById(moimId), writerNameRetriever.findByMoimAndUser(moimId, userId));
         return TemporaryPostExistResponse.of(!secureUrlUtil.decodeUrl(postId).equals(0L), postId);
     }
 
@@ -346,12 +348,12 @@ public class MoimService {
         Moim moim = moimRetriever.findById(moimId);
         moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         List<Topic> topics = topicService.findTopicListByMoimId(moimId);
-        List<Post> posts = postGetService.findAllByTopics(topics);
+        List<Post> posts = postRetriever.findAllByTopics(topics);
         List<Comment> comments = commentService.findAllByPosts(posts);
         commentReplyService.deleteRepliesByComments(comments);
         commentService.deleteComments(posts);
         curiousService.deleteAllByPosts(posts);
-        postDeleteService.deletePostsByTopic(topics);
+        postRemover.deletePostsByTopic(topics);
         writerNameRemover.deleteWriterNamesByMoim(moim);
         topicService.deleteTopicsByMoim(moim);
         writerNameRemover.setWriterNameMoimNull(moim.getOwner());

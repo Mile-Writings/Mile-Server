@@ -21,7 +21,7 @@ public class CommentCreator {
             final WriterName writerName,
             final CommentCreateRequest commentCreateRequest
     ) {
-        return commentRepository.saveAndFlush(Comment.create(post, writerName, commentCreateRequest));
+        return commentRepository.save(Comment.create(post, writerName, commentCreateRequest));
     }
 
     public void createComment(
@@ -31,6 +31,7 @@ public class CommentCreator {
     ) {
         Comment comment = create(post, writerName, commentCreateRequest);
         comment.setIdUrl(secureUrlUtil.encodeUrl(comment.getId()));
+        commentRepository.save(comment);
     }
 
 }
