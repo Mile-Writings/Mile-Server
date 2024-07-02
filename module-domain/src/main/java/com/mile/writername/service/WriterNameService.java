@@ -1,6 +1,6 @@
 package com.mile.writername.service;
 
-import com.mile.comment.service.CommentGetService;
+import com.mile.comment.service.CommentRetriever;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ConflictException;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class WriterNameService {
     private final WriterNameRepository writerNameRepository;
     private final PostGetService postGetService;
-    private final CommentGetService commentGetService;
+    private final CommentRetriever commentGetService;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
     private static final int WRITERNAME_MAX_SIZE = 5;
