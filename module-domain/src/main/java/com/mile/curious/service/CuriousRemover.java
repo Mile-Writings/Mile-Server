@@ -31,9 +31,14 @@ public class CuriousRemover {
 
         curiousRepository.deleteAll(curiousList);
     }
+
     public void deleteAllByPost(
             final Post post
     ) {
         curiousRepository.deleteAllByPost(post);
+    }
+
+    public void deleteCurious(final Post post, final WriterName writerName) {
+        curiousRepository.delete(curiousRepository.findByPostAndWriterName(post, writerName));
     }
 }
