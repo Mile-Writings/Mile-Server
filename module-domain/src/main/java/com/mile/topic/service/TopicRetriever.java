@@ -10,7 +10,7 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.MoimTopicInfoResponse;
 import com.mile.post.domain.Post;
-import com.mile.post.service.PostGetService;
+import com.mile.post.service.PostRetriever;
 import com.mile.post.service.dto.PostListResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
@@ -40,7 +40,7 @@ public class TopicRetriever {
     private static final int TOPIC_PER_PAGE_SIZE = 4;
 
     private final TopicRepository topicRepository;
-    private final PostGetService postGetService;
+    private final PostRetriever postGetService;
     private final SecureUrlUtil secureUrlUtil;
     private final CommentService commentService;
     private final UserService userService;
