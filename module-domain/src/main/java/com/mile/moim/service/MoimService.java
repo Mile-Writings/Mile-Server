@@ -32,9 +32,7 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.post.domain.Post;
-import com.mile.post.service.PostAuthenticateService;
-import com.mile.post.service.PostDeleteService;
-import com.mile.post.service.PostGetService;
+import com.mile.post.service.PostRetriever;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicService;
 import com.mile.user.domain.User;
@@ -61,9 +59,7 @@ public class MoimService {
     private final WriterNameRetriever writerNameRetriever;
     private final TopicService topicService;
     private final UserRetriever userRetriever;
-    private final PostDeleteService postDeleteService;
-    private final PostAuthenticateService postAuthenticateService;
-    private final PostGetService postGetService;
+    private final PostRetriever postRetriever;
     private final SecureUrlUtil secureUrlUtil;
     private final MoimRemover moimRemover;
     private final MoimRetriever moimRetriever;
@@ -81,7 +77,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        postAuthenticateService.authenticateUserOfMoim(moimId, userId);
+        postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
         return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
     }
 
@@ -162,7 +158,7 @@ public class MoimService {
     }
 
     public MoimCuriousPostListResponse getMostCuriousPostFromMoim(final Long moimId) {
-        return postDeleteService.getMostCuriousPostByMoim(moimRetriever.findById(moimId));
+        return postRetriever.getMostCuriousPostByMoim(moimRetriever.findById(moimId));
     }
 
     public TopicListResponse getTopicList(

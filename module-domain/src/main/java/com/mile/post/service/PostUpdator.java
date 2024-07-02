@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PostUpdateService {
+public class PostUpdator {
 
     @Transactional
     public void update(

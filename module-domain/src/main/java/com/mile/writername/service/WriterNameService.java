@@ -10,8 +10,8 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.service.MoimRetriever;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
-import com.mile.post.service.PostDeleteService;
-import com.mile.post.service.PostGetService;
+import com.mile.post.service.PostRemover;
+import com.mile.post.service.PostRetriever;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserRetriever;
 import com.mile.writername.domain.WriterName;
@@ -36,9 +36,9 @@ public class WriterNameService {
     private final MoimRetriever moimRetriever;
     private final UserRetriever userRetriever;
     private final CommentRemover commentRemover;
-    private final PostDeleteService postDeleteService;
+    private final PostRemover postDeleteService;
     private final CuriousRemover curiousRemover;
-    private final PostGetService postGetService;
+    private final PostRetriever postGetService;
     private final CommentRetriever commentGetService;
 
     private final WriterNameRemover writerNameRemover;

@@ -1,8 +1,8 @@
 package com.mile.topic.service;
 
 import com.mile.moim.domain.Moim;
-import com.mile.post.service.PostDeleteService;
-import com.mile.post.service.PostGetService;
+import com.mile.post.service.PostRemover;
+import com.mile.post.service.PostRetriever;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TopicRemover {
 
-    private final PostGetService postGetService;
-    private final PostDeleteService postDeleteService;
+    private final PostRetriever postGetService;
+    private final PostRemover postDeleteService;
     private final TopicRepository topicRepository;
 
     public void deleteTopic(

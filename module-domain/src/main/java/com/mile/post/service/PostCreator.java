@@ -4,7 +4,6 @@ import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.topic.service.TopicRetriever;
-import com.mile.topic.service.TopicService;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
-public class PostCreateService {
+public class PostCreator {
     private final PostRepository postRepository;
     private final TopicRetriever topicRetriever;
     private final SecureUrlUtil secureUrlUtil;

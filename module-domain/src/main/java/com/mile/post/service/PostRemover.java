@@ -8,7 +8,6 @@ import com.mile.moim.service.dto.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
-import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,19 +18,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostDeleteService {
+public class PostRemover {
 
     private final PostRepository postRepository;
     private final CuriousService curiousService;
     private final CommentService commentService;
     private final S3Service s3Service;
 
-    private List<Post> getPostHaveCuriousCount(
-            final List<Post> postList
-    ) {
-        postList.removeIf(post -> post.getCuriousCount() <= 0);
-        return postList;
-    }
 
     public void deleteTemporaryPosts(
             final Moim moim,
@@ -57,11 +50,6 @@ public class PostDeleteService {
         postRepository.delete(post);
     }
 
-    public void deletePostsByTopic(
-            final List<Topic> topics
-    ) {
-        topics.forEach(postRepository::deleteByTopic);
-    }
 
     private void deleteRelatedData(
             final Post post
@@ -81,15 +69,6 @@ public class PostDeleteService {
             final String key
     ) {
         s3Service.deleteImage(key);
-    }
-
-    public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
-        List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
-        return MoimCuriousPostListResponse.of(postList
-                .stream()
-                .map(p ->
-                        MoimMostCuriousPostResponse.of(p.getIdUrl(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), p.getContent(), p.isContainPhoto())
-                ).collect(Collectors.toList()));
     }
 
 

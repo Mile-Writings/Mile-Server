@@ -7,8 +7,7 @@ import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.commentreply.service.CommentReplyService;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
 import com.mile.post.domain.Post;
-import com.mile.post.service.PostAuthenticateService;
-import com.mile.post.service.PostGetService;
+import com.mile.post.service.PostRetriever;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final PostAuthenticateService postAuthenticateService;
+    private final PostRetriever postRetriever;
     private final CommentRepository commentRepository;
     private final PostGetService postGetService;
     private final WriterNameRetriever  writerNameRetriever;
