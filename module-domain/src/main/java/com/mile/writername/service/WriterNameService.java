@@ -1,7 +1,7 @@
 package com.mile.writername.service;
 
-import com.mile.comment.service.CommentRemover;
 import com.mile.comment.service.CommentRetriever;
+import com.mile.comment.service.CommentRemover;
 import com.mile.curious.service.CuriousRemover;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
@@ -47,7 +47,7 @@ public class WriterNameService {
 
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
     private static final int WRITERNAME_MAX_SIZE = 5;
-
+    private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
 
     public WriterNameDescriptionResponse findWriterNameDescription(
             final Long userId,
