@@ -1,7 +1,7 @@
 package com.mile.cocurrency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.authentication.UserAuthentication;
+import com.mile.common.auth.JwtTokenProvider;
 import com.mile.moim.service.dto.MoimCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,12 +15,12 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -29,6 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class UniqueNameLockTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -40,15 +44,15 @@ public class UniqueNameLockTest {
         int numberOfThread = 4;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThread);
         CountDownLatch latch = new CountDownLatch(numberOfThread);
-
+        String randomName = UUID.randomUUID().toString().substring(0,7);
         MoimCreateRequest bodyDto = new
-                MoimCreateRequest("이정해봅시다", "string", false, "string", "string", "string", "string", "str", "string");
+                MoimCreateRequest(randomName, "string", false, "string", "string", "string", "string", "str", "string");
 
         String body = objectMapper.writeValueAsString(bodyDto);
-
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(1L);
         // when
         List<MvcResult> results = new ArrayList<>();
-        UserAuthentication testUser = new UserAuthentication(1L, null, null);
+
 
         for (int i = 0; i < numberOfThread; i++) {
             executorService.submit(() -> {
@@ -56,8 +60,8 @@ public class UniqueNameLockTest {
                     MvcResult result = mockMvc.perform(
                                     post("/api/moim")
                                             .contentType(MediaType.APPLICATION_JSON)
+                                            .header("Authorization", token)
                                             .content(body)
-                                            .with(authentication(testUser))
                             )
                             .andDo(print())
                             .andReturn();
@@ -80,7 +84,6 @@ public class UniqueNameLockTest {
             if (mvcResult.getResponse().getStatus() == HttpStatus.OK.value()) count200++;
             else if (mvcResult.getResponse().getStatus() == HttpStatus.BAD_REQUEST.value()) count400++;
         }
-        System.out.println(count400);
 
         assertThat(count200).isEqualTo(1);
         assertThat(count400).isEqualTo(numberOfThread - 1);
