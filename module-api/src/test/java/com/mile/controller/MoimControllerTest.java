@@ -156,7 +156,7 @@ public class MoimControllerTest {
 
     @Test
     @DisplayName("모임 초대 코드가 정상적으로 조회된다.")
-    public void moimGetTest() throws Exception {
+    public void getMoimInvitationCodeTest() throws Exception {
         //given
         String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
         String requestUri = "/api/moim/" + MOIM_ID + "/invitation-code";
@@ -174,7 +174,7 @@ public class MoimControllerTest {
 
     @Test
     @DisplayName("글모임의 주제들이 정상적으로 조회된다.")
-    public void topicGetFromMoimTest() throws Exception {
+    public void getTopicFromMoimTest() throws Exception {
         //given
         String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
         String requestUri = "/api/moim/" + MOIM_ID;
@@ -254,7 +254,7 @@ public class MoimControllerTest {
 
     @Test
     @DisplayName("글모임의 공개상태가 정상적으로 반환된다.")
-    public void checkPublicStatusTest() throws Exception {
+    public void getPublicStatusTest() throws Exception {
         //given
         String requestUri = "/api/moim/" + MOIM_ID + "/public-status";
 
@@ -312,7 +312,7 @@ public class MoimControllerTest {
      */
     @Test
     @DisplayName("모임이 정상적으로 생성된다.")
-    public void moimCreateTest() throws Exception {
+    public void postMoimTest() throws Exception {
         //given
         String randomString = UUID.randomUUID().toString().substring(0, 7);
         String randemTagString = UUID.randomUUID().toString().substring(0, 3);
