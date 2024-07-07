@@ -1,13 +1,14 @@
 package com.mile.cocurrency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.authentication.UserAuthentication;
+import com.mile.common.auth.JwtTokenProvider;
 import com.mile.post.service.dto.PostCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,7 +21,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
@@ -30,6 +30,8 @@ public class DuplicatedInterceptorTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
 
     @Test
@@ -39,6 +41,7 @@ public class DuplicatedInterceptorTest {
         int numberOfThread = 4;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThread);
         CountDownLatch latch = new CountDownLatch(numberOfThread);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(1L);
 
         PostCreateRequest bodyDto = new PostCreateRequest(
                 "MQ==",
@@ -53,7 +56,6 @@ public class DuplicatedInterceptorTest {
 
         // when
         List<MvcResult> results = new ArrayList<>();
-        UserAuthentication testUser = new UserAuthentication(1L, null, null);
 
         for (int i = 0; i < numberOfThread; i++) {
             executorService.submit(() -> {
@@ -61,8 +63,8 @@ public class DuplicatedInterceptorTest {
                     MvcResult result = mockMvc.perform(
                                     post("/api/post")
                                             .contentType(MediaType.APPLICATION_JSON)
+                                            .header("Authorization", token)
                                             .content(body)
-                                            .with(authentication(testUser))
                             )
                             .andReturn();
                     synchronized (results) {
