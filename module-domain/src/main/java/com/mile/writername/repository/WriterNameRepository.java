@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,6 +32,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     Optional<WriterName> findById(final Long id);
 
+    //@Query("select w from WriterName w join fetch w.moim where w.writer.id = :writerId")
     List<WriterName> findAllByWriterId(final Long writerId);
 
     Integer countAllByWriter(final User user);
