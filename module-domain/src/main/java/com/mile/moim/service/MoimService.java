@@ -1,9 +1,6 @@
 package com.mile.moim.service;
 
-import com.mile.comment.domain.Comment;
-import com.mile.comment.service.CommentService;
-import com.mile.commentreply.service.CommentReplyService;
-import com.mile.curious.service.CuriousService;
+import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
@@ -32,10 +29,10 @@ import com.mile.moim.service.dto.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.WriterNameConflictCheckResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.post.domain.Post;
-import com.mile.post.service.PostRemover;
 import com.mile.post.service.PostRetriever;
-import com.mile.topic.domain.Topic;
-import com.mile.topic.service.TopicService;
+import com.mile.topic.service.TopicCreator;
+import com.mile.topic.service.TopicRemover;
+import com.mile.topic.service.TopicRetriever;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserRetriever;
 import com.mile.utils.DateUtil;
@@ -58,36 +55,36 @@ public class MoimService {
 
     private final WriterNameService writerNameService;
     private final WriterNameRetriever writerNameRetriever;
-    private final TopicService topicService;
     private final UserRetriever userRetriever;
     private final PostRetriever postRetriever;
     private final SecureUrlUtil secureUrlUtil;
     private final MoimRemover moimRemover;
     private final MoimRetriever moimRetriever;
     private final MoimCreator moimCreator;
-    private final CommentReplyService commentReplyService;
-    private final CommentService commentService;
-    private final CuriousService curiousService;
     private final WriterNameRemover writerNameRemover;
-    private final PostRemover postRemover;
+
+    private final TopicRemover topicRemover;
+    private final TopicRetriever topicRetriever;
+    private final TopicCreator topicCreator;
 
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
+    private final CommentReplyRemover commentReplyRemover;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
             final Long userId
     ) {
         postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
-        return ContentListResponse.of(topicService.getContentsFromMoim(moimId));
+        return ContentListResponse.of(topicRetriever.getContentsFromMoim(moimId));
     }
 
     public WriterNameShortResponse getWriterNameOfUser(
             final Long moimId,
             final Long userId
     ) {
-        return writerNameService.findWriterNameInfo(moimId, userId);
+        return writerNameRetriever.findWriterNameInfo(moimId, userId);
     }
 
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
@@ -142,7 +139,7 @@ public class MoimService {
     public MoimTopicResponse getTopicFromMoim(
             final Long moimId
     ) {
-        return MoimTopicResponse.of(topicService.findLatestTopicByMoim(moimRetriever.findById(moimId)));
+        return MoimTopicResponse.of(topicRetriever.findLatestTopicByMoim(moimRetriever.findById(moimId)));
     }
 
     public MoimInfoResponse getMoimInfo(
@@ -166,7 +163,7 @@ public class MoimService {
     public TopicListResponse getTopicList(
             final Long moimId
     ) {
-        return TopicListResponse.of(topicService.getKeywordsFromMoim(moimId));
+        return TopicListResponse.of(topicRetriever.getKeywordsFromMoim(moimId));
     }
 
     public void getAuthenticateOwnerOfMoim(
@@ -221,7 +218,7 @@ public class MoimService {
             final int page
     ) {
         getAuthenticateOwnerOfMoim(moimId, userId);
-        return topicService.getTopicListFromMoim(moimId, page);
+        return topicRetriever.getTopicListFromMoim(moimId, page);
     }
 
 
@@ -275,7 +272,7 @@ public class MoimService {
     ) {
         Moim moim = moimRetriever.findById(moimId);
         moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
-        return topicService.createTopicOfMoim(moim, createRequest).toString();
+        return topicCreator.createTopicOfMoim(moim, createRequest).toString();
     }
 
     @AtomicValidateUniqueMoimName
@@ -347,17 +344,10 @@ public class MoimService {
 
         Moim moim = moimRetriever.findById(moimId);
         moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
-        List<Topic> topics = topicService.findTopicListByMoimId(moimId);
-        List<Post> posts = postRetriever.findAllByTopics(topics);
-        List<Comment> comments = commentService.findAllByPosts(posts);
-        commentReplyService.deleteRepliesByComments(comments);
-        commentService.deleteComments(posts);
-        curiousService.deleteAllByPosts(posts);
-        postRemover.deletePostsByTopic(topics);
+        moimRemover.deleteRelatedData(moim);
         writerNameRemover.deleteWriterNamesByMoim(moim);
-        topicService.deleteTopicsByMoim(moim);
+        topicRemover.deleteTopicsByMoim(moim);
         writerNameRemover.setWriterNameMoimNull(moim.getOwner());
         moimRemover.deleteMoim(moim);
     }
-
 }

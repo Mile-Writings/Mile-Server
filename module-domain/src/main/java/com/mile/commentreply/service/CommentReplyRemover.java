@@ -3,7 +3,10 @@ package com.mile.commentreply.service;
 import com.mile.comment.domain.Comment;
 import com.mile.commentreply.domain.CommentReply;
 import com.mile.commentreply.repository.CommentReplyRepository;
+
 import java.util.List;
+
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,12 @@ public class CommentReplyRemover {
             final Comment comment
     ) {
         commentReplyRepository.deleteCommentRepliesByComment(comment);
+    }
+
+    public void deleteRepliesByWriterName(
+            final WriterName writerName
+    ) {
+        commentReplyRepository.deleteCommentRepliesByWriterName(writerName);
     }
 
     public void deleteRepliesByComments(final List<Comment> comments) {

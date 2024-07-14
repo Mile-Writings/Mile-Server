@@ -17,7 +17,7 @@ public class CuriousRemover {
     private final CuriousRepository curiousRepository;
     private final CuriousRetriever curiousRetriever;
 
-    public void deleteAllByWriterNameId(
+    public void deleteAllByWriterName(
             final WriterName writerName
     ) {
 
@@ -36,6 +36,12 @@ public class CuriousRemover {
             final Post post
     ) {
         curiousRepository.deleteAllByPost(post);
+    }
+
+    public void deleteAllByPosts(
+            final List<Post> posts
+    ) {
+        posts.forEach(this::deleteAllByPost);
     }
 
     public void deleteCurious(final Post post, final WriterName writerName) {

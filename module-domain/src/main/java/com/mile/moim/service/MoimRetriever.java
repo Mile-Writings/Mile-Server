@@ -7,12 +7,14 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.user.domain.User;
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -66,4 +68,7 @@ public class MoimRetriever {
         return moimRepository.existsByNormalizedName(normalizedName);
     }
 
+    public Optional<Moim> findByOwner(final WriterName writerName) {
+        return moimRepository.findByOwner(writerName);
+    }
 }

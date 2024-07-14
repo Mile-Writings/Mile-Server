@@ -37,12 +37,6 @@ public class CommentReplyService {
         commentReplyRemover.deleteCommentReply(commentReply);
     }
 
-    public void deleteRepliesByComment(
-            final Comment comment
-    ) {
-        commentReplyRemover.deleteRepliesByComment(comment);
-    }
-
     public List<ReplyResponse> findRepliesByComment(
             final Comment comment,
             final Long writerNameId
@@ -56,7 +50,4 @@ public class CommentReplyService {
         return commentReplyRetriever.findRepliesCountByComment(comment);
     }
 
-    public void deleteRepliesByComments(final List<Comment> comments) {
-        commentReplyRemover.deleteRepliesByComments(comments);
-    }
 }

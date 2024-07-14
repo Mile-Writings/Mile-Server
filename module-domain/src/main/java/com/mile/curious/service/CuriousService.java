@@ -37,10 +37,5 @@ public class CuriousService {
         return CuriousInfoResponse.of(curiousRetriever.findCuriousExists(post, writerName), post.getCuriousCount());
     }
 
-    public void deleteAllByPosts(
-            final List<Post> posts
-    ) {
-        posts.forEach(curiousRemover::deleteAllByPost);
-    }
 
 }
