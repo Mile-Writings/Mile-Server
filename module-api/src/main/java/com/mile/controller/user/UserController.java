@@ -75,9 +75,11 @@ public class UserController implements UserControllerSwagger {
     @DeleteMapping("/delete")
     @Override
     public SuccessResponse deleteUser(
-            @UserId final Long userId
+            @UserId final Long userId,
+            @RequestParam final String authorizationCode,
+            @RequestBody final UserLoginRequest userLoginRequest
     ) {
-        authFacade.deleteUser(userId);
+        authFacade.deleteUser(userId, authorizationCode, userLoginRequest);
         return SuccessResponse.of(SuccessMessage.USER_DELETE_SUCCESS);
     }
 
