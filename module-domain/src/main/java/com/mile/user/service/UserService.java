@@ -5,6 +5,7 @@ import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.moim.service.dto.MoimOfUserResponse;
 import com.mile.user.domain.User;
 import com.mile.writername.service.WriterNameRetriever;
+import com.mile.writername.service.WriterNameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
