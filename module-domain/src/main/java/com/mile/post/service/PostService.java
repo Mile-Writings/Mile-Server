@@ -136,7 +136,7 @@ public class PostService {
             return PostAuthenticateResponse.of(ROLE_ANONYMOUS);
         }
 
-        WriterName userWriterName = writerNameRetriever.findByMoimAndUser(moim.getId(), userId); // 유저 필명
+        WriterName userWriterName = writerNameRetriever.findByMoimAndUser(moim.getId(), userId);
         if (postWriterName.equals(userWriterName)) {
             return PostAuthenticateResponse.of(ROLE_WRITER);
         }
