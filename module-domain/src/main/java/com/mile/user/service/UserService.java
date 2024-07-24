@@ -42,9 +42,7 @@ public class UserService {
         userRemover.delete(user);
     }
 
-    public MoimListOfUserResponse getMoimOfUserList(
-            final Long userId
-    ) {
+    public MoimListOfUserResponse getMoimOfUserList(final Long userId) {
         return MoimListOfUserResponse.of(writerNameRetriever.getMoimListOfUser(userId)
                 .stream()
                 .map(MoimOfUserResponse::of)
