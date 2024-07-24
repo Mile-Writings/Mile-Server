@@ -1,16 +1,14 @@
 package com.mile.writername.service;
 
 import com.mile.comment.service.CommentRetriever;
-import com.mile.comment.service.CommentRemover;
-import com.mile.curious.service.CuriousRemover;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.MoimRemover;
 import com.mile.moim.service.MoimRetriever;
 import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
-import com.mile.post.service.PostRemover;
 import com.mile.post.service.PostRetriever;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserRetriever;
@@ -18,7 +16,6 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.dto.WriterNameDescriptionResponse;
 import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
 import com.mile.writername.service.dto.WriterNameInfoResponse;
-import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,19 +32,15 @@ import java.util.stream.Collectors;
 public class WriterNameService {
     private final MoimRetriever moimRetriever;
     private final UserRetriever userRetriever;
-    private final CommentRemover commentRemover;
-    private final PostRemover postDeleteService;
-    private final CuriousRemover curiousRemover;
-    private final PostRetriever postGetService;
-    private final CommentRetriever commentGetService;
-
+    private final PostRetriever postRetriever;
+    private final CommentRetriever commentRetriever;
     private final WriterNameRemover writerNameRemover;
     private final WriterNameRetriever writerNameRetriever;
     private final WriterNameCreator writerNameCreator;
+    private final MoimRemover moimRemover;
 
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
     private static final int WRITERNAME_MAX_SIZE = 5;
-    private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
 
     public WriterNameDescriptionResponse findWriterNameDescription(
             final Long userId,
@@ -57,6 +50,16 @@ public class WriterNameService {
         checkWriterNameUserId(userId, writerName);
         return WriterNameDescriptionResponse.of(writerName);
     }
+    @Transactional
+    public void deleteWriterNameByUser(final User user) {
+        writerNameRetriever.findByWriter(user).forEach(
+                writerName -> {
+                    writerNameRemover.deleteRelatedData(writerName);
+                    moimRemover.deleteMoimByOwner(writerName);
+                }
+        );
+    }
+
 
     public void deleteWriterNameById(
             final Long writerNameId,
@@ -64,25 +67,14 @@ public class WriterNameService {
     ) {
         WriterName writerName = writerNameRetriever.findById(writerNameId);
         moimRetriever.authenticateOwnerOfMoim(writerName.getMoim(), userRetriever.findById(userId));
-
-        postDeleteService.deleteAllPostByWriterNameId(writerNameId);
-        commentRemover.deleteAllCommentByWriterNameId(writerNameId);
-        curiousRemover.deleteAllByWriterNameId(writerName);
-
         writerNameRemover.deleteWriterName(writerName);
     }
+
 
     private void checkWriterNameUserId(final Long userId, final WriterName writerName) {
         if (!writerName.getWriter().getId().equals(userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_NAME_INFO_FORBIDDEN);
         }
-    }
-
-    public WriterNameShortResponse findWriterNameInfo(
-            final Long moimId,
-            final Long userId
-    ) {
-        return WriterNameShortResponse.of(writerNameRetriever.findByMoimAndUser(moimId, userId));
     }
 
     @Transactional
@@ -105,14 +97,12 @@ public class WriterNameService {
     }
 
 
-
     @Transactional
     public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
         checkWriterNameOverFive(user);
         WriterName writerName = writerNameCreator.createWriterName(user, moim, joinRequest);
         return writerName.getId();
     }
-
 
     public MoimWriterNameListGetResponse getWriterNameInfoList(
             final Moim moim,
@@ -124,8 +114,8 @@ public class WriterNameService {
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
                 .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
-                        postGetService.findPostCountByWriterNameId(writerName.getId()),
-                        commentGetService.findCommentCountByWriterNameId(writerName.getId()),
+                        postRetriever.findPostCountByWriterNameId(writerName.getId()),
+                        commentRetriever.findCommentCountByWriterNameId(writerName.getId()),
                         writerName.equals(moim.getOwner())))
                 .collect(Collectors.toList());
 

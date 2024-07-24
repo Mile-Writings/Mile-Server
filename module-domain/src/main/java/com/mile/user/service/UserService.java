@@ -4,7 +4,6 @@ import com.mile.client.SocialType;
 import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.moim.service.dto.MoimOfUserResponse;
 import com.mile.user.domain.User;
-import com.mile.writername.service.WriterNameRemover;
 import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +16,8 @@ public class UserService {
     private final UserRetriever userRetriever;
     private final UserRemover userRemover;
     private final UserCreator userCreator;
-    private final WriterNameRemover writerNameRemover;
     private final WriterNameRetriever writerNameRetriever;
+    private final WriterNameService writerNameService;
 
     public User findById(final Long userId) {
         return userRetriever.findById(userId);
@@ -37,8 +36,9 @@ public class UserService {
     }
 
     public void deleteUser(final Long userId) {
-        userRemover.delete(userId);
-        writerNameRemover.deleteWriterNameByUserId(userId);
+        User user = userRetriever.findById(userId);
+        writerNameService.deleteWriterNameByUser(user);
+        userRemover.delete(user);
     }
 
     public MoimListOfUserResponse getMoimOfUserList(

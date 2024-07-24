@@ -4,12 +4,11 @@ import com.mile.comment.domain.Comment;
 import com.mile.comment.repository.CommentRepository;
 import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.post.domain.Post;
-
-import java.util.List;
-
-import com.mile.post.service.PostRetriever;
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -17,13 +16,12 @@ public class CommentRemover {
 
     private final CommentRepository commentRepository;
     private final CommentReplyRemover commentReplyRemover;
-    private final PostRetriever postRetriever;
     private final CommentRetriever commentRetriever;
 
     public void deleteAllCommentByWriterNameId(
-            final Long writerNameId
+            final WriterName writerName
     ) {
-        commentRepository.deleteAllByWriterNameId(writerNameId);
+        commentRepository.deleteAllByWriterName(writerName);
     }
 
     public void delete(

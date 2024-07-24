@@ -4,20 +4,18 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.topic.domain.Topic;
-import com.mile.topic.service.dto.ContentResponse;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicPutRequest;
-import com.mile.topic.service.dto.TopicResponse;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,35 +28,11 @@ public class TopicService {
     private final UserService userService;
 
 
-    public List<ContentResponse> getContentsFromMoim(
-            final Long moimId
-    ) {
-        return topicRetriever.getContentsFromMoim(moimId);
-    }
-
     public List<ContentWithIsSelectedResponse> getContentsWithIsSelectedFromMoim(
             final Long moimId,
             final Long selectedTopicId
     ) {
         return topicRetriever.getContentsWithIsSelectedFromMoim(moimId, selectedTopicId);
-    }
-
-    public List<Topic> findTopicListByMoimId(
-            final Long moimId
-    ) {
-        return topicRetriever.findTopicListByMoimId(moimId);
-    }
-
-    public List<TopicResponse> getKeywordsFromMoim(
-            final Long moimId
-    ) {
-        return topicRetriever.getKeywordsFromMoim(moimId);
-    }
-
-    public String findLatestTopicByMoim(
-            final Moim moim
-    ) {
-        return topicRetriever.findLatestTopicByMoim(moim);
     }
 
     public PostListInTopicResponse getPostListByTopic(
@@ -117,12 +91,6 @@ public class TopicService {
             final TopicPutRequest topicPutRequest
     ) {
         topicUpdator.putTopic(userId, topicId, topicPutRequest);
-    }
-
-    public void deleteTopicsByMoim(
-            final Moim moim
-    ) {
-        topicRemover.deleteTopicsByMoim(moim);
     }
 
 }

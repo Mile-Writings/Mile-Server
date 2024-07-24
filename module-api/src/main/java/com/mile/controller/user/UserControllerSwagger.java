@@ -73,7 +73,9 @@ public interface UserControllerSwagger {
                     @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    SuccessResponse deleteUser(@Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId);
+    SuccessResponse deleteUser(@Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
+                               @RequestParam final String authorizationCode,
+                               @RequestBody final UserLoginRequest userLoginRequest);
 
 
     @Operation(summary = "유저 글모임 리스트 조회")

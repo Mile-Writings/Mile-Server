@@ -8,6 +8,7 @@ import com.mile.post.domain.Post;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.dto.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,17 +42,21 @@ public class WriterNameRetriever {
         return writerNameRepository.existsWriterNameByMoimAndNormalizedName(moim, name);
     }
 
+    public List<WriterName> findByWriter(final User user) {
+        return writerNameRepository.findByWriter(user);
+    }
+
     public WriterName findById(final Long id) {
         return writerNameRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
         );
     }
 
-    public WriterName findByWriterId(final Long writerId) {
-        return writerNameRepository.findByWriterId(writerId)
-                .orElseThrow(
-                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
-                );
+    public WriterNameShortResponse findWriterNameInfo(
+            final Long moimId,
+            final Long userId
+    ) {
+        return WriterNameShortResponse.of(findByMoimAndUser(moimId, userId));
     }
 
     public boolean isUserInMoim(

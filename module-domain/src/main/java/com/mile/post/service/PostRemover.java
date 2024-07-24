@@ -70,9 +70,8 @@ public class PostRemover {
     }
 
 
-    public void deleteAllPostByWriterNameId(final Long writerNameId) {
-        List<Post> posts = postRepository.findByWriterNameId(writerNameId);
-        posts.forEach(this::delete);
+    public void deleteAllPostByWriterNameId(final WriterName writerName) {
+        postRepository.deleteByWriterName(writerName);
     }
 
     public void deletePostsByTopic(final List<Topic> topics) {

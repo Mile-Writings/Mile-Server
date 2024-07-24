@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface TopicRepository extends JpaRepository<Topic, Long>, TopicRepositoryCustom {
 
+    List<Topic> findByMoim(final Moim moim);
+
     List<Topic> findByMoimId(final Long moimId);
 
     Long countByMoimId(final Long moimId);

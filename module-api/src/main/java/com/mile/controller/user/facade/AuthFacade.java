@@ -45,9 +45,10 @@ public class AuthFacade {
         return getTokenDto(getUserInfoResponse(authorizationCode, loginRequest));
     }
 
-    public void deleteUser(final Long userId) {
-        tokenService.deleteRefreshToken(userId);
+    public void deleteUser(final Long userId, final String authoriztionCode, final UserLoginRequest userLoginRequest) {
+        revokeUser(authoriztionCode, userLoginRequest);
         userService.deleteUser(userId);
+        tokenService.deleteRefreshToken(userId);
     }
 
     public void deleteRefreshToken(
@@ -68,6 +69,15 @@ public class AuthFacade {
             }
         } catch (DataIntegrityViolationException e) {
             return getTokenByUserId(userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
+        }
+    }
+
+    private void revokeUser(final String authorizationCode, final UserLoginRequest userLoginRequest) {
+        switch (userLoginRequest.socialType()) {
+            case KAKAO ->
+                    loginStrategyManager.getLoginStrategy(SocialType.KAKAO).revokeUser(authorizationCode, userLoginRequest);
+            case GOOGLE ->
+                    loginStrategyManager.getLoginStrategy(SocialType.GOOGLE).revokeUser(authorizationCode, userLoginRequest);
         }
     }
 

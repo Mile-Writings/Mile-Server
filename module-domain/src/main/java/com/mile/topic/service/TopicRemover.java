@@ -9,6 +9,8 @@ import com.mile.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class TopicRemover {
@@ -25,6 +27,11 @@ public class TopicRemover {
         topicRepository.deleteById(topic.getId());
     }
 
+    public void deleteTopics(
+            final List<Topic> topics
+    ) {
+
+    }
 
     private void deletePostsOfTopic(
             final Topic topic

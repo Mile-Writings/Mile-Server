@@ -21,17 +21,18 @@ import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicOfMoimResponse;
 import com.mile.topic.service.dto.TopicResponse;
 import com.mile.user.domain.User;
-import com.mile.user.service.UserService;
+import com.mile.user.service.UserRetriever;
 import com.mile.utils.SecureUrlUtil;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class TopicRetriever {
     private final PostRetriever postGetService;
     private final SecureUrlUtil secureUrlUtil;
     private final CommentService commentService;
-    private final UserService userService;
+    private final UserRetriever userRetriever;
 
 
     public void authenticateTopicWithUser(
@@ -90,7 +91,7 @@ public class TopicRetriever {
             final Long topicId
     ) {
         Topic topic = findById(topicId);
-        authenticateTopicWithUser(topic, userService.findById(userId));
+        authenticateTopicWithUser(topic, userRetriever.findById(userId));
         return TopicDetailResponse.of(topic);
     }
 
@@ -157,6 +158,13 @@ public class TopicRetriever {
             final Long moimId
     ) {
         return topicRepository.findByMoimId(moimId);
+    }
+
+
+    public List<Topic> findTopicListByMoim(
+            final Moim moim
+    ) {
+        return topicRepository.findByMoim(moim);
     }
 
     public List<TopicResponse> getKeywordsFromMoim(
