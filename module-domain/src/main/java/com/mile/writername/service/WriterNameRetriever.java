@@ -92,7 +92,7 @@ public class WriterNameRetriever {
     ) {
         return writerNameRepository.findAllByWriterId(userId)
                 .stream()
-                .map(writerName -> writerName.getMoim())
+                .map(WriterName::getMoim)
                 .collect(Collectors.toList());
     }
 
