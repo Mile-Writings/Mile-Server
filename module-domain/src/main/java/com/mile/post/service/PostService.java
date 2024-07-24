@@ -17,7 +17,7 @@ import com.mile.post.service.dto.PostGetResponse;
 import com.mile.post.service.dto.PostPutRequest;
 import com.mile.post.service.dto.TemporaryPostCreateRequest;
 import com.mile.post.service.dto.TemporaryPostGetResponse;
-import com.mile.post.service.dto.WriterAuthenticateResponse;
+import com.mile.post.service.dto.PostAuthenticateResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicRetriever;
 import com.mile.topic.service.TopicService;
@@ -52,6 +52,11 @@ public class PostService {
 
     private static final boolean CURIOUS_FALSE = false;
     private static final boolean CURIOUS_TRUE = true;
+    private static final String ROLE_WRITER = "writer";
+    private static final String ROLE_ANONYMOUS = "anonymous";
+    private static final String ROLE_MEMBER = "member";
+    private static final String ROLE_OWNER = "owner";
+
 
     @Transactional
     public void createCommentOnPost(
@@ -119,12 +124,28 @@ public class PostService {
     }
 
 
-    public WriterAuthenticateResponse getAuthenticateWriter(
+    public PostAuthenticateResponse getAuthenticateWriter(
             final Long postId,
             final Long userId
     ) {
-        return WriterAuthenticateResponse.of(postRetriever.existsPostByWriterWithPost(postId,
-                writerNameRetriever.getWriterNameByPostAndUserId(postRetriever.findById(postId), userId).getId()));
+        Post post = postRetriever.findById(postId);
+        Moim moim = post.getTopic().getMoim();
+        WriterName postWriterName = post.getWriterName();
+
+        if (!writerNameRetriever.isUserInMoim(moim.getId(), userId)) {
+            return PostAuthenticateResponse.of(ROLE_ANONYMOUS);
+        }
+
+        WriterName userWriterName = writerNameRetriever.findByMoimAndUser(moim.getId(), userId); // 유저 필명
+        if (postWriterName.equals(userWriterName)) {
+            return PostAuthenticateResponse.of(ROLE_WRITER);
+        }
+
+        if (moim.getOwner().equals(userWriterName)) {
+            return PostAuthenticateResponse.of(ROLE_OWNER);
+        }
+
+        return PostAuthenticateResponse.of(ROLE_MEMBER);
     }
 
     @Transactional
