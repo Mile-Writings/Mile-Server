@@ -26,10 +26,12 @@ public class ContextHolderUtil {
             return null;
         }
         String token = servletRequest.getHeader("Authorization");
+
         if(!jwtTokenProvider.validateToken(token).equals(JwtValidationType.VALID_JWT)) {
             throw new UnauthorizedException(ErrorMessage.TOKEN_VALIDATION_ERROR);
         }
-        return jwtTokenProvider.getUserFromJwt(servletRequest.getHeader("Authorization")).toString();
+
+        return jwtTokenProvider.getUserFromJwt(token).toString();
     }
 
 }
