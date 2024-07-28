@@ -8,6 +8,7 @@ import com.mile.post.service.PostService;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.ModifyPostGetResponse;
+import com.mile.post.service.dto.PostAuthenticateResponse;
 import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
@@ -96,7 +97,7 @@ public class PostController implements PostControllerSwagger {
 
     @GetMapping("/{postId}/authenticate")
     @Override
-    public ResponseEntity<SuccessResponse> getAuthenticateWrite(
+    public ResponseEntity<SuccessResponse<PostAuthenticateResponse>> getAuthenticateWrite(
             @PostIdPathVariable final Long postId,
             @UserId final Long userId,
             @PathVariable("postId") final String postUrl
