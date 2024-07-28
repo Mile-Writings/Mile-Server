@@ -1,6 +1,9 @@
 package com.mile.common.utils;
 
 import com.mile.common.auth.JwtTokenProvider;
+import com.mile.common.auth.JwtValidationType;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +22,16 @@ public class ContextHolderUtil {
 
     public String getUserIdFromContextHolder() {
         HttpServletRequest servletRequest = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-
         if (HttpMethod.OPTIONS.matches(servletRequest.getMethod())) {
             return null;
         }
-        return jwtTokenProvider.getUserFromJwt(servletRequest.getHeader("Authorization")).toString();
+        String token = servletRequest.getHeader("Authorization");
+
+        if(!jwtTokenProvider.validateToken(token).equals(JwtValidationType.VALID_JWT)) {
+            throw new UnauthorizedException(ErrorMessage.TOKEN_VALIDATION_ERROR);
+        }
+
+        return jwtTokenProvider.getUserFromJwt(token).toString();
     }
 
 }
