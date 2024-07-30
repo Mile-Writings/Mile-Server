@@ -122,7 +122,7 @@ public interface PostControllerSwagger {
     );
 
 
-    @Operation(summary = "게시글 삭제/수정 권한 확인")
+    @Operation(summary = "게시글 권한 확인")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "게시글 권한이 확인되었습니다."),
