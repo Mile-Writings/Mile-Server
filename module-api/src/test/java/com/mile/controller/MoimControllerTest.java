@@ -140,7 +140,7 @@ public class MoimControllerTest {
      */
     @Test
     @DisplayName("모임의 인기 게시물이 정상적으로 조회된다.")
-    public void getBestPostOfMoin() throws Exception {
+    public void getBestPostOfMoim() throws Exception {
         //given
         String requestUri = "/api/moim/" + MOIM_ID + "/posts/top-rank";
 

@@ -2,7 +2,7 @@ package com.mile.moim.service.dto;
 
 import com.mile.post.domain.Post;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 public record BestMoimPostResponse(String postId, String topicName, String imageUrl, String postTitle, String postContent, Boolean isContainPhoto) {
     private static final int SUBSTRING_START = 0;
@@ -23,7 +23,7 @@ public record BestMoimPostResponse(String postId, String topicName, String image
     private static String getSubStringOfCleanContent(
             String content
     ) {
-        String cleanContent = Jsoup.clean(content, Whitelist.none());
+        String cleanContent = Jsoup.clean(content, Safelist.none());
         if (cleanContent.length() >= SUBSTRING_END) {
             return cleanContent.substring(SUBSTRING_START, SUBSTRING_END);
         } else {

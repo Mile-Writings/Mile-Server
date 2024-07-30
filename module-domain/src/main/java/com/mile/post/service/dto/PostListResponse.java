@@ -3,7 +3,7 @@ package com.mile.post.service.dto;
 import com.mile.post.domain.Post;
 import com.mile.utils.DateUtil;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 public record PostListResponse(
         String postId,
@@ -32,7 +32,7 @@ public record PostListResponse(
     }
 
     private static String getSubString(final Post post) {
-        String cleanContent = Jsoup.clean(post.getContent(), Whitelist.none());
+        String cleanContent = Jsoup.clean(post.getContent(), Safelist.none());
         if (cleanContent.length() >= SUBSTRING_END) {
             return cleanContent.substring(SUBSTRING_START, SUBSTRING_END);
         } else {
