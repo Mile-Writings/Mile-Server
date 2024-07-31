@@ -35,6 +35,7 @@ public class WriterNameRemover {
     }
 
     public void deleteWriterName(final WriterName writerName) {
+        deleteRelatedData(writerName);
         writerNameRepository.delete(writerName);
     }
 
