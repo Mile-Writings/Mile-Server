@@ -17,11 +17,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByPostId(final Long postId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from Comment c where c.post = :post")
     void deleteAllByPost(@Param("post")final Post post);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Comment c where c.writerName = :writerName")
     void deleteAllByWriterName(@Param("writerName") final WriterName writerName);
 

@@ -16,11 +16,11 @@ public interface CommentReplyRepository extends JpaRepository<CommentReply, Long
 
     int countByWriterNameId(final Long writerNameId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("DELETE FROM CommentReply c WHERE c.comment = :comment")
     void deleteCommentRepliesByComment(final Comment comment);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("DELETE FROM CommentReply  c WHERE  c.writerName = :writerName")
     void deleteCommentRepliesByWriterName(@Param("writerName") final WriterName writerName);
 }
