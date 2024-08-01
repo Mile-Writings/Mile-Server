@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
@@ -26,8 +27,6 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     boolean existsWriterNameByMoimAndNormalizedName(final Moim moim, final String normalizedName);
 
-    Optional<WriterName> findByWriterId(final Long userId);
-
     List<WriterName> findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Long moimId, final int totalCuriousCount);
 
     Page<WriterName> findByMoimIdOrderByIdDesc(Long moimId, Pageable pageable);
@@ -39,6 +38,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     Integer countAllByWriter(final User user);
 
+    @Transactional
     @Modifying
     @Query("DELETE FROM WriterName w WHERE w.moim = :moim AND w != :owner")
     void deleteWritersExceptOwner(@Param("moim") Moim moim, @Param("owner") WriterName owner);

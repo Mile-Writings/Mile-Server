@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     boolean existsPostByIdAndWriterNameId(final Long postId, final Long userId);
@@ -18,13 +19,13 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     int countByWriterNameId(final Long writerNameId);
 
-
-    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Modifying
     @Query("DELETE FROM Post p WHERE p.topic = :topic")
     void deleteByTopic(@Param("topic") Topic topic);
 
-
-    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Modifying
     @Query("DELETE FROM Post  p WHERE p.writerName = :writerName")
     void deleteByWriterName(@Param("writerName") WriterName writerName);
 }
