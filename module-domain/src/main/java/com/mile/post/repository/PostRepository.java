@@ -16,17 +16,15 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     List<Post> findByTopic(final Topic topic);
 
-    List<Post> findByWriterNameId(final Long writerNameId);
-
     int countByWriterNameId(final Long writerNameId);
 
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Post p WHERE p.topic = :topic")
     void deleteByTopic(@Param("topic") Topic topic);
 
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Post  p WHERE p.writerName = :writerName")
     void deleteByWriterName(@Param("writerName") WriterName writerName);
 }
