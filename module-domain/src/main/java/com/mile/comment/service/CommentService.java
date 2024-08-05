@@ -74,12 +74,6 @@ public class CommentService {
                 replyCreateRequest);
     }
 
-    public int countByPost(
-            final Post post
-    ) {
-        return commentRetriever.countByPost(post) + findCommentReplyByPost(post);
-    }
-
     private int findCommentReplyByPost(
             final Post post
     ) {

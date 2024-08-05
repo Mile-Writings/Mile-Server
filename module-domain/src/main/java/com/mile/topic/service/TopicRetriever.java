@@ -1,6 +1,8 @@
 package com.mile.topic.service;
 
+import com.mile.comment.service.CommentRetriever;
 import com.mile.comment.service.CommentService;
+import com.mile.commentreply.service.CommentReplyRetriever;
 import com.mile.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
@@ -41,10 +43,11 @@ public class TopicRetriever {
     private static final int TOPIC_PER_PAGE_SIZE = 4;
 
     private final TopicRepository topicRepository;
-    private final PostRetriever postGetService;
+    private final PostRetriever postRetriever;
     private final SecureUrlUtil secureUrlUtil;
-    private final CommentService commentService;
+    private final CommentRetriever commentRetriever;
     private final UserRetriever userRetriever;
+    private final CommentReplyRetriever commentReplyRetriever;
 
 
     public void authenticateTopicWithUser(
@@ -70,7 +73,7 @@ public class TopicRetriever {
     ) {
         return topicList.stream()
                 .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public PostListInTopicResponse getPostListByTopic(
@@ -78,10 +81,10 @@ public class TopicRetriever {
             final String lastPostId
     ) {
         Topic topic = findById(topicId);
-        Slice<Post> posts = postGetService.findByTopicAndLastPostId(topic, secureUrlUtil.decodeIfNotNull(lastPostId));
+        Slice<Post> posts = postRetriever.findByTopicAndLastPostId(topic, secureUrlUtil.decodeIfNotNull(lastPostId));
         return PostListInTopicResponse.of(TopicOfMoimResponse.of(topic),
                 posts.stream().sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())
-                        .map(p -> PostListResponse.of(p, commentService.countByPost(p))).toList(),
+                        .map(p -> PostListResponse.of(p, commentRetriever.countByPost(p) + commentReplyRetriever.countByPost(p))).toList(),
                 posts.hasNext()
         );
     }
@@ -135,7 +138,7 @@ public class TopicRetriever {
         }
     }
 
-    private void checkKeywordsEmpty(
+    private void checkTopicListEmpty(
             final List<Topic> topicList
     ) {
         if (topicList.isEmpty()) {
@@ -171,7 +174,7 @@ public class TopicRetriever {
             final Long moimId
     ) {
         List<Topic> topicList = findTopicListByMoimId(moimId);
-        checkKeywordsEmpty(topicList);
+        checkTopicListEmpty(topicList);
         return topicList
                 .stream()
                 .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt).reversed())

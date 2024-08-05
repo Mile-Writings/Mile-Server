@@ -1,7 +1,9 @@
 package com.mile.post.service;
 
 import com.mile.comment.service.CommentCreator;
+import com.mile.comment.service.CommentRetriever;
 import com.mile.comment.service.CommentService;
+import com.mile.commentreply.service.CommentReplyRetriever;
 import com.mile.curious.service.CuriousService;
 import com.mile.curious.service.dto.CuriousInfoResponse;
 import com.mile.exception.message.ErrorMessage;
@@ -49,6 +51,7 @@ public class PostService {
     private final SecureUrlUtil secureUrlUtil;
     private final PostCreator postCreator;
     private final CommentService commentService;
+    private final CommentRetriever commentRetriever;
 
     private static final boolean CURIOUS_FALSE = false;
     private static final boolean CURIOUS_TRUE = true;
@@ -56,6 +59,7 @@ public class PostService {
     private static final String ROLE_ANONYMOUS = "anonymous";
     private static final String ROLE_MEMBER = "member";
     private static final String ROLE_OWNER = "owner";
+    private final CommentReplyRetriever commentReplyRetriever;
 
 
     @Transactional
@@ -189,7 +193,7 @@ public class PostService {
         Post post = postRetriever.findById(postId);
         post.increaseHits();
         Moim moim = post.getTopic().getMoim();
-        return PostGetResponse.of(post, moim, commentService.countByPost(post));
+        return PostGetResponse.of(post, moim, commentRetriever.countByPost(post) + commentReplyRetriever.countByPost(post));
     }
 
     private Long getMoimIdFromPostId(final Long postId) {
