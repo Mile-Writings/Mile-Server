@@ -1,6 +1,5 @@
 package com.mile.moim.service;
 
-import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
@@ -70,7 +69,6 @@ public class MoimService {
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
-    private final CommentReplyRemover commentReplyRemover;
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -119,7 +117,6 @@ public class MoimService {
             throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
         }
     }
-
 
     public MoimAuthenticateResponse getAuthenticateUserOfMoim(
             final Long moimId,
@@ -228,12 +225,11 @@ public class MoimService {
             final Long userId,
             final MoimInfoModifyRequest modifyRequest
     ) {
-        validateMoimName(modifyRequest.moimTitle());
+        checkMoimNameUnique(modifyRequest.moimTitle());
         Moim moim = moimRetriever.findById(moimId);
         moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         moim.modifyMoimInfo(modifyRequest);
     }
-
 
     @AtomicValidateUniqueMoimName
     public MoimNameConflictCheckResponse validateMoimName(

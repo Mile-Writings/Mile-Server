@@ -65,7 +65,7 @@ public class MoimRetriever {
 
     @AtomicValidateUniqueMoimName
     public boolean checkNormalizeName(final String normalizedName) {
-        return moimRepository.existsByNormalizedName(normalizedName);
+        return !moimRepository.existsByNormalizedName(normalizedName);
     }
 
     public Optional<Moim> findByOwner(final WriterName writerName) {
