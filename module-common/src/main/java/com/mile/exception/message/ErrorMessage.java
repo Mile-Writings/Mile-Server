@@ -11,20 +11,20 @@ public enum ErrorMessage {
     /*
     Not Found
      */
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저는 존재하지 않습니다."),
+    USER_NOT_FOUND(40400, "해당 유저는 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저의 리프레시 토큰이 존재하지 않습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글은 존재하지 않습니다."),
-    MOIM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글모임이 존재하지 않습니다."),
+    MOIM_NOT_FOUND(40403, "해당 글모임이 존재하지 않습니다."),
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 댓글이 존재하지 않습니다."),
     CURIOUS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 궁금해요는 존재하지 않습니다."),
-    TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감이 존재하지 않습니다."),
-    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글모임의 글감 키워드가 존재하지 않습니다."),
+    TOPIC_NOT_FOUND(40408, "해당 글감이 존재하지 않습니다."),
+    KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
     WRITERS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 작가가 요청한 개수 이상 존재하지 않습니다"),
     WRITER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 작가는 존재하지 않습니다."),
     RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "추천 글감을 받아오는데 실패했습니다."),
-    MOIM_TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글감이 존재하지 않습니다."),
+    MOIM_TOPIC_NOT_FOUND(40413, "해당 모임의 글감이 존재하지 않습니다."),
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
     RANDOM_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "랜덤 글 이름을 생성하는데 실패했습니다."),
@@ -65,7 +65,7 @@ public enum ErrorMessage {
     /*
     Forbidden
      */
-    USER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 모임에 접근 권한이 없습니다."),
+    USER_AUTHENTICATE_ERROR(40300, "해당 사용자는 모임에 접근 권한이 없습니다."),
     REPLY_USER_FORBIDDEN(HttpStatus.UNAUTHORIZED.value(), "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
     WRITER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
     MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
@@ -78,7 +78,7 @@ public enum ErrorMessage {
     /*
     Too Many Requests
      */
-    TOO_MANY_REQUESTS_EXCEPTION(HttpStatus.TOO_MANY_REQUESTS.value(),"요청이 중복되었습니다."),
+    TOO_MANY_REQUESTS_EXCEPTION(HttpStatus.TOO_MANY_REQUESTS.value(), "요청이 중복되었습니다."),
     /*
     Internal Server Error
      */
