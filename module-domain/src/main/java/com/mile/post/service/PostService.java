@@ -66,7 +66,7 @@ public class PostService {
 
     ) {
         Post post = postRetriever.findById(postId);
-        Long moimId = post.getTopic().getMoim().getId();
+        final Long moimId = post.getTopic().getMoim().getId();
         postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
         commentCreator.createComment(post, writerNameRetriever.findByMoimAndUser(moimId, userId), commentCreateRequest);
     }
@@ -88,7 +88,7 @@ public class PostService {
             final Long userId
     ) {
         Post post = postRetriever.findById(postId);
-        return CommentListResponse.of(commentService.getCommentResponse(post.getTopic().getMoim().getId(), postId, userId));
+        return CommentListResponse.of(commentService.getCommentResponse(post.getTopic().getMoim().getId(), post, userId));
     }
 
     @Transactional(readOnly = true)
@@ -154,9 +154,8 @@ public class PostService {
             final Long userId
     ) {
         Post post = postRetriever.findById(postId);
-        Long moimId = getMoimIdFromPostId(postId);
-        postRetriever.authenticateWriter(postId,
-                writerNameRetriever.findWriterNameByMoimIdAndUserId(moimId, userId));
+        Long moimId = post.getTopic().getMoim().getId();
+        postRetriever.authenticateWriter(postId, writerNameRetriever.findWriterNameByMoimIdAndUserId(moimId, userId));
         postRemover.delete(post);
     }
 

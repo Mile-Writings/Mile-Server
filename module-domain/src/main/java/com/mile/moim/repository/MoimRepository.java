@@ -24,5 +24,5 @@ public interface MoimRepository extends JpaRepository<Moim, Long> {
     @Query("SELECT m FROM Post p JOIN p.topic t JOIN t.moim m WHERE m.isPublic = true GROUP BY m ORDER BY MAX(p.createdAt) DESC")
     List<Moim> findLatestMoimsWithoutExclusion(Pageable pageable);
 
-    Optional<Moim> findByOwner(@NonNull final WriterName writerName);
+    Optional<Moim> findByOwner(final WriterName writerName);
 }
