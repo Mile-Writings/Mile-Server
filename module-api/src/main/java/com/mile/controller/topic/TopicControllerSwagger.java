@@ -35,8 +35,7 @@ public interface TopicControllerSwagger {
             }
     )
     SuccessResponse<PostListInTopicResponse> getPostListByTopic(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long topicId,
-            @PathVariable("topicId") final String topicUrl,
+            @PathVariable("topicId") Long topicId,
             @RequestParam(required = false) final String lastPostId
     );
 
