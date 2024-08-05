@@ -18,11 +18,12 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reactor.util.annotation.NonNull;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "writerName", uniqueConstraints = @UniqueConstraint(columnNames = "normalizedName"))
+@Table(name = "writer_name", uniqueConstraints = @UniqueConstraint(columnNames = "normalized_name"))
 public class WriterName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +50,12 @@ public class WriterName {
 
     public void increaseTotalCuriousCount() {
         totalCuriousCount++;
+    }
+
+    @Override
+    public boolean equals(@NonNull final Object writerName) {
+        WriterName that = (WriterName) writerName;
+        return id.equals(that.getId());
     }
 
     public void decreaseTotalCuriousCount() {
