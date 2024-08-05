@@ -71,6 +71,7 @@ public class PostRetriever {
     ) {
         return postRepository.findByTopic(topic);
     }
+
     private List<Post> getPostHaveCuriousCount(
             final List<Post> postList
     ) {
@@ -114,19 +115,21 @@ public class PostRetriever {
             final Long postId,
             final Long writerNameId
     ) {
-        if(!existsPostByWriterWithPost(postId, writerNameId)) {
+        if (!existsPostByWriterWithPost(postId, writerNameId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
     }
 
-    public WriterName authenticateWriter(
+    public void authenticateWriter(
             final Long postId,
             final WriterName writerName
     ) {
         authenticateWriterWithPost(postId, writerName.getId());
-        return writerName;
     }
 
+    public boolean isWriterOfPost(final Post post, final WriterName writerName) {
+        return post.getWriterName().equals(writerName);
+    }
 
     public void authenticateWriterOfMoim(
             final Long userId,
