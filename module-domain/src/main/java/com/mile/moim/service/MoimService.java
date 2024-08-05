@@ -1,6 +1,5 @@
 package com.mile.moim.service;
 
-import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
@@ -70,7 +69,7 @@ public class MoimService {
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
-    private final CommentReplyRemover commentReplyRemover;
+
 
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
@@ -125,7 +124,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        return MoimAuthenticateResponse.of(writerNameRetriever.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userRetriever.findById(userId)));
+        return MoimAuthenticateResponse.of(writerNameRetriever.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userId));
     }
 
     public PopularWriterListResponse getMostCuriousWritersOfMoim(
@@ -243,7 +242,7 @@ public class MoimService {
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
-        return MoimNameConflictCheckResponse.of(moimRetriever.checkNormalizeName(normalizedMoimName));
+        return MoimNameConflictCheckResponse.of(moimRetriever.validateNormalizedName(normalizedMoimName));
     }
 
 
@@ -251,7 +250,7 @@ public class MoimService {
     public void checkMoimNameUnique(
             final String moimName
     ) {
-        if (moimRetriever.checkNormalizeName(moimName)) {
+        if (moimRetriever.validateNormalizedName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }
