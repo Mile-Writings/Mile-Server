@@ -25,7 +25,8 @@ public class ContextHolderUtil {
         if (HttpMethod.OPTIONS.matches(servletRequest.getMethod())) {
             return null;
         }
-        String token = servletRequest.getHeader("Authorization");
+
+        final String token = servletRequest.getHeader("Authorization");
 
         if(!jwtTokenProvider.validateToken(token).equals(JwtValidationType.VALID_JWT)) {
             throw new UnauthorizedException(ErrorMessage.TOKEN_VALIDATION_ERROR);
