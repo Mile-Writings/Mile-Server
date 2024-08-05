@@ -8,8 +8,8 @@ import com.mile.common.resolver.reply.ReplyIdPathVariable;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Slf4j
 @RequestMapping("/api/comment")
 @RequiredArgsConstructor
 public class CommentController implements CommentControllerSwagger {
@@ -41,13 +40,14 @@ public class CommentController implements CommentControllerSwagger {
     public ResponseEntity<SuccessResponse> createCommentReply(
             @CommentIdPathVariable final Long commentId,
             @UserId final Long userId,
-            @RequestBody final ReplyCreateRequest createRequest,
+            @Valid @RequestBody final ReplyCreateRequest createRequest,
             @PathVariable("commentId") final String commentUrl
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).header("Location",
                 commentService.createCommentReply(
                         userId,
-                        commentId, createRequest
+                        commentId,
+                        createRequest
                 )).body(SuccessResponse.of(SuccessMessage.REPLY_CREATE_SUCCESS));
     }
 
