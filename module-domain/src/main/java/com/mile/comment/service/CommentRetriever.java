@@ -4,13 +4,13 @@ import com.mile.comment.domain.Comment;
 import com.mile.comment.repository.CommentRepository;
 import com.mile.commentreply.service.CommentReplyRetriever;
 import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -42,13 +42,11 @@ public class CommentRetriever {
         return comment.getPost().getTopic().getMoim().getId();
     }
 
-    public void authenticateUser(
+    public boolean authenticateUserOfComment(
             final Comment comment,
             final Long userId
     ) {
-        if (!commentRepository.findUserIdByComment(comment).equals(userId)) {
-            throw new ForbiddenException(ErrorMessage.COMMENT_ACCESS_ERROR);
-        }
+        return commentRepository.findUserIdByComment(comment).equals(userId);
     }
 
     public Comment findById(

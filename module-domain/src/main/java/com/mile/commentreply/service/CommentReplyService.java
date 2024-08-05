@@ -4,6 +4,9 @@ import com.mile.comment.domain.Comment;
 import com.mile.commentreply.domain.CommentReply;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
 import com.mile.commentreply.service.dto.ReplyResponse;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.ForbiddenException;
+import com.mile.moim.service.MoimRetriever;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class CommentReplyService {
     private final CommentReplyRetriever commentReplyRetriever;
     private final CommentReplyCreator commentReplyCreator;
     private final CommentReplyRemover commentReplyRemover;
+    private final MoimRetriever moimRetriever;
 
     @Transactional
     public String createCommentReply(
@@ -33,7 +37,11 @@ public class CommentReplyService {
             final Long replyId
     ) {
         CommentReply commentReply = commentReplyRetriever.findById(replyId);
-        commentReplyRetriever.authenticateReplyWithUserId(userId, commentReply);
+        if (!commentReplyRetriever.authenticateReplyWithUserId(userId, commentReply) &&
+                moimRetriever.isMoimOwnerEqualsUser(commentReply.getWriterName().getMoim(), userId)) {
+            throw new ForbiddenException(ErrorMessage.REPLY_USER_FORBIDDEN);
+        }
+
         commentReplyRemover.deleteCommentReply(commentReply);
     }
 
