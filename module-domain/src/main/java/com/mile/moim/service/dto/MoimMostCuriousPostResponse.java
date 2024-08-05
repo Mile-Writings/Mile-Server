@@ -1,7 +1,6 @@
 package com.mile.moim.service.dto;
 
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
+import com.mile.utils.JsoupUtil;
 
 public record MoimMostCuriousPostResponse(
         String postId,
@@ -28,7 +27,7 @@ public record MoimMostCuriousPostResponse(
     private static String getSubStringOfCleanContent(
             String content
     ) {
-        String cleanContent = Jsoup.clean(content, Safelist.none());
+        String cleanContent = JsoupUtil.toPlainText(content);
         if (cleanContent.length() >= SUBSTRING_END) {
             return cleanContent.substring(SUBSTRING_START, SUBSTRING_END);
         } else {
