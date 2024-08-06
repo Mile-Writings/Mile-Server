@@ -28,7 +28,7 @@ public class UserService {
         return userRetriever.isExistingUser(socialId, socialType);
     }
 
-    public Long createuser(final String socialId, final SocialType socialType, final String email) {
+    public Long createUser(final String socialId, final SocialType socialType, final String email) {
         return userCreator.createUser(socialId, socialType, email);
     }
 
