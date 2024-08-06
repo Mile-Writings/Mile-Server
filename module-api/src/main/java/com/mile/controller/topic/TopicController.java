@@ -30,8 +30,9 @@ public class TopicController implements TopicControllerSwagger {
     @Override
     @GetMapping("/{topicId}")
     public SuccessResponse<PostListInTopicResponse> getPostListByTopic(
-            @PathVariable("topicId") Long topicId,
-            @RequestParam(required = false) final String lastPostId
+            @TopicIdPathVariable Long topicId,
+            @RequestParam(required = false) final String lastPostId,
+            @PathVariable("topicId") final String topicUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_POST_GET_SUCCESS, topicService.getPostListByTopic(topicId, lastPostId));
     }
