@@ -40,7 +40,7 @@ public enum ErrorMessage {
     VALIDATION_REQUEST_NULL_OR_BLANK_EXCEPTION(40005,"요청 값이 비어있습니다."),
     VALIDATION_REQUEST_LENGTH_EXCEPTION(40006,"요청 값이 길이를 초과했습니다."),
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
-    POST_NOT_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장 글이 아닙니다."),
+    POST_NOT_TEMPORARY_ERROR(40008, "해당 글은 임시저장 글이 아닙니다."),
     POST_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장글입니다."),
     PATH_PARAMETER_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "요청 URI를 다시 확인해주세요."),
     REQUEST_URL_WRONG_ERROR(HttpStatus.BAD_REQUEST.value(), "요청 URL를 다시 확인해주세요"),
@@ -67,7 +67,7 @@ public enum ErrorMessage {
     /*
     Forbidden
      */
-    USER_AUTHENTICATE_ERROR(40300, "해당 사용자는 모임에 접근 권한이 없습니다."),
+    USER_MOIM_AUTHENTICATE_ERROR(40300, "해당 사용자는 모임에 접근 권한이 없습니다."),
     REPLY_USER_FORBIDDEN(40301, "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
     WRITER_AUTHENTICATE_ERROR(40302, "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
     MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
