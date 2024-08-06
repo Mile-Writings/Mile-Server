@@ -1,6 +1,7 @@
 package com.mile.writername.service;
 
 import com.mile.comment.service.CommentRetriever;
+import com.mile.commentreply.service.CommentReplyRetriever;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
@@ -41,6 +42,7 @@ public class WriterNameService {
 
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
     private static final int WRITERNAME_MAX_SIZE = 5;
+    private final CommentReplyRetriever commentReplyRetriever;
 
     public WriterNameDescriptionResponse findWriterNameDescription(
             final Long userId,
@@ -115,9 +117,9 @@ public class WriterNameService {
                 .stream()
                 .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
                         postRetriever.findPostCountByWriterNameId(writerName.getId()),
-                        commentRetriever.findCommentCountByWriterNameId(writerName.getId()),
+                        commentRetriever.findCommentCountByWriterNameId(writerName.getId()) + commentReplyRetriever.countByWriterNameId(writerName.getId()),
                         writerName.equals(moim.getOwner())))
-                .collect(Collectors.toList());
+                .toList();
 
         return MoimWriterNameListGetResponse.of(
                 writerNamePage.getTotalPages(),

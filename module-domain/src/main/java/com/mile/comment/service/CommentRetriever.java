@@ -17,12 +17,11 @@ import java.util.stream.Collectors;
 public class CommentRetriever {
 
     private final CommentRepository commentRepository;
-    private final CommentReplyRetriever commentReplyRetriever;
 
     public int findCommentCountByWriterNameId(
             final Long writerNameId
     ) {
-        return commentRepository.countByWriterNameId(writerNameId) + commentReplyRetriever.countByWriterNameId(writerNameId);
+        return commentRepository.countByWriterNameId(writerNameId);
     }
 
     public List<Comment> findByPostId(

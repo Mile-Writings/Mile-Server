@@ -70,7 +70,6 @@ public class MoimService {
     private static final int MOIM_NAME_MAX_VALUE = 10;
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
 
-
     public ContentListResponse getContentsFromMoim(
             final Long moimId,
             final Long userId
@@ -118,7 +117,6 @@ public class MoimService {
             throw new BadRequestException(ErrorMessage.USER_MOIM_ALREADY_JOIN);
         }
     }
-
 
     public MoimAuthenticateResponse getAuthenticateUserOfMoim(
             final Long moimId,
@@ -227,12 +225,11 @@ public class MoimService {
             final Long userId,
             final MoimInfoModifyRequest modifyRequest
     ) {
-        validateMoimName(modifyRequest.moimTitle());
+        checkMoimNameUnique(modifyRequest.moimTitle());
         Moim moim = moimRetriever.findById(moimId);
         moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         moim.modifyMoimInfo(modifyRequest);
     }
-
 
     @AtomicValidateUniqueMoimName
     public MoimNameConflictCheckResponse validateMoimName(
@@ -250,7 +247,7 @@ public class MoimService {
     public void checkMoimNameUnique(
             final String moimName
     ) {
-        if (moimRetriever.validateNormalizedName(moimName)) {
+        if (!moimRetriever.validateNormalizedName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }

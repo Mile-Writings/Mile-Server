@@ -11,7 +11,8 @@ import com.mile.exception.model.UnauthorizedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mile.moim.service.MoimRetriever;
+import com.mile.post.domain.Post;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -57,6 +58,10 @@ public class CommentReplyRetriever {
 
     public int countByWriterNameId(final Long writerNameId) {
         return commentReplyRepository.countByWriterNameId(writerNameId);
+    }
+
+    public int countByPost(final Post post) {
+        return commentReplyRepository.countByPost(post);
     }
 
 }
