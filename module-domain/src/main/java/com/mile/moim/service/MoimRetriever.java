@@ -11,6 +11,7 @@ import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import reactor.util.annotation.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,16 +35,16 @@ public class MoimRetriever {
             final Moim moim,
             final User user
     ) {
-        if (!isMoimOwnerEqualsUser(moim, user)) {
+        if (!isMoimOwnerEqualsUser(moim, user.getId())) {
             throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
         }
     }
 
     public boolean isMoimOwnerEqualsUser(
             final Moim moim,
-            final User user
+            @NonNull final Long userId
     ) {
-        return moim.getOwner().getWriter().equals(user);
+        return moim.getOwner().getWriter().getId().equals(userId);
     }
 
     public List<Moim> findBestMoims() {
@@ -64,7 +65,7 @@ public class MoimRetriever {
 
 
     @AtomicValidateUniqueMoimName
-    public boolean checkNormalizeName(final String normalizedName) {
+    public boolean validateNormalizedName(final String normalizedName) {
         return !moimRepository.existsByNormalizedName(normalizedName);
     }
 

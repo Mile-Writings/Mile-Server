@@ -71,8 +71,15 @@ public class GlobalExceptionHandler {
         FieldError fieldError = e.getBindingResult().getFieldError();
         if (fieldError == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.VALIDATION_REQUEST_MISSING_EXCEPTION));
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), fieldError.getDefaultMessage()));
+
+        return switch (fieldError.getCode()) {
+            case "NotNull", "NotBlank" ->
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.VALIDATION_REQUEST_NULL_OR_BLANK_EXCEPTION));
+            case "Size" ->
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.VALIDATION_REQUEST_LENGTH_EXCEPTION));
+            default ->
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.VALIDATION_REQUEST_MISSING_EXCEPTION));
+        };
     }
 
     @ExceptionHandler(ForbiddenException.class)
@@ -95,7 +102,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
-    @ExceptionHandler({NoHandlerFoundException.class})
+    @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(final NoHandlerFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(ErrorMessage.HANDLER_NOT_FOUND));
     }

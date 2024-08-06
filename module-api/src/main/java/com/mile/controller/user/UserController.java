@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController implements UserControllerSwagger {
 
-    private final UserService userService;
     private final AuthFacade authFacade;
     private final static int COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
     private final static String REFRESH_TOKEN = "refreshToken";
@@ -88,7 +87,7 @@ public class UserController implements UserControllerSwagger {
     public ResponseEntity<SuccessResponse<MoimListOfUserResponse>> getMoimListOfUser(
             @UserId final Long userId
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, userService.getMoimOfUserList(userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_LIST_OF_USER_GET_SUCCESS, authFacade.getMoimListOfUser(userId)));
     }
 }
 

@@ -13,12 +13,12 @@ public enum ErrorMessage {
      */
     USER_NOT_FOUND(40400, "해당 유저는 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 유저의 리프레시 토큰이 존재하지 않습니다."),
-    POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글은 존재하지 않습니다."),
+    POST_NOT_FOUND(40402, "해당 글은 존재하지 않습니다."),
     MOIM_NOT_FOUND(40403, "해당 글모임이 존재하지 않습니다."),
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 댓글이 존재하지 않습니다."),
-    CURIOUS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 궁금해요는 존재하지 않습니다."),
+    COMMENT_NOT_FOUND(40406, "해당 댓글이 존재하지 않습니다."),
+    CURIOUS_NOT_FOUND(40407, "해당 궁금해요는 존재하지 않습니다."),
     TOPIC_NOT_FOUND(40408, "해당 글감이 존재하지 않습니다."),
     KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
     WRITERS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 작가가 요청한 개수 이상 존재하지 않습니다"),
@@ -28,7 +28,7 @@ public enum ErrorMessage {
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
     RANDOM_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "랜덤 글 이름을 생성하는데 실패했습니다."),
-    REPLY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Id에 해당하는 대댓글이 없습니다."),
+    REPLY_NOT_FOUND(40416, "Id에 해당하는 대댓글이 없습니다."),
     /*
     Bad Request
      */
@@ -37,6 +37,8 @@ public enum ErrorMessage {
     SOCIAL_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "로그인 요청이 유효하지 않습니다."),
     INVALID_BUCKET_PREFIX(HttpStatus.BAD_REQUEST.value(), "유효하지 않는 S3 버킷 디렉터리 이름입니다."),
     VALIDATION_REQUEST_MISSING_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청 값이 유효하지 않습니다."),
+    VALIDATION_REQUEST_NULL_OR_BLANK_EXCEPTION(40005,"요청 값이 비어있습니다."),
+    VALIDATION_REQUEST_LENGTH_EXCEPTION(40006,"요청 값이 길이를 초과했습니다."),
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
     POST_NOT_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장 글이 아닙니다."),
     POST_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장글입니다."),
@@ -53,7 +55,7 @@ public enum ErrorMessage {
     /*
     Conflict
      */
-    CURIOUS_ALREADY_EXISTS_EXCEPTION(HttpStatus.CONFLICT.value(), "'궁금해요'는 이미 존재합니다."),
+    CURIOUS_ALREADY_EXISTS_EXCEPTION(40900, "'궁금해요'는 이미 존재합니다."),
     WRITER_NAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 가입한 모임입니다."),
     /*
     Unauthorized
@@ -61,16 +63,16 @@ public enum ErrorMessage {
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "액세스 토큰이 만료되었습니다."),
     TOKEN_INCORRECT_ERROR(HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 유효하지 않습니다."),
     TOKEN_VALIDATION_ERROR(HttpStatus.UNAUTHORIZED.value(), "사용자 검증 토큰이 유효하지 않습니다."),
-    UN_LOGIN_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "로그인 후 진행해주세요."),
+    UN_LOGIN_EXCEPTION(40103, "로그인 후 진행해주세요."),
     /*
     Forbidden
      */
     USER_AUTHENTICATE_ERROR(40300, "해당 사용자는 모임에 접근 권한이 없습니다."),
-    REPLY_USER_FORBIDDEN(HttpStatus.UNAUTHORIZED.value(), "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
-    WRITER_AUTHENTICATE_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
+    REPLY_USER_FORBIDDEN(40301, "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
+    WRITER_AUTHENTICATE_ERROR(40302, "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
     MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
     WRITER_NAME_INFO_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 사용자는 필명에 접근 권한이 없습니다."),
-    COMMENT_ACCESS_ERROR(HttpStatus.FORBIDDEN.value(), "해당 사용자는 댓글에 접근 권한이 없습니다."),
+    COMMENT_ACCESS_ERROR(40305, "해당 사용자는 댓글에 접근 권한이 없습니다."),
     /*
     Method Not Supported
      */

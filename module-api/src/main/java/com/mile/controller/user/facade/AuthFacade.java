@@ -7,6 +7,7 @@ import com.mile.common.auth.JwtTokenProvider;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.UnauthorizedException;
 import com.mile.jwt.service.TokenService;
+import com.mile.moim.service.dto.MoimListOfUserResponse;
 import com.mile.strategy.LoginStrategyManager;
 import com.mile.strategy.dto.UserInfoResponse;
 import com.mile.user.service.UserService;
@@ -103,5 +104,9 @@ public class AuthFacade {
                 jwtTokenProvider.issueAccessToken(id),
                 refreshToken
         );
+    }
+
+    public MoimListOfUserResponse getMoimListOfUser(long userId) {
+        return userService.getMoimOfUserList(userId);
     }
 }

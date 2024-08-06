@@ -122,7 +122,7 @@ public class MoimService {
             final Long moimId,
             final Long userId
     ) {
-        return MoimAuthenticateResponse.of(writerNameRetriever.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userRetriever.findById(userId)));
+        return MoimAuthenticateResponse.of(writerNameRetriever.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userId));
     }
 
     public PopularWriterListResponse getMostCuriousWritersOfMoim(
@@ -239,7 +239,7 @@ public class MoimService {
         if (moimName.length() > MOIM_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
-        return MoimNameConflictCheckResponse.of(moimRetriever.checkNormalizeName(normalizedMoimName));
+        return MoimNameConflictCheckResponse.of(moimRetriever.validateNormalizedName(normalizedMoimName));
     }
 
 
@@ -247,7 +247,7 @@ public class MoimService {
     public void checkMoimNameUnique(
             final String moimName
     ) {
-        if (!moimRetriever.checkNormalizeName(moimName)) {
+        if (!moimRetriever.validateNormalizedName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }

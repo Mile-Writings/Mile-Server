@@ -5,6 +5,9 @@ import com.mile.comment.service.dto.CommentResponse;
 import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.commentreply.service.CommentReplyService;
 import com.mile.commentreply.service.dto.ReplyCreateRequest;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.ForbiddenException;
+import com.mile.moim.service.MoimRetriever;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostRetriever;
 import com.mile.writername.service.WriterNameRetriever;
@@ -26,6 +29,7 @@ public class CommentService {
     private final CommentRetriever commentRetriever;
     private final CommentRemover commentRemover;
     private final CommentReplyRemover commentReplyRemover;
+    private final MoimRetriever moimRetriever;
 
 
     @Transactional
@@ -34,7 +38,10 @@ public class CommentService {
             final Long userId
     ) {
         Comment comment = commentRetriever.findById(commentId);
-        commentRetriever.authenticateUser(comment, userId);
+        if (commentRetriever.authenticateUserOfComment(comment, userId) &&
+                moimRetriever.isMoimOwnerEqualsUser(comment.getWriterName().getMoim(), userId)) {
+            throw new ForbiddenException(ErrorMessage.COMMENT_ACCESS_ERROR);
+        }
         commentReplyRemover.deleteRepliesByComment(comment);
         commentRemover.delete(comment);
     }
@@ -48,18 +55,20 @@ public class CommentService {
 
     public List<CommentResponse> getCommentResponse(
             final Long moimId,
-            final Long postId,
+            final Post post,
             final Long userId
     ) {
-        postRetriever.authenticateUserWithPostId(postId, userId);
-        List<Comment> commentList = commentRetriever.findByPostId(postId);
+        postRetriever.authenticateUserWithPostId(post.getId(), userId);
+        List<Comment> commentList = commentRetriever.findByPostId(post.getId());
         Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
+
         return commentList.stream()
                 .map(comment -> CommentResponse.of(
                         comment,
                         writerNameId,
-                        commentRetriever.isCommentWriterEqualWriterOfPost(comment, postRetriever.findById(postId)),
-                        commentReplyService.findRepliesByComment(comment, writerNameId))).collect(Collectors.toList());
+                        commentRetriever.isCommentWriterEqualWriterOfPost(comment, post),
+                        commentReplyService.findRepliesByComment(comment, writerNameId)))
+                .collect(Collectors.toList());
     }
 
     public String createCommentReply(
@@ -82,16 +91,6 @@ public class CommentService {
                 c -> result.addAndGet(commentReplyService.findRepliesCountByComment(c))
         );
         return result.intValue();
-    }
-
-    public List<Comment> findAllByPosts(
-            final List<Post> posts
-    ) {
-        return commentRetriever.findAllByPosts(posts);
-    }
-
-    public void deleteComments(final List<Post> posts) {
-        commentRemover.deleteComments(posts);
     }
 
 }
