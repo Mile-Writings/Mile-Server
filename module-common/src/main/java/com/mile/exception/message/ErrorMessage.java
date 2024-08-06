@@ -23,7 +23,7 @@ public enum ErrorMessage {
     KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
     WRITERS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 작가가 요청한 개수 이상 존재하지 않습니다"),
     WRITER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 작가는 존재하지 않습니다."),
-    RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "추천 글감을 받아오는데 실패했습니다."),
+    RECOMMEND_NOT_FOUND(40412, "추천 글감을 받아오는데 실패했습니다."),
     MOIM_TOPIC_NOT_FOUND(40413, "해당 모임의 글감이 존재하지 않습니다."),
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
