@@ -22,7 +22,7 @@ public enum ErrorMessage {
     TOPIC_NOT_FOUND(40408, "해당 글감이 존재하지 않습니다."),
     KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
     WRITERS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 작가가 요청한 개수 이상 존재하지 않습니다"),
-    WRITER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 작가는 존재하지 않습니다."),
+    WRITER_NOT_FOUND(40411, "해당 작가는 존재하지 않습니다."),
     RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "추천 글감을 받아오는데 실패했습니다."),
     MOIM_TOPIC_NOT_FOUND(40413, "해당 모임의 글감이 존재하지 않습니다."),
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
@@ -70,7 +70,7 @@ public enum ErrorMessage {
     USER_AUTHENTICATE_ERROR(40300, "해당 사용자는 모임에 접근 권한이 없습니다."),
     REPLY_USER_FORBIDDEN(40301, "사용자에게 해당 대댓글에 대한 권한이 없습니다."),
     WRITER_AUTHENTICATE_ERROR(40302, "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
-    MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
+    MOIM_OWNER_AUTHENTICATION_ERROR(40303, "사용자는 해당 모임의 모임장이 아닙니다."),
     WRITER_NAME_INFO_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 사용자는 필명에 접근 권한이 없습니다."),
     COMMENT_ACCESS_ERROR(40305, "해당 사용자는 댓글에 접근 권한이 없습니다."),
     /*
