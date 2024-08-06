@@ -72,7 +72,7 @@ public enum ErrorMessage {
     WRITER_AUTHENTICATE_ERROR(40302, "해당 사용자는 글 생성/수정/삭제 권한이 없습니다."),
     MOIM_OWNER_AUTHENTICATION_ERROR(HttpStatus.FORBIDDEN.value(), "사용자는 해당 모임의 모임장이 아닙니다."),
     WRITER_NAME_INFO_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 사용자는 필명에 접근 권한이 없습니다."),
-    COMMENT_ACCESS_ERROR(40306, "해당 사용자는 댓글에 접근 권한이 없습니다."),
+    COMMENT_ACCESS_ERROR(40305, "해당 사용자는 댓글에 접근 권한이 없습니다."),
     /*
     Method Not Supported
      */
