@@ -7,8 +7,11 @@ import com.mile.commentreply.service.dto.ReplyResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.exception.model.UnauthorizedException;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.mile.moim.service.MoimRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -40,17 +43,16 @@ public class CommentReplyRetriever {
             final Comment comment,
             final Long writerNameId
     ) {
-        return commentReplyRepository.findByComment(comment).stream().map(c -> ReplyResponse.of(c, writerNameId, isWriterOfPost(c))).collect(
-                Collectors.toList());
+        return commentReplyRepository.findByComment(comment).stream()
+                .map(commentReply -> ReplyResponse.of(commentReply, writerNameId, isWriterOfPost(commentReply)))
+                .collect(Collectors.toList());
     }
 
-    public void authenticateReplyWithUserId(
+    public boolean authenticateReplyWithUserId(
             final Long userId,
             final CommentReply commentReply
     ) {
-        if (!commentReply.getWriterName().getWriter().getId().equals(userId)) {
-            throw new UnauthorizedException(ErrorMessage.REPLY_USER_FORBIDDEN);
-        }
+        return commentReply.getWriterName().getWriter().getId().equals(userId);
     }
 
     public int countByWriterNameId(final Long writerNameId) {
