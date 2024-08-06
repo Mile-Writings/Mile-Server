@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long>, TopicReposi
 
     Page<Topic> findByMoimIdOrderByCreatedAtDesc(Long moimId, Pageable pageable);
 
+    @Transactional
     @Modifying
     @Query("DELETE FROM Topic t where t.moim = :moim")
     void deleteByMoim(@Param("moim") Moim moim);
