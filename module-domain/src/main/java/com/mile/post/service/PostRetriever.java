@@ -40,7 +40,6 @@ public class PostRetriever {
 
     }
 
-
     public String getTemporaryPostExist(
             final Moim moim,
             final WriterName writerName
@@ -99,7 +98,7 @@ public class PostRetriever {
             final boolean isUserInMoim
     ) {
         if (!isUserInMoim) {
-            throw new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR);
+            throw new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR);
         }
     }
 
@@ -131,14 +130,6 @@ public class PostRetriever {
         return post.getWriterName().equals(writerName);
     }
 
-    public void authenticateWriterOfMoim(
-            final Long userId,
-            final Long moimId
-    ) {
-        if (!writerNameRetriever.isUserInMoim(moimId, userId)) {
-            throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
-        }
-    }
 
     public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
