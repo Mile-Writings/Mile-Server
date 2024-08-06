@@ -247,7 +247,7 @@ public class MoimService {
     public void checkMoimNameUnique(
             final String moimName
     ) {
-        if (moimRetriever.checkNormalizeName(moimName)) {
+        if (!moimRetriever.checkNormalizeName(moimName)) {
             throw new BadRequestException(ErrorMessage.MOIM_NAME_VALIDATE_ERROR);
         }
     }
