@@ -82,7 +82,7 @@ public class TopicService {
         User user = userService.findById(userId);
         topicRetriever.authenticateTopicWithUser(topic, user);
         topicRetriever.checkSingleTopicDeletion(topic);
-        topicRemover.deleteTopic(topic, user);
+        topicRemover.deleteTopic(topic);
     }
 
     public void putTopic(
