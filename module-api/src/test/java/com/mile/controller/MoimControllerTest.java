@@ -9,6 +9,8 @@ import com.mile.moim.service.dto.MoimCreateRequest;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
+import com.mile.post.service.PostService;
+import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.utils.SecureUrlUtil;
@@ -55,6 +57,9 @@ public class MoimControllerTest {
     private MoimService moimService;
 
     @Autowired
+    private PostService postService;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     private static final String AUTHORIZATION = "Authorization";
@@ -81,6 +86,7 @@ public class MoimControllerTest {
     테스트 이전 더미 모임 쌓기
      */
     @Test
+    @Transactional
     @DisplayName("더미 모임 생성")
     public void bSaveNewMoimAndGetMoimId() {
         String randomTagString = UUID.randomUUID().toString().substring(0, 3);
@@ -95,7 +101,13 @@ public class MoimControllerTest {
                 randomTagString,
                 randomString
         );
+
+        TopicCreateRequest topicCreateRequest = new TopicCreateRequest(randomString, randomTagString, randomTagString);
         MOIM_ID = moimService.createMoim(USER_ID, createRequest).moimId();
+        String topicId = secureUrlUtil
+                .encodeUrl(Long.parseLong(moimService.createTopic(secureUrlUtil.decodeUrl(MOIM_ID), USER_ID, topicCreateRequest)));
+        PostCreateRequest postCreateRequest =new PostCreateRequest(MOIM_ID, topicId, randomString, randomString, randomString, false);
+        postService.createPost(USER_ID, postCreateRequest);
     }
 
     /*
@@ -435,7 +447,6 @@ public class MoimControllerTest {
 
     @Test
     @DisplayName("글모임이 정상적으로 삭제된다.")
-    @Transactional
     public void zdeleteMoimTest() throws Exception {
         //given
         String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
