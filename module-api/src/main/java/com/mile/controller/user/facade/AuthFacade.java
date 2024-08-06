@@ -65,7 +65,7 @@ public class AuthFacade {
             if (userService.isExistingUser(userResponse.socialId(), userResponse.socialType())) {
                 return getTokenByUserId(userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
             } else {
-                Long id = userService.createuser(userResponse.socialId(), userResponse.socialType(), userResponse.email());
+                Long id = userService.createUser(userResponse.socialId(), userResponse.socialType(), userResponse.email());
                 return getTokenByUserId(id);
             }
         } catch (DataIntegrityViolationException e) {

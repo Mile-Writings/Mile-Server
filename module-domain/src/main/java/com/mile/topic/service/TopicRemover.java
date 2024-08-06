@@ -20,17 +20,10 @@ public class TopicRemover {
     private final TopicRepository topicRepository;
 
     public void deleteTopic(
-            final Topic topic,
-            final User user
+            final Topic topic
     ) {
         deletePostsOfTopic(topic);
         topicRepository.deleteById(topic.getId());
-    }
-
-    public void deleteTopics(
-            final List<Topic> topics
-    ) {
-
     }
 
     private void deletePostsOfTopic(

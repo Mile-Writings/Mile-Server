@@ -28,11 +28,10 @@ public class PostUpdator {
     }
 
     public void updateTemporaryPost(
-            final Long postId,
+            final Post post,
             final Topic topic,
             final PostPutRequest putRequest
     ) {
-        Post post = postRetriever.findById(postId);
         post.setTemporary(false);
         post.updateCratedAt(LocalDateTime.now());
         update(post, topic, putRequest);

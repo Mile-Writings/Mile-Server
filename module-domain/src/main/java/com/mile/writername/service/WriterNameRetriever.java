@@ -25,16 +25,6 @@ public class WriterNameRetriever {
     private final WriterNameRepository writerNameRepository;
     private static final int MIN_TOTAL_CURIOUS_COUNT = 0;
 
-    public WriterName getWriterNameByPostAndUserId(
-            final Post post,
-            final Long userId
-    ) {
-        return writerNameRepository.findByMoimIdAndWriterId(post.getTopic().getMoim().getId(), userId)
-                .orElseThrow(
-                        () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
-                );
-    }
-
     public boolean existWriterNamesByMoimAndName(
             final Moim moim,
             final String name
@@ -76,7 +66,7 @@ public class WriterNameRetriever {
     ) {
         return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId)
                 .orElseThrow(
-                        () -> new ForbiddenException(ErrorMessage.USER_AUTHENTICATE_ERROR)
+                        () -> new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR)
                 );
     }
 

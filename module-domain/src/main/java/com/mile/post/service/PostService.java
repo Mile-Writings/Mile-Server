@@ -176,7 +176,7 @@ public class PostService {
         Post post = postRetriever.findById(postId);
         Topic selectedTopic = post.getTopic();
         Moim moim = selectedTopic.getMoim();
-        postRetriever.authenticateUserWithPost(post, userId);
+        postRetriever.authenticateWriter(postId, writerNameRetriever.findByMoimAndUser(moim.getId(), userId));
         isPostTemporary(post);
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(moim.getId(), selectedTopic.getId());
         return TemporaryPostGetResponse.of(post, contentResponse);
@@ -224,7 +224,6 @@ public class PostService {
             final Long userId,
             final PostCreateRequest postCreateRequest
     ) {
-        postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(decodeUrlToLong(postCreateRequest.moimId()), userId));
         WriterName writerName = writerNameRetriever.findByMoimAndUser(decodeUrlToLong(postCreateRequest.moimId()), userId);
         Topic topic = topicRetriever.findById(decodeUrlToLong(postCreateRequest.topicId()));
         String postIdUrl = postCreator.create(postCreateRequest, topic, writerName);
@@ -237,7 +236,6 @@ public class PostService {
             final Long userId,
             final TemporaryPostCreateRequest temporaryPostCreateRequest
     ) {
-        postRetriever.authenticateWriterOfMoim(userId, decodeUrlToLong(temporaryPostCreateRequest.moimId()));
         WriterName writerName = writerNameRetriever.findByMoimAndUser(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.moimId()), userId);
         postRemover.deleteTemporaryPosts(topicRetriever.findById(secureUrlUtil.decodeUrl(temporaryPostCreateRequest.topicId())).getMoim(), writerName);
         Topic topic = topicRetriever.findById(decodeUrlToLong(temporaryPostCreateRequest.topicId()));
@@ -250,7 +248,7 @@ public class PostService {
         WriterName writerName = writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId);
         postRetriever.authenticateWriter(postId, writerName);
         isPostTemporary(post);
-        postUpdator.updateTemporaryPost(postId, post.getTopic(), request);
+        postUpdator.updateTemporaryPost(post, post.getTopic(), request);
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
     }
 

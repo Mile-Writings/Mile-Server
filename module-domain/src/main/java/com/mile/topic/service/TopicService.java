@@ -27,7 +27,6 @@ public class TopicService {
     private final TopicCreator topicCreator;
     private final UserService userService;
 
-
     public List<ContentWithIsSelectedResponse> getContentsWithIsSelectedFromMoim(
             final Long moimId,
             final Long selectedTopicId
@@ -42,35 +41,11 @@ public class TopicService {
         return topicRetriever.getPostListByTopic(topicId, lastPostId);
     }
 
-    public MoimTopicInfoListResponse getTopicListFromMoim(
-            final Long moimId,
-            final int page
-    ) {
-        return topicRetriever.getTopicListFromMoim(moimId, page);
-    }
-
-    public MoimTopicInfoListResponse getTopicResponsesFromPage(Page<Topic> topicPage, final Long moimId) {
-        return topicRetriever.getTopicResponsesFromPage(topicPage, moimId);
-    }
-
-    public Long getNumberOfTopicFromMoim(
-            final Long moimId
-    ) {
-        return topicRetriever.getNumberOfTopicFromMoim(moimId);
-    }
-
     public TopicDetailResponse getTopicDetail(
             final Long userId,
             final Long topicId
     ) {
         return topicRetriever.getTopicDetail(userId, topicId);
-    }
-
-    public Long createTopicOfMoim(
-            final Moim moim,
-            final TopicCreateRequest createRequest
-    ) {
-        return topicCreator.createTopicOfMoim(moim, createRequest);
     }
 
     @Transactional
@@ -82,7 +57,7 @@ public class TopicService {
         User user = userService.findById(userId);
         topicRetriever.authenticateTopicWithUser(topic, user);
         topicRetriever.checkSingleTopicDeletion(topic);
-        topicRemover.deleteTopic(topic, user);
+        topicRemover.deleteTopic(topic);
     }
 
     public void putTopic(

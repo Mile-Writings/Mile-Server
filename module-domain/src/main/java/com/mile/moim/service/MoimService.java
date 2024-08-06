@@ -225,8 +225,12 @@ public class MoimService {
             final Long userId,
             final MoimInfoModifyRequest modifyRequest
     ) {
-        checkMoimNameUnique(modifyRequest.moimTitle());
         Moim moim = moimRetriever.findById(moimId);
+
+        if (!moim.getName().equals(modifyRequest.moimTitle())) {
+            validateMoimName(modifyRequest.moimTitle());
+        }
+
         moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         moim.modifyMoimInfo(modifyRequest);
     }
