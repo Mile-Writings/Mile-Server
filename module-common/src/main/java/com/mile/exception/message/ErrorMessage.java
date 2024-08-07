@@ -57,6 +57,7 @@ public enum ErrorMessage {
      */
     CURIOUS_ALREADY_EXISTS_EXCEPTION(40900, "'궁금해요'는 이미 존재합니다."),
     WRITER_NAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 가입한 모임입니다."),
+    WRITER_NAME_OF_MOIM_ALREADY_EXISTS_EXCEPTION(40902, "모임에 이미 존재하는 필명입니다."),
     /*
     Unauthorized
      */

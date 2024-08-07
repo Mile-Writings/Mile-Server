@@ -4,6 +4,7 @@ import com.mile.comment.service.CommentRetriever;
 import com.mile.commentreply.service.CommentReplyRetriever;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.MoimRemover;
@@ -102,8 +103,16 @@ public class WriterNameService {
     @Transactional
     public Long createWriterName(final User user, final Moim moim, final WriterMemberJoinRequest joinRequest) {
         checkWriterNameOverFive(user);
+        validateWriterNameUniqueInMoim(moim, joinRequest.writerName());
         WriterName writerName = writerNameCreator.createWriterName(user, moim, joinRequest);
         return writerName.getId();
+    }
+
+    private void validateWriterNameUniqueInMoim(Moim moim, String writerName) {
+        String normalizedWriterName = writerName.replaceAll("\\s+", "").toLowerCase();
+        if (writerNameRetriever.existWriterNamesByMoimAndName(moim, normalizedWriterName)) {
+            throw new ConflictException(ErrorMessage.WRITER_NAME_OF_MOIM_ALREADY_EXISTS_EXCEPTION);
+        }
     }
 
     public MoimWriterNameListGetResponse getWriterNameInfoList(
