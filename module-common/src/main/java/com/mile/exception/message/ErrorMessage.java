@@ -50,13 +50,13 @@ public enum ErrorMessage {
     LEAST_TOPIC_SIZE_OF_MOIM_ERROR(HttpStatus.BAD_REQUEST.value(), "모임에는 최소 하나의 글감이 있어야 합니다."),
     USER_MOIM_ALREADY_JOIN(HttpStatus.BAD_REQUEST.value(), "사용자는 이미 모임에 가입했습니다."),
     WRITER_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 필명입니다."),
-    MOIM_NAME_VALIDATE_ERROR(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 모임명입니다."),
-    EXCEED_MOIM_MAX_SIZE(HttpStatus.BAD_REQUEST.value(), "최대 가입 가능 모임 개수(5개)를 초과하였습니다."),
+    MOIM_NAME_VALIDATE_ERROR(40018, "사용 불가능한 모임명입니다."),
+    EXCEED_MOIM_MAX_SIZE(40019, "최대 가입 가능 모임 개수(5개)를 초과하였습니다."),
     /*
     Conflict
      */
     CURIOUS_ALREADY_EXISTS_EXCEPTION(40900, "'궁금해요'는 이미 존재합니다."),
-    WRITER_NAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 가입한 모임입니다."),
+    WRITER_NAME_ALREADY_EXIST(40901, "이미 가입한 모임입니다."),
     /*
     Unauthorized
      */
