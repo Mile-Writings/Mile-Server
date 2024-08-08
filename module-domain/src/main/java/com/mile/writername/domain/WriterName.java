@@ -23,7 +23,7 @@ import reactor.util.annotation.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "writer_name", uniqueConstraints = @UniqueConstraint(columnNames = "normalized_name"))
+@Table(name = "writer_name", uniqueConstraints = @UniqueConstraint(columnNames = {"moim_id", "normalized_name"}))
 public class WriterName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

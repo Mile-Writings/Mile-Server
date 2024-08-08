@@ -15,7 +15,7 @@ public enum ErrorMessage {
     REFRESH_TOKEN_NOT_FOUND(40401, "해당 유저의 리프레시 토큰이 존재하지 않습니다."),
     POST_NOT_FOUND(40402, "해당 글은 존재하지 않습니다."),
     MOIM_NOT_FOUND(40403, "해당 글모임이 존재하지 않습니다."),
-    CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 주제가 존재하지 않습니다."),
+    CONTENT_NOT_FOUND(40404, "해당 모임의 주제가 존재하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
     COMMENT_NOT_FOUND(40406, "해당 댓글이 존재하지 않습니다."),
     CURIOUS_NOT_FOUND(40407, "해당 궁금해요는 존재하지 않습니다."),
@@ -23,7 +23,7 @@ public enum ErrorMessage {
     KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
     WRITERS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 작가가 요청한 개수 이상 존재하지 않습니다"),
     WRITER_NOT_FOUND(40411, "해당 작가는 존재하지 않습니다."),
-    RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "추천 글감을 받아오는데 실패했습니다."),
+    RECOMMEND_NOT_FOUND(40412, "추천 글감을 받아오는데 실패했습니다."),
     MOIM_TOPIC_NOT_FOUND(40413, "해당 모임의 글감이 존재하지 않습니다."),
     TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
     MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
@@ -47,7 +47,7 @@ public enum ErrorMessage {
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
     IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),
     INVALID_URL_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "요청된 URL을 다시 확인해주세요"),
-    LEAST_TOPIC_SIZE_OF_MOIM_ERROR(HttpStatus.BAD_REQUEST.value(), "모임에는 최소 하나의 글감이 있어야 합니다."),
+    LEAST_TOPIC_SIZE_OF_MOIM_ERROR(40015, "모임에는 최소 하나의 글감이 있어야 합니다."),
     USER_MOIM_ALREADY_JOIN(HttpStatus.BAD_REQUEST.value(), "사용자는 이미 모임에 가입했습니다."),
     WRITER_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 필명입니다."),
     MOIM_NAME_VALIDATE_ERROR(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 모임명입니다."),
@@ -57,6 +57,7 @@ public enum ErrorMessage {
      */
     CURIOUS_ALREADY_EXISTS_EXCEPTION(40900, "'궁금해요'는 이미 존재합니다."),
     WRITER_NAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 가입한 모임입니다."),
+    WRITER_NAME_OF_MOIM_ALREADY_EXISTS_EXCEPTION(40902, "모임에 이미 존재하는 필명입니다."),
     /*
     Unauthorized
      */
@@ -86,7 +87,7 @@ public enum ErrorMessage {
      */
     IMAGE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷에 이미지를 업로드에 실패했습니다."),
     PRESIGNED_URL_GET_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 PRESIGNED URL을 받아오기에 실패했습니다."),
-    IMAGE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "S3 버킷으로부터 이미지를 삭제하는 데 실패했습니다."),
+    IMAGE_DELETE_ERROR(50002, "S3 버킷으로부터 이미지를 삭제하는 데 실패했습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다."),
     DISCORD_LOG_APPENDER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "디스코드 로그 전송에 실패하였습니다"),
     TIME_OUT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR.value(), "락을 획득하는 과정에서 Time Out이 발생했습니다."),
