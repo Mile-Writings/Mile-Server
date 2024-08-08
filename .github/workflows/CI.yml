@@ -6,8 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04 
-
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        redis-version: [6, 7]
 
     steps: 
     - name: checkout
