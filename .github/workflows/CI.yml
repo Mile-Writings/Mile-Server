@@ -19,6 +19,20 @@ jobs:
         distribution: 'corretto'
         java-version: '17'
 
+    - name: Setup MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: 3306
+        mysql root password: 'asap'
+        mysql user: 'mile' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        mysql password: 1217
+        container port: 3306
+
+    - name: Set up redis
+      uses: supercharge/redis-github-action@1.7.0
+      with:
+        node-version: ${{ matrix.node-version }}
+
     - name: create application.yml
       run: |
         ## create application.yml
@@ -33,9 +47,16 @@ jobs:
         # application.yml 파일 확인
         cat ./application.yml
       shell: bash
-      
+
+
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password='mile' --silent; do
+          sleep 1
+        done     
+
     - name: build
       run: |
           chmod +x gradlew
-          ./gradlew build -x test
+          ./gradlew clean build
       shell: bash
