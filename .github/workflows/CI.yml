@@ -23,7 +23,8 @@ jobs:
       uses: mirromutth/mysql-action@v1.1
       with:
         host port: 3306
-        mysql root password: 'asap'
+        mysql root password: 'mile'
+        mysql database: mile
         mysql user: 'mile' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
         mysql password: 1217
         container port: 3306
