@@ -79,7 +79,6 @@ public class MoimControllerTest {
         randomString = UUID.randomUUID().toString().substring(0, 7);
         User user = userRepository.saveAndFlush(User.of(randomString, randomString, SocialType.GOOGLE));
         USER_ID = user.getId();
-        System.out.println(objectMapper.writeValueAsString(userRepository.findById(USER_ID).get()));
     }
 
     /*
