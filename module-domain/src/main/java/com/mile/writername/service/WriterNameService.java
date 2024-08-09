@@ -126,7 +126,7 @@ public class WriterNameService {
                 .stream()
                 .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
                         postRetriever.findPostCountByWriterNameId(writerName.getId()),
-                        commentRetriever.findCommentCountByWriterNameId(writerName.getId()) + commentReplyRetriever.countByWriterNameId(writerName.getId()),
+                        commentRetriever.findCommentCountByWriterNameId(writerName.getId()) + commentReplyRetriever.countByWriterName(writerName),
                         writerName.equals(moim.getOwner())))
                 .toList();
 

@@ -16,7 +16,9 @@ public interface CommentReplyRepository extends JpaRepository<CommentReply, Long
 
     List<CommentReply> findByComment(final Comment comment);
 
-    int countByWriterNameId(final Long writerNameId);
+
+    @Query("select count(commentReply) from CommentReply commentReply where commentReply.writerName = :writerName")
+    int countByWriterName(@Param("writerName") final WriterName writerName);
 
     @Query("select count(commentReply) from CommentReply commentReply where commentReply.comment.post = :post")
     int countByPost(final Post post);
