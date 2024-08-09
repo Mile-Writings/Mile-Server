@@ -4,16 +4,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.client.SocialType;
 import com.mile.common.auth.JwtTokenProvider;
+import com.mile.moim.domain.Moim;
+import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.MoimService;
 import com.mile.moim.service.dto.MoimCreateRequest;
 import com.mile.moim.service.dto.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.moim.service.dto.WriterMemberJoinRequest;
-import com.mile.post.service.PostService;
-import com.mile.post.service.dto.PostCreateRequest;
+import com.mile.topic.domain.Topic;
+import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.utils.SecureUrlUtil;
+import com.mile.writername.domain.WriterName;
+import com.mile.writername.repository.WriterNameRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -38,27 +43,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestMethodOrder(value = MethodOrderer.MethodName.class)
 public class MoimControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private SecureUrlUtil secureUrlUtil;
-
     @Autowired
     private MoimService moimService;
-
     @Autowired
-    private PostService postService;
-
+    private MoimRepository moimRepository;
+    @Autowired
+    private WriterNameRepository writerNameRepository;
+    @Autowired
+    private TopicRepository topicRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -70,25 +72,14 @@ public class MoimControllerTest {
     private static String MOIM_ID;
     private static String randomString;
 
-    /*
-    테스트 이전 더미 유저
-     */
-    @Test
-    @DisplayName("더미 유저 생성")
-    public void aTestForDummyUser() throws JsonProcessingException {
-        randomString = UUID.randomUUID().toString().substring(0, 7);
+
+    @BeforeEach
+    @Transactional
+    public void setUp() {
+        randomString = UUID.randomUUID().toString().substring(0, 3);
         User user = userRepository.saveAndFlush(User.of(randomString, randomString, SocialType.GOOGLE));
         USER_ID = user.getId();
-    }
-
-    /*
-    테스트 이전 더미 모임 쌓기
-     */
-    @Test
-    @Transactional
-    @DisplayName("더미 모임 생성")
-    public void bSaveNewMoimAndGetMoimId() {
-        String randomTagString = UUID.randomUUID().toString().substring(0, 3);
+        // setting
         MoimCreateRequest createRequest = new MoimCreateRequest(
                 randomString,
                 randomString,
@@ -97,16 +88,17 @@ public class MoimControllerTest {
                 randomString,
                 randomString,
                 randomString,
-                randomTagString,
+                randomString,
                 randomString
         );
 
-        TopicCreateRequest topicCreateRequest = new TopicCreateRequest(randomString, randomTagString, randomTagString);
-        MOIM_ID = moimService.createMoim(USER_ID, createRequest).moimId();
-        String topicId = secureUrlUtil
-                .encodeUrl(Long.parseLong(moimService.createTopic(secureUrlUtil.decodeUrl(MOIM_ID), USER_ID, topicCreateRequest)));
-        PostCreateRequest postCreateRequest =new PostCreateRequest(MOIM_ID, topicId, randomString, randomString, randomString, false);
-        postService.createPost(USER_ID, postCreateRequest);
+        Moim moim = moimRepository.saveAndFlush(Moim.create(createRequest));
+        WriterName writerName = writerNameRepository.saveAndFlush(WriterName.of(moim, new WriterMemberJoinRequest(randomString, randomString), user));
+        moim.setOwner(writerName);
+        moimRepository.saveAndFlush(moim);
+
+        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString, randomString)));
+        MOIM_ID = secureUrlUtil.encodeUrl(moim.getId());
     }
 
     /*
@@ -231,7 +223,7 @@ public class MoimControllerTest {
 
     @Test
     @DisplayName("글모임 초대 정보가 정상적으로 반환된다")
-    @Transactional(readOnly = true)
+    @Transactional
     public void getInvitationInfoTest() throws Exception {
         //given
         String requestUri = "/api/moim/" + MOIM_ID + "/info";
