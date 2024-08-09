@@ -27,7 +27,10 @@ jobs:
         mysql root password: 'mile'
         mysql user: 'mile'
         mysql password: 'mile'
-        run: mysqladmin ping --host=127.0.0.1 --password='mile'
+
+    - name: Check MySQL
+      run: |
+          mysqladmin ping --host=127.0.0.1 --password='mile'
 
     - name : Setup Redis
       uses: shogo82148/actions-setup-redis@v1
