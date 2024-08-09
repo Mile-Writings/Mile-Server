@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ public class CommentReply {
     @Setter
     private String idUrl;
     private boolean isAnonymous;
-    @Column(length = 20000)
+    @Column(length = 10000)
     private String content;
 
     @Builder

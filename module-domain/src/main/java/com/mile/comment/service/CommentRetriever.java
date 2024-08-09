@@ -6,6 +6,7 @@ import com.mile.commentreply.service.CommentReplyRetriever;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
 import com.mile.post.domain.Post;
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +19,10 @@ public class CommentRetriever {
 
     private final CommentRepository commentRepository;
 
-    public int findCommentCountByWriterNameId(
-            final Long writerNameId
+    public int findCommentCountByWriterName(
+            final WriterName writerName
     ) {
-        return commentRepository.countByWriterNameId(writerNameId);
+        return commentRepository.countByWriterName(writerName);
     }
 
     public List<Comment> findByPostId(
