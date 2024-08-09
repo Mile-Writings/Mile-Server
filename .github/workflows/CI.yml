@@ -27,9 +27,10 @@ jobs:
       with:
         host port: 3306
         container port: 3306
-        mysql root password: 'mile'
-        mysql user: 'mile' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-        mysql password: 'mile'
+        mysql root user: 'mile'
+        mysql root password: mile
+        mysql user: 'mile'
+        mysql password: mile
 
     - name: Set up redis
       uses: supercharge/redis-github-action@1.7.0
