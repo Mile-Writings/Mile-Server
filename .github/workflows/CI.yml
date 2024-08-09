@@ -28,9 +28,9 @@ jobs:
         host port: 3306
         container port: 3306
         mysql root user: 'mile'
-        mysql root password: mile
+        mysql root password: 'mile'
         mysql user: 'mile'
-        mysql password: mile
+        mysql password: 'mile'
 
     - name: Set up redis
       uses: supercharge/redis-github-action@1.7.0
