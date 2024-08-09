@@ -7,7 +7,7 @@ on:
 permissions:
   checks: write
   pull-requests: write
-  
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -62,14 +62,17 @@ jobs:
     - name: build
       run: |
           chmod +x gradlew
-          ./gradlew clean build
+          ./gradlew --info test
       shell: bash
 
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: ${{ always() }}
       with:
-        files: |
-          test-results/**/*.xml
-          test-results/**/*.trx
-          test-results/**/*.json
+        files: build/test-results/**/*.xml
+
+    - name: Cleanup Gradle Cache
+      if: ${{ always() }}
+      run: |
+        rm -f ~/.gradle/caches/modules-2/modules-2.lock
+        rm -f ~/.gradle/caches/modules-2/gc.properties
