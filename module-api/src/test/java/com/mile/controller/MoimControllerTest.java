@@ -380,9 +380,9 @@ public class MoimControllerTest {
         //when
         MvcResult result = mockMvc.perform(
                 get(requestUri)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, token)
                         .param("page", "1")
-                        .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print()).andReturn();
 
         //then
@@ -439,7 +439,7 @@ public class MoimControllerTest {
 
     @Test
     @DisplayName("글모임이 정상적으로 삭제된다.")
-    public void zdeleteMoimTest() throws Exception {
+    public void deleteMoimTest() throws Exception {
         //given
         String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
         String requestUri = "/api/moim/" + MOIM_ID;
