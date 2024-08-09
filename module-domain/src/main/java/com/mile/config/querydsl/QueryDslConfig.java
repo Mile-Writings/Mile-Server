@@ -1,6 +1,5 @@
 package com.mile.config.querydsl;
 
-;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
