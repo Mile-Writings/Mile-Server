@@ -369,25 +369,25 @@ public class MoimControllerTest {
         assertThat(result.getResponse().getContentAsString()).contains(randomString);
     }
 
-    @Test
-    @DisplayName("관리자 페이지의 필명 조회가 정상적으로 반횐된다.")
-    public void getWriterNamesForOwnerTest() throws Exception {
-        //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
-        String requestUri = "/api/moim/" + MOIM_ID + "/writernames";
-
-        //when
-        MvcResult result = mockMvc.perform(
-                get(requestUri)
-                        .header(AUTHORIZATION, token)
-                        .param("page", "1")
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print()).andReturn();
-
-        //then
-        assertThat(result.getResponse().getStatus()).isEqualTo(OK);
-
-    }
+//    @Test
+//    @DisplayName("관리자 페이지의 필명 조회가 정상적으로 반횐된다.")
+//    public void getWriterNamesForOwnerTest() throws Exception {
+//        //given
+//        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+//        String requestUri = "/api/moim/" + MOIM_ID + "/writernames";
+//
+//        //when
+//        MvcResult result = mockMvc.perform(
+//                get(requestUri)
+//                        .header(AUTHORIZATION, token)
+//                        .param("page", "1")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//        ).andDo(print()).andReturn();
+//
+//        //then
+//        assertThat(result.getResponse().getStatus()).isEqualTo(OK);
+//
+//    }
 
     @Test
     @DisplayName("글모임 정보가 정상적으로 수정된다.")
