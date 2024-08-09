@@ -20,9 +20,7 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -386,6 +384,7 @@ public class MoimControllerTest {
         ).andDo(print()).andReturn();
 
         //then
+        System.out.println(result.getResponse().getErrorMessage());
         assertThat(result.getResponse().getStatus()).isEqualTo(OK);
 
     }
