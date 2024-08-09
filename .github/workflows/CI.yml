@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
     branches: [ "develop" ]
-    
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -61,8 +61,11 @@ jobs:
           ./gradlew clean build
       shell: bash
 
-    - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: ${{ always() }}
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
       with:
-        files: build/test-results/**/*.xml
+        files: |
+          test-results/**/*.xml
+          test-results/**/*.trx
+          test-results/**/*.json
