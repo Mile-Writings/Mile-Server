@@ -76,7 +76,7 @@ public class MoimControllerTest {
     @BeforeEach
     @Transactional
     public void setUp() {
-        randomString = UUID.randomUUID().toString().substring(0, 3);
+        randomString = UUID.randomUUID().toString().substring(0, 6);
         User user = userRepository.saveAndFlush(User.of(randomString, randomString, SocialType.GOOGLE));
         USER_ID = user.getId();
         // setting
@@ -97,7 +97,7 @@ public class MoimControllerTest {
         moim.setOwner(writerName);
         moimRepository.saveAndFlush(moim);
 
-        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString, randomString)));
+        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString.substring(0,4), randomString)));
         MOIM_ID = secureUrlUtil.encodeUrl(moim.getId());
     }
 
