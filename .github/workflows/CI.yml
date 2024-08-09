@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: [ "develop" ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -28,10 +31,6 @@ jobs:
         mysql user: 'mile'
         mysql password: 'mile'
 
-    - name: Check MySQL
-      run: |
-          mysqladmin ping --host=127.0.0.1 --password='mile'
-
     - name : Setup Redis
       uses: shogo82148/actions-setup-redis@v1
       with:
@@ -52,6 +51,12 @@ jobs:
         # application.yml 파일 확인
         cat ./application.yml
       shell: bash
+
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password='asap' --silent; do
+          sleep 1
+        done      
 
     - name: build
       run: |
