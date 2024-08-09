@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Setup MySQL
-      uses: mirromutth/mysql-action@v1.1
+      uses: samin/mysql-action@v1
       with:
         host port: 3306
         container port: 3306
