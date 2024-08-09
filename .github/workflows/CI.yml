@@ -3,10 +3,7 @@ name: CI
 on:
   pull_request:
     branches: [ "develop" ]
-
-permissions:
-  contents: read
-
+    
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -66,6 +63,6 @@ jobs:
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
-      if: ${{ always() }} 
+      if: ${{ always() }}
       with:
         files: build/test-results/**/*.xml
