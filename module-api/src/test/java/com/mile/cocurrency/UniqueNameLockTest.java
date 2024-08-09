@@ -1,6 +1,5 @@
 package com.mile.cocurrency;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.client.SocialType;
 import com.mile.common.auth.JwtTokenProvider;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,7 @@ public class UniqueNameLockTest {
         int numberOfThread = 4;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThread);
         CountDownLatch latch = new CountDownLatch(numberOfThread);
-        String randomName = UUID.randomUUID().toString().substring(0,7);
+        String randomName = UUID.randomUUID().toString().substring(0, 7);
         MoimCreateRequest bodyDto = new
                 MoimCreateRequest(randomName, "string", false, "string", "string", "string", "string", "str", "string");
 
