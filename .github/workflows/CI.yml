@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    
+
     steps: 
     - name: checkout
       uses: actions/checkout@v3
@@ -27,12 +27,14 @@ jobs:
         mysql root password: 'mile'
         mysql user: 'mile'
         mysql password: 'mile'
+        run: mysqladmin ping --host=127.0.0.1 --password='mile'
 
     - name : Setup Redis
       uses: shogo82148/actions-setup-redis@v1
       with:
         redis-version: "7.x"
         run: redis-cli ping
+
     - name: create application.yml
       run: |
         ## create application.yml
@@ -47,13 +49,6 @@ jobs:
         # application.yml 파일 확인
         cat ./application.yml
       shell: bash
-
-
-    - name: Wait for MySQL
-      run: |
-        while ! mysqladmin ping --host=127.0.0.1 --password='mile' --silent; do
-          sleep 1
-        done     
 
     - name: build
       run: |
