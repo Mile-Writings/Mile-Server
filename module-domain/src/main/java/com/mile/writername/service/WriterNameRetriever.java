@@ -111,7 +111,7 @@ public class WriterNameRetriever {
     }
 
 
-    public Page<WriterName> findWriterNameByMoimIdOrderByLatest(final Long moimId, final PageRequest pageRequest) {
-        return writerNameRepository.findByMoimIdOrderByIdAsc(moimId, pageRequest);
+    public Page<WriterName> findWriterNameByMoimIdOrderByOwnerFirstAndIdAsc(final Long moimId, final WriterName owner, final PageRequest pageRequest) {
+        return writerNameRepository.findByMoimIdOrderByOwnerFirstAndIdAsc(moimId, owner, pageRequest);
     }
 }

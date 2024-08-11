@@ -121,7 +121,7 @@ public class WriterNameService {
     ) {
         final Long moimId = moim.getId();
         PageRequest pageRequest = PageRequest.of(page - 1, WRITERNAME_PER_PAGE_SIZE, Sort.by(Sort.Direction.ASC, "id"));
-        Page<WriterName> writerNamePage = writerNameRetriever.findWriterNameByMoimIdOrderByLatest(moimId, pageRequest);
+        Page<WriterName> writerNamePage = writerNameRetriever.findWriterNameByMoimIdOrderByOwnerFirstAndIdAsc(moimId, moim.getOwner(), pageRequest);
         List<WriterNameInfoResponse> infoResponses = writerNamePage.getContent()
                 .stream()
                 .map(writerName -> WriterNameInfoResponse.of(writerName.getId(), writerName.getName(),
