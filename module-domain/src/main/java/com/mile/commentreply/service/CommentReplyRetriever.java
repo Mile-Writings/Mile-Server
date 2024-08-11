@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import com.mile.post.domain.Post;
 
+import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -56,8 +57,8 @@ public class CommentReplyRetriever {
         return commentReply.getWriterName().getWriter().getId().equals(userId);
     }
 
-    public int countByWriterNameId(final Long writerNameId) {
-        return commentReplyRepository.countByWriterNameId(writerNameId);
+    public int countByWriterName(final WriterName writerName) {
+        return commentReplyRepository.countByWriterName(writerName);
     }
 
     public int countByPost(final Post post) {

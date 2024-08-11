@@ -25,7 +25,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "moim", uniqueConstraints = @UniqueConstraint(columnNames = "normalizedName"))
+@Table(name = "moim", uniqueConstraints = @UniqueConstraint(columnNames = "normalized_name"))
 public class Moim extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

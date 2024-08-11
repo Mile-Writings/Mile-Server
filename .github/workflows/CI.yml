@@ -4,20 +4,39 @@ on:
   pull_request:
     branches: [ "develop" ]
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
-    runs-on: ubuntu-22.04 
-
+    runs-on: ubuntu-22.04
 
     steps: 
     - name: checkout
       uses: actions/checkout@v3
+
+    - name: Setup MySQL
+      uses: samin/mysql-action@v1
+      with:
+        host port: 3306
+        container port: 3306
+        mysql root user: 'mile'
+        mysql root password: 'mile'
+        mysql user: 'mile'
+        mysql password: 'mile'
 
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         distribution: 'corretto'
         java-version: '17'
+
+    - name : Setup Redis
+      uses: shogo82148/actions-setup-redis@v1
+      with:
+        redis-version: "7.x"
+        run: redis-cli ping
 
     - name: create application.yml
       run: |
@@ -33,9 +52,15 @@ jobs:
         # application.yml 파일 확인
         cat ./application.yml
       shell: bash
-      
-    - name: build
+
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password='mile' --silent; do
+          sleep 1
+        done
+
+    - name: Build
       run: |
           chmod +x gradlew
-          ./gradlew build -x test
+          ./gradlew clean build
       shell: bash
