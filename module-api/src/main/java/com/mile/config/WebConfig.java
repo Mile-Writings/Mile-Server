@@ -9,6 +9,7 @@ import com.mile.common.resolver.reply.ReplyVariableResolver;
 import com.mile.common.resolver.topic.TopicVariableResolver;
 import com.mile.common.resolver.user.UserIdHeaderResolver;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -28,11 +29,18 @@ public class WebConfig implements WebMvcConfigurer {
     private final DuplicatedInterceptor duplicatedInterceptor;
     private final UserIdHeaderResolver userIdHeaderResolver;
 
+    @Value("${client.local}")
+    private String clientLocal;
+
+    @Value("${client.deploy}")
+    private String clientDeploy;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins(clientLocal, clientDeploy)
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS")
+                .allowCredentials(true)
                 .maxAge(3000);
     }
 
