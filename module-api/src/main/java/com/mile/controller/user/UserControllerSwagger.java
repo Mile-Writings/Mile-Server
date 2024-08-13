@@ -14,8 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,7 +51,7 @@ public interface UserControllerSwagger {
     )
     SuccessResponse<AccessTokenGetSuccess> refreshToken(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId Long userId,
-            @RequestParam final String refreshToken
+            @CookieValue Cookie cookie
     );
 
     @Operation(summary = "로그아웃")

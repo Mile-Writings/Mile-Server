@@ -21,13 +21,9 @@ public enum ErrorMessage {
     CURIOUS_NOT_FOUND(40407, "해당 궁금해요는 존재하지 않습니다."),
     TOPIC_NOT_FOUND(40408, "해당 글감이 존재하지 않습니다."),
     KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
-    WRITERS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 작가가 요청한 개수 이상 존재하지 않습니다"),
     WRITER_NOT_FOUND(40411, "해당 작가는 존재하지 않습니다."),
     RECOMMEND_NOT_FOUND(40412, "추천 글감을 받아오는데 실패했습니다."),
     MOIM_TOPIC_NOT_FOUND(40413, "해당 모임의 글감이 존재하지 않습니다."),
-    TOPIC_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 글감의 글이 존재하지 않습니다."),
-    MOIM_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 모임의 글이 존재하지 않습니다."),
-    RANDOM_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "랜덤 글 이름을 생성하는데 실패했습니다."),
     REPLY_NOT_FOUND(40416, "Id에 해당하는 대댓글이 없습니다."),
     /*
     Bad Request
@@ -52,6 +48,7 @@ public enum ErrorMessage {
     WRITER_NAME_LENGTH_WRONG(HttpStatus.BAD_REQUEST.value(), "사용 불가능한 필명입니다."),
     MOIM_NAME_VALIDATE_ERROR(40018, "사용 불가능한 모임명입니다."),
     EXCEED_MOIM_MAX_SIZE(40019, "최대 가입 가능 모임 개수(5개)를 초과하였습니다."),
+    REFRESH_TOKEN_NULL(40020, "리프레시 토큰의 값이 비어있습니다."),
     /*
     Conflict
      */
@@ -61,8 +58,7 @@ public enum ErrorMessage {
     /*
     Unauthorized
      */
-    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "액세스 토큰이 만료되었습니다."),
-    TOKEN_INCORRECT_ERROR(HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 유효하지 않습니다."),
+    TOKEN_INCORRECT_ERROR(40101, "리프레시 토큰이 유효하지 않습니다."),
     TOKEN_VALIDATION_ERROR(40102, "사용자 검증 토큰이 유효하지 않습니다."),
     UN_LOGIN_EXCEPTION(40103, "로그인 후 진행해주세요."),
     /*
