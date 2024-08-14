@@ -35,10 +35,22 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${client.deploy}")
     private String clientDeploy;
 
+    @Value("${backend.local-set1}")
+    private String serverLocalSet1;
+
+    @Value("${backend.local-set2}")
+    private String serverLocalSet2;
+
+    @Value("${backend.develop}")
+    private String serverDevelop;
+
+    @Value("${backend.deploy}")
+    private String serverDeploy;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(clientLocal, clientDeploy)
+                .allowedOrigins(clientLocal, clientDeploy, serverLocalSet1, serverLocalSet2, serverDevelop, serverDeploy)
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS")
                 .allowCredentials(true)
                 .maxAge(3000);
