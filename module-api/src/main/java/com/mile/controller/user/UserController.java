@@ -4,11 +4,8 @@ import com.mile.client.dto.UserLoginRequest;
 import com.mile.common.resolver.user.UserId;
 import com.mile.controller.user.facade.AuthFacade;
 import com.mile.dto.SuccessResponse;
-import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.exception.model.BadRequestException;
 import com.mile.moim.service.dto.MoimListOfUserResponse;
-import com.mile.user.service.UserService;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
 import jakarta.servlet.http.Cookie;
@@ -59,11 +56,10 @@ public class UserController implements UserControllerSwagger {
     @GetMapping("/refresh-token")
     @Override
     public SuccessResponse<AccessTokenGetSuccess> refreshToken(
-            @UserId Long userId,
             @CookieValue(name = REFRESH_TOKEN) Cookie cookie
     ) {
         String refreshToken = cookie.getValue();
-        return SuccessResponse.of(SuccessMessage.ISSUE_ACCESS_TOKEN_SUCCESS, authFacade.refreshToken(userId, refreshToken));
+        return SuccessResponse.of(SuccessMessage.ISSUE_ACCESS_TOKEN_SUCCESS, authFacade.refreshToken(refreshToken));
     }
 
 
