@@ -50,7 +50,6 @@ public interface UserControllerSwagger {
             }
     )
     SuccessResponse<AccessTokenGetSuccess> refreshToken(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId Long userId,
             @CookieValue Cookie cookie
     );
 
