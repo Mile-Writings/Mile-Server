@@ -31,7 +31,7 @@ public class UserController implements UserControllerSwagger {
 
     private final AuthFacade authFacade;
     private final static Long COOKIE_MAX_AGE = 60 * 60 * 24 * 1000L * 14;
-    private final static String REFRESH_TOKEN = "refreshToken";
+    private final static String REFRESH_TOKEN = "M-RID";
 
     @PostMapping("/login")
     @Override
@@ -45,7 +45,7 @@ public class UserController implements UserControllerSwagger {
                 .maxAge(COOKIE_MAX_AGE)
                 .path("/")
                 .secure(true)
-                .sameSite("None")
+                .sameSite("Strict")
                 .httpOnly(true)
                 .build();
         response.setHeader("Set-Cookie", cookie.toString());
