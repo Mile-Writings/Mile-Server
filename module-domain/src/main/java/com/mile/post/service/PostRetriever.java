@@ -91,7 +91,7 @@ public class PostRetriever {
             final Long userId
     ) {
         Long moimId = post.getTopic().getMoim().getId();
-        authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
+        writerNameRetriever.findByMoimAndUserWithNotExceptionCase(moimId, userId);
     }
 
     public void authenticateUserOfMoim(

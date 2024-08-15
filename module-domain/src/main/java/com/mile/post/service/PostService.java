@@ -73,7 +73,7 @@ public class PostService {
     ) {
         Post post = postRetriever.findById(postId);
         final Long moimId = post.getTopic().getMoim().getId();
-        postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
+        postRetriever.authenticateUserWithPost(post, userId);
         commentCreator.createComment(post, writerNameRetriever.findByMoimAndUser(moimId, userId), commentCreateRequest);
     }
 
@@ -84,7 +84,7 @@ public class PostService {
     ) {
         Post post = postRetriever.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
-        postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
+        postRetriever.authenticateUserWithPost(post, userId);
         curiousService.createCurious(post, writerNameRetriever.findByMoimAndUser(moimId, userId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
@@ -113,7 +113,7 @@ public class PostService {
             final Long userId
     ) {
         Post post = postRetriever.findById(postId);
-        curiousService.deleteCurious(post, writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
+        curiousService.deleteCurious(post, writerNameRetriever.findByMoimAndUserWithNotExceptionCase(post.getTopic().getMoim().getId(), userId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 

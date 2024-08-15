@@ -37,7 +37,7 @@ public class JwtTokenProvider {
     }
 
     private String getTokenFromHeader(final String token) {
-        if (!StringUtils.hasText(token)) {
+        if (!StringUtils.hasText(token) || token.equals("Bearer null") || token.equals("Bearer ")) {
             throw new UnauthorizedException(ErrorMessage.UN_LOGIN_EXCEPTION);
         } else if (StringUtils.hasText(token) && !token.startsWith("Bearer ")) {
             throw new BadRequestException(ErrorMessage.BEARER_LOST_ERROR);

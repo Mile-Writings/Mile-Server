@@ -58,7 +58,7 @@ public class CommentService {
             final Post post,
             final Long userId
     ) {
-        postRetriever.authenticateUserWithPostId(post.getId(), userId);
+        postRetriever.authenticateUserWithPost(post, userId);
         List<Comment> commentList = commentRetriever.findByPostId(post.getId());
         Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
 
