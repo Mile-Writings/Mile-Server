@@ -70,6 +70,7 @@ public enum ErrorMessage {
     MOIM_OWNER_AUTHENTICATION_ERROR(40303, "사용자는 해당 모임의 모임장이 아닙니다."),
     WRITER_NAME_INFO_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 사용자는 필명에 접근 권한이 없습니다."),
     COMMENT_ACCESS_ERROR(40305, "해당 사용자는 댓글에 접근 권한이 없습니다."),
+    WRITER_NAME_NON_AUTHENTICATE(40306, "사용자는 모임에 대한 접근 권한이 없습니다.(Non Error)"),
     /*
     Method Not Supported
      */

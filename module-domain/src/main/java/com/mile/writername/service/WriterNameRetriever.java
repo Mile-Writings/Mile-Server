@@ -46,7 +46,7 @@ public class WriterNameRetriever {
             final Long moimId,
             final Long userId
     ) {
-        return WriterNameShortResponse.of(findByMoimAndUser(moimId, userId));
+        return WriterNameShortResponse.of(findByMoimAndUserWithNotExceptionCase(moimId, userId));
     }
 
     public boolean isUserInMoim(
@@ -67,6 +67,15 @@ public class WriterNameRetriever {
         return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId)
                 .orElseThrow(
                         () -> new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR)
+                );
+    }
+
+    public WriterName findByMoimAndUserWithNotExceptionCase(
+            final Long moimId,
+            final Long writerId
+    ) {
+        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId)
+                .orElseThrow( () -> new ForbiddenException(ErrorMessage.WRITER_NAME_NON_AUTHENTICATE)
                 );
     }
 
