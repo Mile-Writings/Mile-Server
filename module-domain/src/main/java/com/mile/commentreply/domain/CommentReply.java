@@ -2,11 +2,13 @@ package com.mile.commentreply.domain;
 
 import com.mile.comment.domain.Comment;
 import com.mile.writername.domain.WriterName;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class CommentReply {
     @Setter
     private String idUrl;
     private boolean isAnonymous;
+    @Column(length = 10000)
     private String content;
 
     @Builder

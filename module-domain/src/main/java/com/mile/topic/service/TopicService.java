@@ -4,20 +4,18 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.topic.domain.Topic;
-import com.mile.topic.service.dto.ContentResponse;
 import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
 import com.mile.topic.service.dto.PostListInTopicResponse;
 import com.mile.topic.service.dto.TopicDetailResponse;
 import com.mile.topic.service.dto.TopicPutRequest;
-import com.mile.topic.service.dto.TopicResponse;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,36 +27,11 @@ public class TopicService {
     private final TopicCreator topicCreator;
     private final UserService userService;
 
-
-    public List<ContentResponse> getContentsFromMoim(
-            final Long moimId
-    ) {
-        return topicRetriever.getContentsFromMoim(moimId);
-    }
-
     public List<ContentWithIsSelectedResponse> getContentsWithIsSelectedFromMoim(
             final Long moimId,
             final Long selectedTopicId
     ) {
         return topicRetriever.getContentsWithIsSelectedFromMoim(moimId, selectedTopicId);
-    }
-
-    public List<Topic> findTopicListByMoimId(
-            final Long moimId
-    ) {
-        return topicRetriever.findTopicListByMoimId(moimId);
-    }
-
-    public List<TopicResponse> getKeywordsFromMoim(
-            final Long moimId
-    ) {
-        return topicRetriever.getKeywordsFromMoim(moimId);
-    }
-
-    public String findLatestTopicByMoim(
-            final Moim moim
-    ) {
-        return topicRetriever.findLatestTopicByMoim(moim);
     }
 
     public PostListInTopicResponse getPostListByTopic(
@@ -68,35 +41,11 @@ public class TopicService {
         return topicRetriever.getPostListByTopic(topicId, lastPostId);
     }
 
-    public MoimTopicInfoListResponse getTopicListFromMoim(
-            final Long moimId,
-            final int page
-    ) {
-        return topicRetriever.getTopicListFromMoim(moimId, page);
-    }
-
-    public MoimTopicInfoListResponse getTopicResponsesFromPage(Page<Topic> topicPage, final Long moimId) {
-        return topicRetriever.getTopicResponsesFromPage(topicPage, moimId);
-    }
-
-    public Long getNumberOfTopicFromMoim(
-            final Long moimId
-    ) {
-        return topicRetriever.getNumberOfTopicFromMoim(moimId);
-    }
-
     public TopicDetailResponse getTopicDetail(
             final Long userId,
             final Long topicId
     ) {
         return topicRetriever.getTopicDetail(userId, topicId);
-    }
-
-    public Long createTopicOfMoim(
-            final Moim moim,
-            final TopicCreateRequest createRequest
-    ) {
-        return topicCreator.createTopicOfMoim(moim, createRequest);
     }
 
     @Transactional
@@ -108,7 +57,7 @@ public class TopicService {
         User user = userService.findById(userId);
         topicRetriever.authenticateTopicWithUser(topic, user);
         topicRetriever.checkSingleTopicDeletion(topic);
-        topicRemover.deleteTopic(topic, user);
+        topicRemover.deleteTopic(topic);
     }
 
     public void putTopic(
@@ -117,12 +66,6 @@ public class TopicService {
             final TopicPutRequest topicPutRequest
     ) {
         topicUpdator.putTopic(userId, topicId, topicPutRequest);
-    }
-
-    public void deleteTopicsByMoim(
-            final Moim moim
-    ) {
-        topicRemover.deleteTopicsByMoim(moim);
     }
 
 }

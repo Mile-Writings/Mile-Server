@@ -1,11 +1,9 @@
 package com.mile.post.service;
 
 import com.mile.aws.utils.S3Service;
-import com.mile.comment.service.CommentService;
-import com.mile.curious.service.CuriousService;
+import com.mile.comment.service.CommentRemover;
+import com.mile.curious.service.CuriousRemover;
 import com.mile.moim.domain.Moim;
-import com.mile.moim.service.dto.MoimCuriousPostListResponse;
-import com.mile.moim.service.dto.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.topic.domain.Topic;
@@ -15,23 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostDeleteService {
+public class PostRemover {
 
     private final PostRepository postRepository;
-    private final CuriousService curiousService;
-    private final CommentService commentService;
     private final S3Service s3Service;
+    private final CommentRemover commentRemover;
+    private final CuriousRemover curiousRemover;
 
-    private List<Post> getPostHaveCuriousCount(
-            final List<Post> postList
-    ) {
-        postList.removeIf(post -> post.getCuriousCount() <= 0);
-        return postList;
-    }
 
     public void deleteTemporaryPosts(
             final Moim moim,
@@ -57,11 +48,6 @@ public class PostDeleteService {
         postRepository.delete(post);
     }
 
-    public void deletePostsByTopic(
-            final List<Topic> topics
-    ) {
-        topics.forEach(postRepository::deleteByTopic);
-    }
 
     private void deleteRelatedData(
             final Post post
@@ -73,8 +59,8 @@ public class PostDeleteService {
         WriterName writerName = post.getWriterName();
         writerName.decreaseTotalCuriousCountByPostDelete(post.getCuriousCount());
 
-        curiousService.deleteAllByPost(post);
-        commentService.deleteAllByPost(post);
+        curiousRemover.deleteAllByPost(post);
+        commentRemover.deleteAllByPost(post);
     }
 
     private void deleteS3File(
@@ -83,18 +69,12 @@ public class PostDeleteService {
         s3Service.deleteImage(key);
     }
 
-    public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
-        List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
-        return MoimCuriousPostListResponse.of(postList
-                .stream()
-                .map(p ->
-                        MoimMostCuriousPostResponse.of(p.getIdUrl(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), p.getContent(), p.isContainPhoto())
-                ).collect(Collectors.toList()));
+
+    public void deleteAllPostByWriterNameId(final WriterName writerName) {
+        postRepository.deleteByWriterName(writerName);
     }
 
-
-    public void deleteAllPostByWriterNameId(final Long writerNameId) {
-        List<Post> posts = postRepository.findByWriterNameId(writerNameId);
-        posts.forEach(this::delete);
+    public void deletePostsByTopic(final List<Topic> topics) {
+        topics.forEach(postRepository::deleteByTopic);
     }
 }

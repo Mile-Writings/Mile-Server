@@ -1,5 +1,6 @@
 package com.mile.client.google.api;
 
+
 import com.mile.client.google.api.dto.GoogleAccessTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,4 +16,5 @@ public interface GoogleAccessTokenClient {
             @RequestParam(name = "redirectUri") String redirectUri,
             @RequestParam(name = "grantType") String grantType
     );
+
 }

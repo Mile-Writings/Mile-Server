@@ -1,13 +1,14 @@
 package com.mile.client.kakao;
 
-import com.mile.client.dto.UserLoginRequest;
-import com.mile.client.kakao.api.KakaoUserClient;
-import com.mile.exception.message.ErrorMessage;
-import com.mile.exception.model.BadRequestException;
 import com.mile.client.SocialType;
+import com.mile.client.dto.UserLoginRequest;
 import com.mile.client.kakao.api.KakaoAccessTokenClient;
+import com.mile.client.kakao.api.KakaoUnlinkClient;
+import com.mile.client.kakao.api.KakaoUserClient;
 import com.mile.client.kakao.api.dto.KakaoAccessTokenResponse;
 import com.mile.client.kakao.api.dto.KakaoUserResponse;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.BadRequestException;
 import com.mile.strategy.LoginStrategy;
 import com.mile.strategy.dto.UserInfoResponse;
 import feign.FeignException;
@@ -25,8 +26,9 @@ public class KakaoSocialStrategy implements LoginStrategy {
     private static final String AUTH_CODE = "authorization_code";
     @Value("${kakao.clientId}")
     private String clientId;
-    private final KakaoUserClient kakaoApiClient;
-    private final KakaoAccessTokenClient kakaoAuthApiClient;
+    private final KakaoAccessTokenClient kakaoAccessTokenClient;
+    private final KakaoUserClient kakaoUserClient;
+    private final KakaoUnlinkClient kakaoUnlinkClient;
     @Getter
     private final SocialType socialType = SocialType.KAKAO;
 
@@ -52,19 +54,24 @@ public class KakaoSocialStrategy implements LoginStrategy {
             final String redirectUri,
             final String authorizationCode
     ) {
-        KakaoAccessTokenResponse response = kakaoAuthApiClient.getOAuth2AccessToken(
+        KakaoAccessTokenResponse response = kakaoAccessTokenClient.getOAuth2AccessToken(
                 AUTH_CODE,
                 clientId,
                 redirectUri,
                 authorizationCode
         );
-        return response.accessToken();
+        return "Bearer " + response.accessToken();
     }
 
+    @Override
+    public void revokeUser(final String authorizationCode, final UserLoginRequest userLoginRequest) {
+        final String accessToken = getOAuth2Authentication(userLoginRequest.redirectUri(), authorizationCode);
+        kakaoUnlinkClient.revokeWithSocialService(accessToken);
+    }
     private KakaoUserResponse getUserInfo(
             final String accessToken
     ) {
-        return kakaoApiClient.getUserInformation("Bearer " + accessToken);
+        return kakaoUserClient.getUserInformation(accessToken);
     }
 
     public UserInfoResponse getLoginDto(

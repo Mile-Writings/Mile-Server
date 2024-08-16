@@ -7,6 +7,7 @@ import com.mile.dto.SuccessResponse;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.post.service.dto.CommentListResponse;
 import com.mile.post.service.dto.ModifyPostGetResponse;
+import com.mile.post.service.dto.PostAuthenticateResponse;
 import com.mile.post.service.dto.PostCreateRequest;
 import com.mile.post.service.dto.PostCuriousResponse;
 import com.mile.post.service.dto.PostGetResponse;
@@ -121,7 +122,7 @@ public interface PostControllerSwagger {
     );
 
 
-    @Operation(summary = "게시글 삭제/수정 권한 확인")
+    @Operation(summary = "게시글 권한 확인")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "게시글 권한이 확인되었습니다."),
@@ -134,7 +135,7 @@ public interface PostControllerSwagger {
 
             }
     )
-    ResponseEntity<SuccessResponse> getAuthenticateWrite(
+    ResponseEntity<SuccessResponse<PostAuthenticateResponse>> getAuthenticateWrite(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl

@@ -25,13 +25,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "moim", uniqueConstraints = @UniqueConstraint(columnNames = "normalizedName"))
+@Table(name = "moim", uniqueConstraints = @UniqueConstraint(columnNames = "normalized_name"))
 public class Moim extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private WriterName owner;
     private String name;
     private String normalizedName;

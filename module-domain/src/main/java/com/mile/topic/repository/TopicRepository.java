@@ -8,17 +8,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface TopicRepository extends JpaRepository<Topic, Long>, TopicRepositoryCustom {
 
-    List<Topic> findByMoimId(final Long moimId);
+    List<Topic> findByMoim(final Moim moim);
+
+    List<Topic> findByMoimId(@NonNull final Long moimId);
 
     Long countByMoimId(final Long moimId);
 
     Page<Topic> findByMoimIdOrderByCreatedAtDesc(Long moimId, Pageable pageable);
 
+    @Transactional
     @Modifying
     @Query("DELETE FROM Topic t where t.moim = :moim")
     void deleteByMoim(@Param("moim") Moim moim);

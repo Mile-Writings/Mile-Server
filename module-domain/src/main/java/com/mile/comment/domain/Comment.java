@@ -4,6 +4,7 @@ import com.mile.config.BaseTimeEntity;
 import com.mile.post.domain.Post;
 import com.mile.post.service.dto.CommentCreateRequest;
 import com.mile.writername.domain.WriterName;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,8 @@ public class Comment extends BaseTimeEntity {
     private Post post;
     @Setter
     private String idUrl;
+
+    @Column(length = 2000)
     private String content;
     private boolean anonymous;
 

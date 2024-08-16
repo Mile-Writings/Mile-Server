@@ -1,30 +1,30 @@
 package com.mile.topic.service;
 
 import com.mile.moim.domain.Moim;
-import com.mile.post.service.PostDeleteService;
-import com.mile.post.service.PostGetService;
+import com.mile.post.service.PostRemover;
+import com.mile.post.service.PostRetriever;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class TopicRemover {
 
-    private final PostGetService postGetService;
-    private final PostDeleteService postDeleteService;
+    private final PostRetriever postGetService;
+    private final PostRemover postDeleteService;
     private final TopicRepository topicRepository;
 
     public void deleteTopic(
-            final Topic topic,
-            final User user
+            final Topic topic
     ) {
         deletePostsOfTopic(topic);
         topicRepository.deleteById(topic.getId());
     }
-
 
     private void deletePostsOfTopic(
             final Topic topic

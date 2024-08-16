@@ -91,10 +91,14 @@ public class Post extends BaseTimeEntity {
             final Topic topic,
             final PostPutRequest putRequest
     ) {
+        final String DEFAULT_IMAGE = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
         this.topic = topic;
         this.title = putRequest.title();
         this.content = putRequest.content();
         this.imageUrl = putRequest.imageUrl();
+        if (!putRequest.imageUrl().equals(DEFAULT_IMAGE)) {
+            this.containPhoto = true;
+        }
         this.anonymous = putRequest.anonymous();
     }
 
