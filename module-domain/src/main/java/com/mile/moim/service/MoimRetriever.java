@@ -50,7 +50,7 @@ public class MoimRetriever {
     public List<Moim> findBestMoims() {
         LocalDateTime endOfWeek = LocalDateTime.now();
         LocalDateTime startOfWeek = endOfWeek.minusDays(7);
-        PageRequest pageRequest = PageRequest.of(0, 2);
+        PageRequest pageRequest = PageRequest.of(0, 3);
         return moimRepository.findTop3PublicMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
     }
 
