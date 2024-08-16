@@ -17,6 +17,5 @@
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="ASYNC_DISCORD" />
         </root>
-    </springProfile>\
-</springProfile>
+    </springProfile>
 </configuration>
