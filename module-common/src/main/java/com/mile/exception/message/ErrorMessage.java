@@ -42,7 +42,7 @@ public enum ErrorMessage {
     REQUEST_URL_WRONG_ERROR(HttpStatus.BAD_REQUEST.value(), "요청 URL를 다시 확인해주세요"),
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
     IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),
-    INVALID_URL_EXCEPTION(40014, "요청된 URL을 다시 확인해주세요"),
+    INVALID_URL_EXCEPTION(40014, "해당 URI는 자원을 표시할 수 없습니다."),
     LEAST_TOPIC_SIZE_OF_MOIM_ERROR(40015, "모임에는 최소 하나의 글감이 있어야 합니다."),
     USER_MOIM_ALREADY_JOIN(40016, "사용자는 이미 모임에 가입했습니다."),
     WRITER_NAME_LENGTH_WRONG(40017, "사용 불가능한 필명입니다."),
