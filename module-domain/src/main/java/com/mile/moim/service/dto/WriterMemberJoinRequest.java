@@ -9,7 +9,6 @@ public record WriterMemberJoinRequest(
         @Size(max = 8, message = "필명은 최대 8자 이내로 작성해주세요.")
         String writerName,
 
-        @NotBlank(message = "소개 글이 입력되지 않았습니다.")
         @Size(max = 110, message = "소개 글은 최대 100자 이내로 작성해주세요.")
         String writerDescription
 ) {
