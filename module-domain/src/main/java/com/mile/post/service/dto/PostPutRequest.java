@@ -19,7 +19,7 @@ public record PostPutRequest(
 
 
         @NotBlank(message = "내용을 입력해주세요.")
-        @Size(max = 2500, message = "내용 최대 글자를 초과했습니다.")
+        @Size(max = 10000, message = "내용 최대 글자를 초과했습니다.")
         @Schema(description = "글 내용", example = "내용입니다.")
         String content,
 
