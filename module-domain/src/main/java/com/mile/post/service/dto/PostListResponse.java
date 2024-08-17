@@ -19,10 +19,11 @@ public record PostListResponse(
 ) {
     private static final int SUBSTRING_START = 0;
     private static final int SUBSTRING_END = 400;
-
+    private static final String UNNAMED = "작자미상";
     public static PostListResponse of(final Post post, final int commentCount) {
+
         return new PostListResponse(post.getIdUrl(), post.getTitle(), getSubString(post),
-                post.getWriterName().getName(),
+                getWriterName(post),
                 DateUtil.getStringWithTimeOfLocalDate(post.getCreatedAt()),
                 post.getCuriousCount(),
                 post.getHitsCount(),
@@ -31,6 +32,11 @@ public record PostListResponse(
                 post.isContainPhoto());
     }
 
+    private static String getWriterName(final Post post) {
+        if(post.isAnonymous()) return UNNAMED;
+        else return post.getWriterName().getName();
+    }
+    
     private static String getSubString(final Post post) {
         String cleanContent = Jsoup.clean(post.getContent(), Safelist.none());
         if (cleanContent.length() >= SUBSTRING_END) {
