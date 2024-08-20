@@ -3,7 +3,7 @@ package com.mile.cocurrency;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.client.SocialType;
 import com.mile.common.auth.JwtTokenProvider;
-import com.mile.moim.service.dto.MoimCreateRequest;
+import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;

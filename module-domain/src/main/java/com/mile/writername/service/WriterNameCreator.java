@@ -3,7 +3,7 @@ package com.mile.writername.service;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ConflictException;
 import com.mile.moim.domain.Moim;
-import com.mile.moim.service.dto.WriterMemberJoinRequest;
+import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.user.domain.User;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;

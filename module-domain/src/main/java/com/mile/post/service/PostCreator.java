@@ -2,8 +2,8 @@ package com.mile.post.service;
 
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
-import com.mile.post.service.dto.PostCreateRequest;
-import com.mile.post.service.dto.TemporaryPostCreateRequest;
+import com.mile.post.service.dto.request.PostCreateRequest;
+import com.mile.post.service.dto.request.TemporaryPostCreateRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;

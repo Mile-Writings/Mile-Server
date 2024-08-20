@@ -2,7 +2,7 @@ package com.mile.controller.comment;
 
 
 import com.mile.comment.service.CommentService;
-import com.mile.commentreply.service.dto.ReplyCreateRequest;
+import com.mile.commentreply.service.dto.request.ReplyCreateRequest;
 import com.mile.common.resolver.comment.CommentIdPathVariable;
 import com.mile.common.resolver.reply.ReplyIdPathVariable;
 import com.mile.common.resolver.user.UserId;

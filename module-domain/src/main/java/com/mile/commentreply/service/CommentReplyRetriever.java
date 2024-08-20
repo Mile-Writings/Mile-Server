@@ -3,10 +3,9 @@ package com.mile.commentreply.service;
 import com.mile.comment.domain.Comment;
 import com.mile.commentreply.domain.CommentReply;
 import com.mile.commentreply.repository.CommentReplyRepository;
-import com.mile.commentreply.service.dto.ReplyResponse;
+import com.mile.commentreply.service.dto.response.ReplyResponse;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.NotFoundException;
-import com.mile.exception.model.UnauthorizedException;
 
 import java.util.List;
 import java.util.stream.Collectors;

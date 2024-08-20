@@ -1,6 +1,6 @@
 package com.mile.controller.comment;
 
-import com.mile.commentreply.service.dto.ReplyCreateRequest;
+import com.mile.commentreply.service.dto.request.ReplyCreateRequest;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;

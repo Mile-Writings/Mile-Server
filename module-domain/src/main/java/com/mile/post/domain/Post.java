@@ -1,7 +1,7 @@
 package com.mile.post.domain;
 
 import com.mile.config.BaseTimeEntity;
-import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.request.PostPutRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import jakarta.persistence.Column;

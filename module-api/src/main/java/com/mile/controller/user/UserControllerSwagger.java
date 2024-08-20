@@ -4,7 +4,7 @@ import com.mile.client.dto.UserLoginRequest;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
 import com.mile.dto.SuccessResponse;
-import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.response.MoimListOfUserResponse;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

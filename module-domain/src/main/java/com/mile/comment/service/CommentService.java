@@ -4,7 +4,7 @@ import com.mile.comment.domain.Comment;
 import com.mile.comment.service.dto.CommentResponse;
 import com.mile.commentreply.service.CommentReplyRemover;
 import com.mile.commentreply.service.CommentReplyService;
-import com.mile.commentreply.service.dto.ReplyCreateRequest;
+import com.mile.commentreply.service.dto.request.ReplyCreateRequest;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.service.MoimRetriever;
