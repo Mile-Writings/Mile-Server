@@ -51,7 +51,7 @@ public class MoimRetriever {
         LocalDateTime endOfWeek = LocalDateTime.now();
         LocalDateTime startOfWeek = endOfWeek.minusDays(7);
         PageRequest pageRequest = PageRequest.of(0, 3);
-        return moimRepository.findTop3PublicMoimsWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
+        return moimRepository.findTop3PublicMoimWithMostPostsLastWeek(pageRequest, startOfWeek, endOfWeek);
     }
 
     public List<Moim> getLatestMoims(int count, List<Moim> excludeMoims) {
@@ -59,7 +59,7 @@ public class MoimRetriever {
         if (excludeMoims.isEmpty()) {
             return moimRepository.findLatestMoimsWithoutExclusion(pageRequest);
         } else {
-            return moimRepository.findLatestMoimsWithExclusion(pageRequest, excludeMoims);
+            return moimRepository.findLatestMoimWithExclusion(pageRequest, excludeMoims);
         }
     }
 
