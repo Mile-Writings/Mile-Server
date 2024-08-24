@@ -5,7 +5,7 @@ import com.mile.common.resolver.user.UserId;
 import com.mile.controller.user.facade.AuthFacade;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
-import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.response.MoimListOfUserResponse;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
 import jakarta.servlet.http.Cookie;

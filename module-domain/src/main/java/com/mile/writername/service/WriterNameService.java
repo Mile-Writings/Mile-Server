@@ -9,15 +9,15 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.MoimRemover;
 import com.mile.moim.service.MoimRetriever;
-import com.mile.moim.service.dto.MoimWriterNameListGetResponse;
-import com.mile.moim.service.dto.WriterMemberJoinRequest;
+import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
+import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.post.service.PostRetriever;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserRetriever;
 import com.mile.writername.domain.WriterName;
-import com.mile.writername.service.dto.WriterNameDescriptionResponse;
-import com.mile.writername.service.dto.WriterNameDescriptionUpdateRequest;
-import com.mile.writername.service.dto.WriterNameInfoResponse;
+import com.mile.writername.service.dto.response.WriterNameDescriptionResponse;
+import com.mile.writername.service.dto.request.WriterNameDescriptionUpdateRequest;
+import com.mile.writername.service.dto.response.WriterNameInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service

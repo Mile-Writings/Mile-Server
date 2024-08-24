@@ -1,17 +1,13 @@
 package com.mile.topic.service;
 
-import com.mile.moim.domain.Moim;
-import com.mile.moim.service.dto.MoimTopicInfoListResponse;
-import com.mile.moim.service.dto.TopicCreateRequest;
 import com.mile.topic.domain.Topic;
-import com.mile.topic.service.dto.ContentWithIsSelectedResponse;
-import com.mile.topic.service.dto.PostListInTopicResponse;
-import com.mile.topic.service.dto.TopicDetailResponse;
-import com.mile.topic.service.dto.TopicPutRequest;
+import com.mile.topic.service.dto.response.ContentWithIsSelectedResponse;
+import com.mile.topic.service.dto.response.PostListInTopicResponse;
+import com.mile.topic.service.dto.response.TopicDetailResponse;
+import com.mile.topic.service.dto.request.TopicPutRequest;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

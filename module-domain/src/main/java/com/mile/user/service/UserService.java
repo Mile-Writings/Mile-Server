@@ -1,8 +1,8 @@
 package com.mile.user.service;
 
 import com.mile.client.SocialType;
-import com.mile.moim.service.dto.MoimListOfUserResponse;
-import com.mile.moim.service.dto.MoimOfUserResponse;
+import com.mile.moim.service.dto.response.MoimListOfUserResponse;
+import com.mile.moim.service.dto.response.MoimOfUserResponse;
 import com.mile.user.domain.User;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
