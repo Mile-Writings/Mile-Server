@@ -1,8 +1,8 @@
 package com.mile.moim.domain;
 
 import com.mile.config.BaseTimeEntity;
-import com.mile.moim.service.dto.MoimCreateRequest;
-import com.mile.moim.service.dto.MoimInfoModifyRequest;
+import com.mile.moim.service.dto.request.MoimCreateRequest;
+import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.writername.domain.WriterName;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;

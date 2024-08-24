@@ -1,7 +1,7 @@
 package com.mile.comment.service.dto;
 
 import com.mile.comment.domain.Comment;
-import com.mile.commentreply.service.dto.ReplyResponse;
+import com.mile.commentreply.service.dto.response.ReplyResponse;
 import com.mile.writername.domain.WriterName;
 
 import java.util.List;

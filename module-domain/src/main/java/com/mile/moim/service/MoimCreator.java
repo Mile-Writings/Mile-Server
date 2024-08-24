@@ -2,7 +2,7 @@ package com.mile.moim.service;
 
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
-import com.mile.moim.service.dto.MoimCreateRequest;
+import com.mile.moim.service.dto.request.MoimCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

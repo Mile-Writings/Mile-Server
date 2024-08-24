@@ -5,7 +5,7 @@ import com.mile.client.SocialType;
 import com.mile.client.dto.UserLoginRequest;
 import com.mile.common.auth.JwtTokenProvider;
 import com.mile.jwt.service.TokenService;
-import com.mile.moim.service.dto.MoimListOfUserResponse;
+import com.mile.moim.service.dto.response.MoimListOfUserResponse;
 import com.mile.strategy.LoginStrategyManager;
 import com.mile.strategy.dto.UserInfoResponse;
 import com.mile.user.service.UserService;

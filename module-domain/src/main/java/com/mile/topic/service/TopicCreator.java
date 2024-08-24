@@ -1,7 +1,7 @@
 package com.mile.topic.service;
 
 import com.mile.moim.domain.Moim;
-import com.mile.moim.service.dto.TopicCreateRequest;
+import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.utils.SecureUrlUtil;

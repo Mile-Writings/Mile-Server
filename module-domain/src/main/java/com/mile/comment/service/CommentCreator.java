@@ -3,7 +3,7 @@ package com.mile.comment.service;
 import com.mile.comment.domain.Comment;
 import com.mile.comment.repository.CommentRepository;
 import com.mile.post.domain.Post;
-import com.mile.post.service.dto.CommentCreateRequest;
+import com.mile.post.service.dto.request.CommentCreateRequest;
 import com.mile.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;

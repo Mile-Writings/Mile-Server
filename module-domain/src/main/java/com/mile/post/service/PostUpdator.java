@@ -2,11 +2,10 @@ package com.mile.post.service;
 
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
-import com.mile.post.service.dto.PostPutRequest;
+import com.mile.post.service.dto.request.PostPutRequest;
 import com.mile.topic.domain.Topic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
