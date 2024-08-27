@@ -5,10 +5,10 @@ import com.mile.writername.service.dto.response.PopularWriterResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record PopularWriterListResponse(List<PopularWriterResponse> popularWriters) {
+public record MoimMostCuriousWriterResponse(List<PopularWriterResponse> popularWriters) {
 
-    public static PopularWriterListResponse of(final List<WriterName> writers) {
-        return new PopularWriterListResponse(
+    public static MoimMostCuriousWriterResponse of(final List<WriterName> writers) {
+        return new MoimMostCuriousWriterResponse(
                 writers
                 .stream()
                 .map(PopularWriterResponse::of)
