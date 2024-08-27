@@ -1,6 +1,6 @@
-package com.mile.log.utils;
+package com.mile.exception.log.utils;
 
-import com.mile.log.filter.CustomServletWrappingFilter;
+import com.mile.exception.log.filter.CustomServletWrappingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

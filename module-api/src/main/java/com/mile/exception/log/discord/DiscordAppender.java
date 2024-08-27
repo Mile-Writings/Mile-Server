@@ -1,13 +1,13 @@
-package com.mile.log.discord;
+package com.mile.exception.log.discord;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import com.mile.log.discord.exception.ErrorLogAppenderException;
-import com.mile.log.discord.model.EmbedObject;
-import com.mile.log.utils.MDCUtil;
-import com.mile.log.utils.StringUtil;
+import com.mile.exception.log.discord.exception.ErrorLogAppenderException;
+import com.mile.exception.log.discord.model.EmbedObject;
+import com.mile.exception.log.utils.MDCUtil;
+import com.mile.exception.log.utils.StringUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;

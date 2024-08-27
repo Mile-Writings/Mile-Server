@@ -1,4 +1,4 @@
-package com.mile.log.filter.wrapper;
+package com.mile.exception.log.filter.wrapper;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;

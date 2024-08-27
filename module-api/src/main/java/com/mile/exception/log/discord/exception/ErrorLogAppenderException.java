@@ -1,4 +1,4 @@
-package com.mile.log.discord.exception;
+package com.mile.exception.log.discord.exception;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.MileException;

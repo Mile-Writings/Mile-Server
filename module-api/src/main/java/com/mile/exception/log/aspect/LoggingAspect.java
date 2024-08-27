@@ -1,7 +1,7 @@
-package com.mile.log.aspect;
+package com.mile.exception.log.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.log.filter.wrapper.CachedBodyRequestWrapper;
+import com.mile.exception.log.filter.wrapper.CachedBodyRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -24,12 +24,34 @@ public class LoggingAspect {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Pointcut("execution(* com.mile.handler.GlobalExceptionHandler.handleException*(..))")
+    @Pointcut("execution(* com.mile.exception.handler.GlobalExceptionHandler.handleException*(..))")
     public void controllerErrorLevelExecute() {
     }
+    @Pointcut("execution(* com.mile.controller..*(..)) || ( execution(* com.mile.exception.handler..*(..)) && !execution(* com.mile.exception.handler.GlobalExceptionHandler.handleException*(..)))")
+    public void controllerInfoLevelExecute() {
+    }
 
+    @Around("com.mile.exception.log.aspect.LoggingAspect.controllerInfoLevelExecute()")
+    public Object requestInfoLevelLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        final CachedBodyRequestWrapper cachedBodyRequestWrapper = new CachedBodyRequestWrapper(request);
+        long startAt = System.currentTimeMillis();
+        Object returnValue = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
+        long endAt = System.currentTimeMillis();
 
-    @Around("com.mile.log.aspect.LoggingAspect.controllerErrorLevelExecute()")
+        log.info("================================================NEW===============================================");
+        log.info("====> Request: {} {} ({}ms)\n *Header = {}", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
+        if ("POST".equalsIgnoreCase(request.getMethod())) {
+            log.info("====> Body: {}", objectMapper.readTree(cachedBodyRequestWrapper.getBody()));
+        }
+        if (returnValue != null) {
+            log.info("====> Response: {}", returnValue);
+        }
+        log.info("================================================END===============================================");
+        return returnValue;
+    }
+
+    @Around("com.mile.exception.log.aspect.LoggingAspect.controllerErrorLevelExecute()")
     public Object requestErrorLevelLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         final CachedBodyRequestWrapper cachedBodyRequestWrapper = new CachedBodyRequestWrapper(request);

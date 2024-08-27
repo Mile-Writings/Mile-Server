@@ -1,4 +1,4 @@
-package com.mile.log.utils;
+package com.mile.exception.log.utils;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;

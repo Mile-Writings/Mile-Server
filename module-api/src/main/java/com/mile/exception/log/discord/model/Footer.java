@@ -1,13 +1,12 @@
-package com.mile.log.discord.model;
+package com.mile.exception.log.discord.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class Author {
+public class Footer {
 
-    private final String name;
-    private final String url;
+    private final String text;
     private final String iconUrl;
 }

@@ -1,4 +1,4 @@
-package com.mile.log.discord.model;
+package com.mile.exception.log.discord.model;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;

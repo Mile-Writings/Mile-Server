@@ -1,6 +1,6 @@
-package com.mile.log.filter;
+package com.mile.exception.log.filter;
 
-import com.mile.log.filter.wrapper.CachedBodyRequestWrapper;
+import com.mile.exception.log.filter.wrapper.CachedBodyRequestWrapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.mile.log.utils;
+package com.mile.exception.log.utils;
 
 
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
-import com.mile.log.discord.model.JsonObject;
+import com.mile.exception.log.discord.model.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

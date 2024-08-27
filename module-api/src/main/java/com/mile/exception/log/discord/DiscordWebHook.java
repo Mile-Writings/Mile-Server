@@ -1,15 +1,15 @@
-package com.mile.log.discord;
+package com.mile.exception.log.discord;
 
 
-import com.mile.log.discord.exception.ErrorLogAppenderException;
-import com.mile.log.discord.model.Author;
-import com.mile.log.discord.model.EmbedObject;
-import com.mile.log.discord.model.Field;
-import com.mile.log.discord.model.Footer;
-import com.mile.log.discord.model.Image;
-import com.mile.log.discord.model.JsonObject;
-import com.mile.log.discord.model.Thumbnail;
-import com.mile.log.utils.ApiCallUtil;
+import com.mile.exception.log.discord.exception.ErrorLogAppenderException;
+import com.mile.exception.log.discord.model.Author;
+import com.mile.exception.log.discord.model.EmbedObject;
+import com.mile.exception.log.discord.model.Field;
+import com.mile.exception.log.discord.model.Footer;
+import com.mile.exception.log.discord.model.JsonObject;
+import com.mile.exception.log.discord.model.Thumbnail;
+import com.mile.exception.log.utils.ApiCallUtil;
+import com.mile.exception.log.discord.model.Image;
 
 import java.awt.Color;
 import java.io.IOException;

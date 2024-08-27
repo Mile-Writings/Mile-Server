@@ -1,4 +1,4 @@
-package com.mile.handler;
+package com.mile.exception.handler;
 
 import com.mile.dto.ErrorResponse;
 import com.mile.exception.message.ErrorMessage;
