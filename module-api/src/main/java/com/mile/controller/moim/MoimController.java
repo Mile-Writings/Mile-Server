@@ -21,13 +21,16 @@ import com.mile.moim.service.dto.response.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.response.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.response.MoimTopicResponse;
 import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
-import com.mile.moim.service.dto.response.PopularWriterListResponse;
+import com.mile.moim.service.dto.response.MoimMostCuriousWriterResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
 import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -112,7 +116,7 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/writers/top-rank")
-    public ResponseEntity<SuccessResponse<PopularWriterListResponse>> getMostCuriousWritersOfMoim(
+    public ResponseEntity<SuccessResponse<MoimMostCuriousWriterResponse>> getMostCuriousWritersOfMoim(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
     ) {
@@ -293,4 +297,12 @@ public class MoimController implements MoimControllerSwagger {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
     }
 
+    @Override
+    @GetMapping("/{moimId}/information")
+    public ResponseEntity<SuccessResponse> getMoimTotalInformation(
+            @MoimIdPathVariable @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimTotalInformation(moimId)));
+    }
 }
