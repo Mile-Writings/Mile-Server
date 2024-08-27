@@ -27,7 +27,9 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     boolean existsWriterNameByMoimAndNormalizedName(final Moim moim, final String normalizedName);
 
-    List<WriterName> findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Long moimId, final int totalCuriousCount);
+    int countByMoim(final Moim moim);
+
+    List<WriterName> findTop2ByMoimAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Moim moim, final int totalCuriousCount);
 
     @Query("SELECT w FROM WriterName w WHERE w.moim.id = :moimId ORDER BY CASE WHEN w = :owner THEN 0 ELSE 1 END, w.id ASC")
     Page<WriterName> findByMoimIdOrderByOwnerFirstAndIdAsc(@Param("moimId") Long moimId, @Param("owner") WriterName owner, Pageable pageable);

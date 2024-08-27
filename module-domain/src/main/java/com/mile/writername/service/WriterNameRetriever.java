@@ -114,8 +114,14 @@ public class WriterNameRetriever {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
-    public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
-        return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
+    public int findNumbersOfWritersByMoim(
+            final Moim moim
+    ) {
+        return writerNameRepository.countByMoim(moim);
+    }
+
+    public List<WriterName> findTop2ByCuriousCount(final Moim moim) {
+        return writerNameRepository.findTop2ByMoimAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moim, MIN_TOTAL_CURIOUS_COUNT);
     }
 
 
