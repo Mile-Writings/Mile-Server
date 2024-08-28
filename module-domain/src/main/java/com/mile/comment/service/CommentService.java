@@ -38,8 +38,8 @@ public class CommentService {
             final Long userId
     ) {
         Comment comment = commentRetriever.findById(commentId);
-        if (commentRetriever.authenticateUserOfComment(comment, userId) &&
-                moimRetriever.isMoimOwnerEqualsUser(comment.getWriterName().getMoim(), userId)) {
+        if (!commentRetriever.authenticateUserOfComment(comment, userId) &&
+                !moimRetriever.isMoimOwnerEqualsUser(comment.getWriterName().getMoim(), userId)) {
             throw new ForbiddenException(ErrorMessage.COMMENT_ACCESS_ERROR);
         }
         commentReplyRemover.deleteRepliesByComment(comment);
