@@ -38,7 +38,7 @@ public class CommentReplyService {
     ) {
         CommentReply commentReply = commentReplyRetriever.findById(replyId);
         if (!commentReplyRetriever.authenticateReplyWithUserId(userId, commentReply) &&
-                moimRetriever.isMoimOwnerEqualsUser(commentReply.getWriterName().getMoim(), userId)) {
+                !moimRetriever.isMoimOwnerEqualsUser(commentReply.getWriterName().getMoim(), userId)) {
             throw new ForbiddenException(ErrorMessage.REPLY_USER_FORBIDDEN);
         }
 
