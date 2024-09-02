@@ -134,7 +134,7 @@ public class MoimService {
         return MoimMostCuriousWriterResponse.of(writers);
     }
 
-    public MoimMostCuriousWriterResponse getMoistCuriousWritersOfMoimForTotal(
+    public MoimMostCuriousWriterResponse getMostCuriousWritersOfMoimForTotal(
             final Moim moim
     ) {
         List<WriterName> writerNames = writerNameRetriever.findTop2ByCuriousCount(moim);
@@ -178,7 +178,7 @@ public class MoimService {
     public MoimOverallInfoResponse getMoimTotalInformation(final Long moimId) {
         Moim moim = moimRetriever.findById(moimId);
         MoimInfoResponse moimInfoResponse = getMoimInfoForTotal(moim);
-        MoimMostCuriousWriterResponse mostCuriousWriterResponse = getMoistCuriousWritersOfMoimForTotal(moim);
+        MoimMostCuriousWriterResponse mostCuriousWriterResponse = getMostCuriousWritersOfMoimForTotal(moim);
         MoimCuriousPostListResponse moimCuriousPostListResponse = postRetriever.getMostCuriousPostByMoimForTotal(moim);
         return new MoimOverallInfoResponse(moimInfoResponse, moimCuriousPostListResponse, mostCuriousWriterResponse);
     }
