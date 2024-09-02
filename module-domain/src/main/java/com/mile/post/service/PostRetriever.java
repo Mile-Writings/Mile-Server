@@ -130,7 +130,6 @@ public class PostRetriever {
         return post.getWriterName().equals(writerName);
     }
 
-
     public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
         return MoimCuriousPostListResponse.of(postList
@@ -138,6 +137,15 @@ public class PostRetriever {
                 .map(p ->
                         MoimMostCuriousPostResponse.of(p.getIdUrl(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), p.getContent(), p.isContainPhoto())
                 ).collect(Collectors.toList()));
+    }
+
+    public MoimCuriousPostListResponse getMostCuriousPostByMoimForTotal(final Moim moim) {
+        List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
+        return MoimCuriousPostListResponse.of(
+                postList.stream()
+                        .map((p ->
+                        MoimMostCuriousPostResponse.of(p.getIdUrl(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), p.getContent(), p.isContainPhoto())
+                )).toList());
     }
 
     public int findPostCountByWriterNameId(

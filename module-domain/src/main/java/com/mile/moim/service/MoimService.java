@@ -4,27 +4,28 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.service.dto.request.MoimCreateRequest;
+import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
+import com.mile.moim.service.dto.request.TopicCreateRequest;
+import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.BestMoimListResponse;
 import com.mile.moim.service.dto.response.ContentListResponse;
 import com.mile.moim.service.dto.response.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.response.MoimAuthenticateResponse;
-import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.response.MoimCreateResponse;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
-import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.response.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.response.MoimInfoResponse;
 import com.mile.moim.service.dto.response.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.response.MoimMostCuriousWriterResponse;
 import com.mile.moim.service.dto.response.MoimNameConflictCheckResponse;
+import com.mile.moim.service.dto.response.MoimOverallInfoResponse;
 import com.mile.moim.service.dto.response.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.response.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.response.MoimTopicResponse;
 import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
-import com.mile.moim.service.dto.response.PopularWriterListResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
-import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.moim.service.dto.response.TopicListResponse;
-import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.post.domain.Post;
@@ -125,11 +126,19 @@ public class MoimService {
         return MoimAuthenticateResponse.of(writerNameRetriever.isUserInMoim(moimId, userId), moimRetriever.isMoimOwnerEqualsUser(moimRetriever.findById(moimId), userId));
     }
 
-    public PopularWriterListResponse getMostCuriousWritersOfMoim(
+    public MoimMostCuriousWriterResponse getMostCuriousWritersOfMoim(
             final Long moimId
     ) {
-        List<WriterName> writers = writerNameRetriever.findTop2ByCuriousCount(moimId);
-        return PopularWriterListResponse.of(writers);
+        Moim moim = moimRetriever.findById(moimId);
+        List<WriterName> writers = writerNameRetriever.findTop2ByCuriousCount(moim);
+        return MoimMostCuriousWriterResponse.of(writers);
+    }
+
+    public MoimMostCuriousWriterResponse getMostCuriousWritersOfMoimForTotal(
+            final Moim moim
+    ) {
+        List<WriterName> writerNames = writerNameRetriever.findTop2ByCuriousCount(moim);
+        return MoimMostCuriousWriterResponse.of(writerNames);
     }
 
 
@@ -153,8 +162,30 @@ public class MoimService {
         );
     }
 
+    public MoimInfoResponse getMoimInfoForTotal(
+            final Moim moim
+    ) {
+        return MoimInfoResponse.of(
+                moim.getImageUrl(),
+                moim.getName(),
+                moim.getOwner().getName(),
+                moim.getInformation(),
+                writerNameRetriever.findNumbersOfWritersByMoim(moim),
+                DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
+        );
+    }
+
+    public MoimOverallInfoResponse getMoimTotalInformation(final Long moimId) {
+        Moim moim = moimRetriever.findById(moimId);
+        MoimInfoResponse moimInfoResponse = getMoimInfoForTotal(moim);
+        MoimMostCuriousWriterResponse mostCuriousWriterResponse = getMostCuriousWritersOfMoimForTotal(moim);
+        MoimCuriousPostListResponse moimCuriousPostListResponse = postRetriever.getMostCuriousPostByMoimForTotal(moim);
+        return new MoimOverallInfoResponse(moimInfoResponse, moimCuriousPostListResponse, mostCuriousWriterResponse);
+    }
+
     public MoimCuriousPostListResponse getMostCuriousPostFromMoim(final Long moimId) {
-        return postRetriever.getMostCuriousPostByMoim(moimRetriever.findById(moimId));
+        Moim moim = moimRetriever.findById(moimId);
+        return postRetriever.getMostCuriousPostByMoim(moim);
     }
 
     public TopicListResponse getTopicList(
