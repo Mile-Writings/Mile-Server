@@ -46,4 +46,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     @Modifying
     @Query("DELETE FROM WriterName w WHERE w.moim = :moim AND w != :owner")
     void deleteWritersExceptOwner(@Param("moim") Moim moim, @Param("owner") WriterName owner);
+
+    @Query("SELECT w FROM WriterName w WHERE w.moim = :moim AND w NOT IN :writerNames ORDER BY w.totalCuriousCount LIMIT :requiredSize")
+    List<WriterName> findCuriousWriterNameNotIn(@Param("moim") final Moim moim, @Param("writerNames") final List<WriterName> writerNames, @Param("requiredSize") final int requiredSize);
 }

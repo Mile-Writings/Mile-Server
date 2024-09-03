@@ -146,4 +146,7 @@ public class PostRetriever {
                 .collect(Collectors.toList());
     }
 
+    public List<MoimCuriousPost> findCuriousPostNotIn(final Moim moim, final List<Post> posts) {
+        return postRepository.findCuriousPostByMoimNotIn(moim, posts).stream().map(MoimCuriousPost::of).toList();
+    }
 }

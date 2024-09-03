@@ -146,12 +146,16 @@ public class MoimService {
 
 
     private MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
-        List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
-
-        mostCuriousPostsInLastWeek.sort(Collections.reverseOrder());
+        List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim).stream().filter(p -> p.getCount() > 0)
+                .sorted(Collections.reverseOrder()).toList();
 
         List<MoimCuriousPost> moimCuriousPosts = mostCuriousPostsInLastWeek.stream().map(p ->
-                MoimCuriousPost.of(p.getPost())).limit(2).toList();
+                MoimCuriousPost.of(p.getPost())).limit(2).collect(Collectors.toList());
+
+        if (moimCuriousPosts.size() < 2) {
+            moimCuriousPosts.addAll(postRetriever.findCuriousPostNotIn(moim,
+                    mostCuriousPostsInLastWeek.stream().map(PostAndCuriousCountInLastWeek::getPost).toList()));
+        }
 
         Map<WriterName, Long> writerNameCount = mostCuriousPostsInLastWeek.stream()
                 .collect(Collectors.groupingBy(p -> p.getPost().getWriterName(), Collectors.summingLong(PostAndCuriousCountInLastWeek::getCount)));
@@ -159,7 +163,11 @@ public class MoimService {
         List<WriterName> topTwoWriters = writerNameCount.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .limit(2)
-                .map(Map.Entry::getKey).toList();
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+
+        if (topTwoWriters.size() < 2) {
+            topTwoWriters.addAll(writerNameRetriever.findCuriousWriterNameNotIn(moim, topTwoWriters));
+        }
 
         List<MoimCuriousWriter> moimCuriousWriters = topTwoWriters.stream().map(MoimCuriousWriter::of).toList();
 
