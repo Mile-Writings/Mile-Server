@@ -1,5 +1,6 @@
 package com.mile.moim.service.dto.response;
 
+import com.mile.moim.domain.popular.MoimCuriousPost;
 import com.mile.utils.JsoupUtil;
 
 public record MoimMostCuriousPostResponse(
@@ -14,14 +15,10 @@ public record MoimMostCuriousPostResponse(
     private static final int SUBSTRING_END = 400;
 
     public static MoimMostCuriousPostResponse of(
-            String postId,
-            String imageUrl,
-            String topic,
-            String title,
-            String content,
-            boolean isContainPhoto
-    ) {
-        return new MoimMostCuriousPostResponse(postId, imageUrl, topic, title, getSubStringOfCleanContent(content), isContainPhoto);
+            final MoimCuriousPost post
+            ) {
+        return new MoimMostCuriousPostResponse(post.getIdUrl(), post.getImgUrl(), post.getTopic(),
+                post.getTitle(), getSubStringOfCleanContent(post.getContents()), post.isContainPhoto());
     }
 
     private static String getSubStringOfCleanContent(

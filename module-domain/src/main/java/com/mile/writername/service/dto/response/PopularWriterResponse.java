@@ -1,9 +1,9 @@
 package com.mile.writername.service.dto.response;
 
-import com.mile.writername.domain.WriterName;
+import com.mile.moim.domain.popular.MoimCuriousWriter;
 
-public record PopularWriterResponse(String writerName, String information) {
-    public static PopularWriterResponse of(WriterName writer) {
-        return new PopularWriterResponse(writer.getName(), writer.getInformation());
+public record PopularWriterResponse(String writerName) {
+    public static PopularWriterResponse of(MoimCuriousWriter writer) {
+        return new PopularWriterResponse(writer.getName());
     }
 }

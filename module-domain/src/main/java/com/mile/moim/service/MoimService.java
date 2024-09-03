@@ -151,7 +151,7 @@ public class MoimService {
         mostCuriousPostsInLastWeek.sort(Collections.reverseOrder());
 
         List<MoimCuriousPost> moimCuriousPosts = mostCuriousPostsInLastWeek.stream().map(p ->
-                MoimCuriousPost.of(p.getPost())).toList();
+                MoimCuriousPost.of(p.getPost())).limit(2).toList();
 
         Map<WriterName, Long> writerNameCount = mostCuriousPostsInLastWeek.stream()
                 .collect(Collectors.groupingBy(p -> p.getPost().getWriterName(), Collectors.summingLong(PostAndCuriousCountInLastWeek::getCount)));
