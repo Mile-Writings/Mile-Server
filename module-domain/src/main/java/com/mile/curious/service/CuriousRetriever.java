@@ -2,15 +2,18 @@ package com.mile.curious.service;
 
 import com.mile.curious.domain.Curious;
 import com.mile.curious.repository.CuriousRepository;
+import com.mile.curious.repository.dto.PostAndCuriousCountInLastWeek;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ConflictException;
 import com.mile.exception.model.NotFoundException;
+import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.writername.domain.WriterName;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -37,5 +40,9 @@ public class CuriousRetriever {
 
     public boolean findCuriousExists(final Post post, final WriterName writerName) {
         return curiousRepository.existsByPostAndWriterName(post, writerName);
+    }
+
+    public List<PostAndCuriousCountInLastWeek> findMostCuriousPostsInLastWeek(final Moim moim) {
+        return curiousRepository.findMostCuriousPostBeforeOneWeek(moim, LocalDateTime.now());
     }
 }
