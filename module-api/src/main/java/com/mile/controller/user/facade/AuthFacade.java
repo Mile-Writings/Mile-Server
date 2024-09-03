@@ -42,8 +42,8 @@ public class AuthFacade {
         return getTokenDto(getUserInfoResponse(authorizationCode, loginRequest));
     }
 
-    public void deleteUser(final Long userId, final String authoriztionCode, final UserLoginRequest userLoginRequest) {
-        revokeUser(authoriztionCode, userLoginRequest);
+    public void deleteUser(final Long userId, final String authorizationCode, final UserLoginRequest userLoginRequest) {
+        revokeUser(authorizationCode, userLoginRequest);
         userService.deleteUser(userId);
         tokenService.deleteRefreshToken(userId);
     }
