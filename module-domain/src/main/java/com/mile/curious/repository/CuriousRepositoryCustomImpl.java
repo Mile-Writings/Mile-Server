@@ -2,6 +2,7 @@ package com.mile.curious.repository;
 
 import com.mile.curious.repository.dto.PostAndCuriousCountInLastWeek;
 import com.mile.moim.domain.Moim;
+import com.mile.post.domain.Post;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class CuriousRepositoryImpl implements CuriousRepositoryCustom {
+public class CuriousRepositoryCustomImpl implements CuriousRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -30,6 +31,17 @@ public class CuriousRepositoryImpl implements CuriousRepositoryCustom {
                 .where(moim.id.eq(targetMoim.getId()))
                 .where(curious.createdAt.between(now.minusDays(WEEK), now))
                 .groupBy(post.id)
+                .fetch();
+    }
+
+    @Override
+    public List<Post> findPostByLatestCurious(final Moim moim, final int requestSize, final List<Post> posts) {
+        return queryFactory.select(post)
+                .from(curious)
+                .join(curious.post, post)
+                .where(post.notIn(posts))
+                .orderBy(curious.createdAt.desc())
+                .limit(requestSize)
                 .fetch();
     }
 }

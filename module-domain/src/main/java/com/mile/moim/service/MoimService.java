@@ -52,7 +52,6 @@ import com.mile.writername.service.dto.response.WriterNameShortResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -146,34 +145,32 @@ public class MoimService {
 
 
     private MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
-        List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim).stream().filter(p -> p.getCount() > 0)
-                .sorted(Collections.reverseOrder()).toList();
+        List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
 
-        List<MoimCuriousPost> moimCuriousPosts = mostCuriousPostsInLastWeek.stream().map(p ->
-                MoimCuriousPost.of(p.getPost())).limit(2).collect(Collectors.toList());
+        List<MoimCuriousPost> moimCuriousPosts = getMoimCuriousPost(mostCuriousPostsInLastWeek);
 
-        if (moimCuriousPosts.size() < 2) {
-            moimCuriousPosts.addAll(postRetriever.findCuriousPostNotIn(moim,
-                    mostCuriousPostsInLastWeek.stream().map(PostAndCuriousCountInLastWeek::getPost).toList()));
-        }
+        List<MoimCuriousWriter> moimCuriousWriters = getMoimCuriousWriter(mostCuriousPostsInLastWeek);
 
+        MoimPopularInfo moimPopularInfo = MoimPopularInfo.of(moim.getId(), moimCuriousPosts, moimCuriousWriters);
+
+        return moimPopularInfoRepository.save(moimPopularInfo);
+    }
+
+    private List<MoimCuriousPost> getMoimCuriousPost(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
+        return mostCuriousPostsInLastWeek.stream().map(p ->
+                MoimCuriousPost.of(p.getPost())).limit(2).toList();
+    }
+
+    private List<MoimCuriousWriter> getMoimCuriousWriter(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
         Map<WriterName, Long> writerNameCount = mostCuriousPostsInLastWeek.stream()
                 .collect(Collectors.groupingBy(p -> p.getPost().getWriterName(), Collectors.summingLong(PostAndCuriousCountInLastWeek::getCount)));
 
         List<WriterName> topTwoWriters = writerNameCount.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .limit(2)
-                .map(Map.Entry::getKey).collect(Collectors.toList());
+                .map(Map.Entry::getKey).toList();
 
-        if (topTwoWriters.size() < 2) {
-            topTwoWriters.addAll(writerNameRetriever.findCuriousWriterNameNotIn(moim, topTwoWriters));
-        }
-
-        List<MoimCuriousWriter> moimCuriousWriters = topTwoWriters.stream().map(MoimCuriousWriter::of).toList();
-
-        MoimPopularInfo moimPopularInfo = MoimPopularInfo.of(moim.getId(), moimCuriousPosts, moimCuriousWriters);
-
-        return moimPopularInfoRepository.save(moimPopularInfo);
+        return topTwoWriters.stream().map(MoimCuriousWriter::of).toList();
     }
 
     public MoimTopicResponse getTopicFromMoim(

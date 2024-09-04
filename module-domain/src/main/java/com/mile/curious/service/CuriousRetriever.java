@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -43,6 +45,15 @@ public class CuriousRetriever {
     }
 
     public List<PostAndCuriousCountInLastWeek> findMostCuriousPostsInLastWeek(final Moim moim) {
-        return curiousRepository.findMostCuriousPostBeforeOneWeek(moim, LocalDateTime.now());
+        List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRepository.findMostCuriousPostBeforeOneWeek(moim, LocalDateTime.now()).stream()
+                .filter(p -> p.getCount() > 0)
+                .sorted(Collections.reverseOrder()).collect(Collectors.toList());
+        if (mostCuriousPostsInLastWeek.size() < 2) {
+            mostCuriousPostsInLastWeek.addAll(
+                    curiousRepository.findPostByLatestCurious(moim, 2 - mostCuriousPostsInLastWeek.size())
+                            .stream().map(p -> new PostAndCuriousCountInLastWeek(p, 0L)).toList()
+            );
+        }
+        return mostCuriousPostsInLastWeek;
     }
 }
