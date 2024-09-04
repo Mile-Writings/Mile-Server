@@ -6,14 +6,13 @@ import com.mile.writername.domain.WriterName;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
@@ -46,7 +45,4 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     @Modifying
     @Query("DELETE FROM WriterName w WHERE w.moim = :moim AND w != :owner")
     void deleteWritersExceptOwner(@Param("moim") Moim moim, @Param("owner") WriterName owner);
-
-    @Query("SELECT w FROM WriterName w WHERE w.moim = :moim AND w NOT IN :writerNames ORDER BY w.totalCuriousCount LIMIT :requiredSize")
-    List<WriterName> findCuriousWriterNameNotIn(@Param("moim") final Moim moim, @Param("writerNames") final List<WriterName> writerNames, @Param("requiredSize") final int requiredSize);
 }

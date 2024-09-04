@@ -35,19 +35,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                 .fetch();
 
     }
-
-    public List<Post> findCuriousPostByMoimNotIn(final Moim requestMoim, final List<Post> posts) {
-        return jpaQueryFactory
-                .selectFrom(post)
-                .join(topic).on(post.topic.eq(topic))
-                .join(moim).on(topic.moim.eq(moim))
-                .where(moim.eq(requestMoim))
-                .where(post.notIn(posts))
-                .orderBy(post.curiousCount.desc())
-                .limit(2 - posts.size())
-                .fetch();
-    }
-
     public List<Post> findLatest4NonTemporaryPostsByMoim(Moim moim) {
 
         List<Post> result = jpaQueryFactory

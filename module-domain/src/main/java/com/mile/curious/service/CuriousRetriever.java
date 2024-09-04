@@ -49,8 +49,9 @@ public class CuriousRetriever {
                 .filter(p -> p.getCount() > 0)
                 .sorted(Collections.reverseOrder()).collect(Collectors.toList());
         if (mostCuriousPostsInLastWeek.size() < 2) {
+            List<Post> existingPost = mostCuriousPostsInLastWeek.stream().map(PostAndCuriousCountInLastWeek::getPost).toList();
             mostCuriousPostsInLastWeek.addAll(
-                    curiousRepository.findPostByLatestCurious(moim, 2 - mostCuriousPostsInLastWeek.size())
+                    curiousRepository.findPostByLatestCurious(moim, 2 - mostCuriousPostsInLastWeek.size(), existingPost)
                             .stream().map(p -> new PostAndCuriousCountInLastWeek(p, 0L)).toList()
             );
         }

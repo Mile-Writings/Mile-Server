@@ -13,8 +13,6 @@ import java.util.Optional;
 public interface PostRepositoryCustom {
     List<Post> findTop2ByMoimOrderByCuriousCountDesc(final Moim requestMoim);
 
-    List<Post> findCuriousPostByMoimNotIn(final Moim requestMoim, final List<Post> posts);
-
     List<Post> findLatest4NonTemporaryPostsByMoim(final Moim moim);
 
     Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim moim, final WriterName writerName);
