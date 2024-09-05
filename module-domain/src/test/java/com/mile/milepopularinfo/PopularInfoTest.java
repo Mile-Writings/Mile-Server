@@ -18,6 +18,7 @@ import com.mile.post.domain.Post;
 import com.mile.topic.domain.Topic;
 import com.mile.utils.DateUtil;
 import com.mile.writername.domain.WriterName;
+import com.mile.writername.service.WriterNameRetriever;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +47,9 @@ public class PopularInfoTest {
 
     @Mock
     private MoimRetriever moimRetriever;
+
+    @Mock
+    private WriterNameRetriever writerNameRetriever;
 
     @Test
     @DisplayName("좋아요가 눌린 게시글이 존재할 때 moimService 에서 예측한 로직대로 리턴한다.")
@@ -92,6 +96,7 @@ public class PopularInfoTest {
                 DateUtil.getStringDateOfLocalDate(date));
 
         when(curiousRetriever.findMostCuriousPostsInLastWeek(moim)).thenReturn(mockResult);
+        when(writerNameRetriever.findNumbersOfWritersByMoim(moim)).thenReturn(0);
         when(moimRetriever.getMoimInfoForTotal(moim, 0)).thenReturn(moimInfoResponse);
         when(moimRetriever.findById(1L)).thenReturn(moim);
         when(moimPopularInfoRepository.save(any())).thenReturn(moimPopularInfo);
