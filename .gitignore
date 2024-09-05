@@ -7,3 +7,5 @@ module-common/build/
 module-domain/build/
 module-auth/build/
 module-api/src/main/resources/application.yml
+
+module-domain/src/test/resources/application.yml

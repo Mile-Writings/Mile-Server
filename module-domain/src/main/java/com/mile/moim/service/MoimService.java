@@ -193,22 +193,10 @@ public class MoimService {
         );
     }
 
-    public MoimInfoResponse getMoimInfoForTotal(
-            final Moim moim
-    ) {
-        return MoimInfoResponse.of(
-                moim.getImageUrl(),
-                moim.getName(),
-                moim.getOwner().getName(),
-                moim.getInformation(),
-                writerNameRetriever.findNumbersOfWritersByMoim(moim),
-                DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
-        );
-    }
-
     public MoimOverallInfoResponse getMoimTotalInformation(final Long moimId) {
         Moim moim = moimRetriever.findById(moimId);
-        MoimInfoResponse moimInfoResponse = getMoimInfoForTotal(moim);
+        MoimInfoResponse moimInfoResponse = moimRetriever.getMoimInfoForTotal(moim,
+                writerNameRetriever.findNumbersOfWritersByMoim(moim));
         MoimPopularInfo moimPopularInfo = moimPopularInfoRepository.findByMoimId(moimId).orElseGet(
                 () -> setMostPopularInfoOfMoim(moim)
         );
