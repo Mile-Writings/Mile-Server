@@ -1,7 +1,7 @@
 package com.mile.moim.service.dto.response;
 
 import com.mile.moim.domain.popular.MoimCuriousPost;
-import com.mile.utils.JsoupUtil;
+import com.mile.common.utils.JsoupUtil;
 
 public record MoimMostCuriousPostResponse(
         String postId,

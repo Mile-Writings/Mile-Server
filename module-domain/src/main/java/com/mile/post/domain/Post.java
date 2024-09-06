@@ -1,6 +1,6 @@
 package com.mile.post.domain;
 
-import com.mile.config.BaseTimeEntity;
+import com.mile.common.config.BaseTimeEntity;
 import com.mile.post.service.dto.request.PostPutRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;

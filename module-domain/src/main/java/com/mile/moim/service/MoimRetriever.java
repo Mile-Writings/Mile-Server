@@ -8,7 +8,7 @@ import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.response.MoimInfoResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.user.domain.User;
-import com.mile.utils.DateUtil;
+import com.mile.common.utils.DateUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

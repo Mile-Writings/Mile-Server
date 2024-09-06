@@ -1,7 +1,7 @@
 package com.mile.moim.service.dto.response;
 
 import com.mile.post.domain.Post;
-import com.mile.utils.JsoupUtil;
+import com.mile.common.utils.JsoupUtil;
 
 public record BestMoimPostResponse(String postId, String topicName, String imageUrl, String postTitle,
                                    String postContent, Boolean isContainPhoto) {

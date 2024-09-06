@@ -1,4 +1,4 @@
-package com.mile.utils;
+package com.mile.common.utils;
 
 import org.springframework.stereotype.Component;
 

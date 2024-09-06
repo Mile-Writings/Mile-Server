@@ -1,4 +1,4 @@
-package com.mile.config;
+package com.mile.common.config;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

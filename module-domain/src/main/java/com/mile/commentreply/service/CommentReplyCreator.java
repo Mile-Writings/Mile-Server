@@ -4,7 +4,7 @@ import com.mile.comment.domain.Comment;
 import com.mile.commentreply.domain.CommentReply;
 import com.mile.commentreply.repository.CommentReplyRepository;
 import com.mile.commentreply.service.dto.request.ReplyCreateRequest;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

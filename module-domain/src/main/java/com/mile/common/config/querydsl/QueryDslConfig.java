@@ -1,4 +1,4 @@
-package com.mile.config.querydsl;
+package com.mile.common.config.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

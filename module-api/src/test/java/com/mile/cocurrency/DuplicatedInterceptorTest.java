@@ -13,7 +13,7 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import org.junit.jupiter.api.BeforeEach;

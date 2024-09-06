@@ -2,7 +2,7 @@ package com.mile.common.resolver.post;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

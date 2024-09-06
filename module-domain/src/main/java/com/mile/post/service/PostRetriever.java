@@ -10,7 +10,7 @@ import com.mile.moim.service.dto.response.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.topic.domain.Topic;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;

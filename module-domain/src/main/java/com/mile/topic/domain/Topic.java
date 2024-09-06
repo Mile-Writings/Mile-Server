@@ -1,6 +1,6 @@
 package com.mile.topic.domain;
 
-import com.mile.config.BaseTimeEntity;
+import com.mile.common.config.BaseTimeEntity;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.topic.service.dto.request.TopicPutRequest;

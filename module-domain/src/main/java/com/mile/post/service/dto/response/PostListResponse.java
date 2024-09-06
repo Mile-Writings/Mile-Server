@@ -1,10 +1,8 @@
 package com.mile.post.service.dto.response;
 
 import com.mile.post.domain.Post;
-import com.mile.utils.DateUtil;
-import com.mile.utils.JsoupUtil;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
+import com.mile.common.utils.DateUtil;
+import com.mile.common.utils.JsoupUtil;
 
 public record PostListResponse(
         String postId,

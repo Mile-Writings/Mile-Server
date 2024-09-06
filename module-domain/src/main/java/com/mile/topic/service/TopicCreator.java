@@ -4,7 +4,7 @@ import com.mile.moim.domain.Moim;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
