@@ -1,15 +1,14 @@
 package com.mile.moim.service;
 
-import com.mile.curious.repository.dto.PostAndCuriousCountInLastWeek;
+import com.mile.common.utils.DateUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.curious.service.CuriousRetriever;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
-import com.mile.moim.domain.popular.MoimCuriousPost;
 import com.mile.moim.domain.popular.MoimCuriousWriter;
 import com.mile.moim.domain.popular.MoimPopularInfo;
-import com.mile.moim.repository.MoimPopularInfoRepository;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
@@ -35,6 +34,7 @@ import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
+import com.mile.moim.service.popular.MoimPopularInfoService;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostRetriever;
 import com.mile.topic.service.TopicCreator;
@@ -42,8 +42,6 @@ import com.mile.topic.service.TopicRemover;
 import com.mile.topic.service.TopicRetriever;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserRetriever;
-import com.mile.common.utils.DateUtil;
-import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRemover;
 import com.mile.writername.service.WriterNameRetriever;
@@ -73,7 +71,7 @@ public class MoimService {
     private final TopicRemover topicRemover;
     private final TopicRetriever topicRetriever;
     private final TopicCreator topicCreator;
-    private final MoimPopularInfoRepository moimPopularInfoRepository;
+    private final MoimPopularInfoService moimPopularInfoService;
 
     private static final int WRITER_NAME_MAX_VALUE = 8;
     private static final int MOIM_NAME_MAX_VALUE = 10;
@@ -144,35 +142,6 @@ public class MoimService {
     }
 
 
-    private MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
-        List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
-
-        List<MoimCuriousPost> moimCuriousPosts = getMoimCuriousPost(mostCuriousPostsInLastWeek);
-
-        List<MoimCuriousWriter> moimCuriousWriters = getMoimCuriousWriter(mostCuriousPostsInLastWeek);
-
-        MoimPopularInfo moimPopularInfo = MoimPopularInfo.of(moim.getId(), moimCuriousPosts, moimCuriousWriters);
-
-        return moimPopularInfoRepository.save(moimPopularInfo);
-    }
-
-    private List<MoimCuriousPost> getMoimCuriousPost(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
-        return mostCuriousPostsInLastWeek.stream().map(p ->
-                MoimCuriousPost.of(p.getPost())).limit(2).toList();
-    }
-
-    private List<MoimCuriousWriter> getMoimCuriousWriter(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
-        Map<WriterName, Long> writerNameCount = mostCuriousPostsInLastWeek.stream()
-                .collect(Collectors.groupingBy(p -> p.getPost().getWriterName(), Collectors.summingLong(PostAndCuriousCountInLastWeek::getCount)));
-
-        List<WriterName> topTwoWriters = writerNameCount.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .limit(2)
-                .map(Map.Entry::getKey).toList();
-
-        return topTwoWriters.stream().map(MoimCuriousWriter::of).toList();
-    }
-
     public MoimTopicResponse getTopicFromMoim(
             final Long moimId
     ) {
@@ -193,13 +162,11 @@ public class MoimService {
         );
     }
 
+
     public MoimOverallInfoResponse getMoimTotalInformation(final Long moimId) {
         Moim moim = moimRetriever.findById(moimId);
-        MoimInfoResponse moimInfoResponse = moimRetriever.getMoimInfoForTotal(moim,
-                writerNameRetriever.findNumbersOfWritersByMoim(moim));
-        MoimPopularInfo moimPopularInfo = moimPopularInfoRepository.findByMoimId(moimId).orElseGet(
-                () -> setMostPopularInfoOfMoim(moim)
-        );
+        MoimInfoResponse moimInfoResponse = moimRetriever.getMoimInfoForTotal(moim, writerNameRetriever.findNumbersOfWritersByMoim(moim));
+        MoimPopularInfo moimPopularInfo = moimPopularInfoService.getMoimPopularInfo(moim);
         MoimMostCuriousWriterResponse mostCuriousWriterResponse = MoimMostCuriousWriterResponse.of(moimPopularInfo.getWriters());
         MoimCuriousPostListResponse moimCuriousPostListResponse = MoimCuriousPostListResponse.of(
                 moimPopularInfo.getPosts().stream().map(MoimMostCuriousPostResponse::of).toList()
