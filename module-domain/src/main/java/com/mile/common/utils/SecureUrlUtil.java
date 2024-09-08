@@ -1,4 +1,4 @@
-package com.mile.utils;
+package com.mile.common.utils;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;

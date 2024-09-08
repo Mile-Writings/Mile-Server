@@ -124,7 +124,6 @@ public class WriterNameRetriever {
         return writerNameRepository.findTop2ByMoimAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moim, MIN_TOTAL_CURIOUS_COUNT);
     }
 
-
     public Page<WriterName> findWriterNameByMoimIdOrderByOwnerFirstAndIdAsc(final Long moimId, final WriterName owner, final PageRequest pageRequest) {
         return writerNameRepository.findByMoimIdOrderByOwnerFirstAndIdAsc(moimId, owner, pageRequest);
     }

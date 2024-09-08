@@ -2,7 +2,7 @@ package com.mile.topic.service;
 
 import com.mile.comment.service.CommentRetriever;
 import com.mile.commentreply.service.CommentReplyRetriever;
-import com.mile.config.BaseTimeEntity;
+import com.mile.common.config.BaseTimeEntity;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.ForbiddenException;
@@ -23,7 +23,7 @@ import com.mile.topic.service.dto.response.TopicOfMoimResponse;
 import com.mile.topic.service.dto.response.TopicResponse;
 import com.mile.user.domain.User;
 import com.mile.user.service.UserRetriever;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

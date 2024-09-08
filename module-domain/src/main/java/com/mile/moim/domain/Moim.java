@@ -1,6 +1,6 @@
 package com.mile.moim.domain;
 
-import com.mile.config.BaseTimeEntity;
+import com.mile.common.config.BaseTimeEntity;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.writername.domain.WriterName;

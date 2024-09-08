@@ -1,4 +1,4 @@
-package com.mile.utils;
+package com.mile.common.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

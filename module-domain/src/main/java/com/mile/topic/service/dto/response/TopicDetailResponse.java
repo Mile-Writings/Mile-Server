@@ -1,7 +1,7 @@
 package com.mile.topic.service.dto.response;
 
 import com.mile.topic.domain.Topic;
-import com.mile.utils.DateUtil;
+import com.mile.common.utils.DateUtil;
 
 public record TopicDetailResponse(
         String topicName,

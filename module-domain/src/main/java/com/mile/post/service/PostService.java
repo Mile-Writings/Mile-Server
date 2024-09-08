@@ -26,7 +26,7 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.service.TopicRetriever;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.response.ContentWithIsSelectedResponse;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.dto.response.WriterNameResponse;
