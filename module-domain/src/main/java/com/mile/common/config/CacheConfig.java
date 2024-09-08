@@ -23,7 +23,7 @@ public class CacheConfig {
     }
 
     private Scheduler getScheduler() {
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
         Scheduler scheduler;
         scheduler = Scheduler.forScheduledExecutorService(executor);
         return scheduler;
