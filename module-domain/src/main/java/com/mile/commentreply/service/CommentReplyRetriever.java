@@ -26,7 +26,7 @@ public class CommentReplyRetriever {
             final Long replyId
     ) {
         return commentReplyRepository.findById(replyId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.REPLY_NOT_FOUND)
+                () -> new NotFoundException(ErrorMessage.COMMENT_NOT_FOUND)
         );
     }
 

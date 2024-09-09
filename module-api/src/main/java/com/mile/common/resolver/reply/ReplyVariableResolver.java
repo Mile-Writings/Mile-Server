@@ -3,6 +3,7 @@ package com.mile.common.resolver.reply;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.common.utils.SecureUrlUtil;
+import com.mile.exception.model.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -36,7 +37,7 @@ public class ReplyVariableResolver implements HandlerMethodArgumentResolver {
         try {
             return secureUrlUtil.decodeUrl(replyId);
         } catch (NumberFormatException e) {
-            throw new BadRequestException(ErrorMessage.INVALID_URL_EXCEPTION);
+            throw new NotFoundException(ErrorMessage.INVALID_URL_EXCEPTION);
         }
     }
 }

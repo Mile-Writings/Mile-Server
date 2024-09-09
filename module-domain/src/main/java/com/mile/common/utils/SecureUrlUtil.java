@@ -2,6 +2,7 @@ package com.mile.common.utils;
 
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
+import com.mile.exception.model.NotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
@@ -17,7 +18,7 @@ public class SecureUrlUtil {
         try {
             return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
         } catch (IllegalArgumentException e) {
-            throw new BadRequestException(ErrorMessage.PATH_PARAMETER_INVALID_ERROR);
+            throw new NotFoundException(ErrorMessage.PATH_PARAMETER_INVALID_ERROR);
         }
     }
 

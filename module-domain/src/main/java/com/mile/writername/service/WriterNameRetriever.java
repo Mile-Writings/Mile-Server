@@ -37,7 +37,7 @@ public class WriterNameRetriever {
 
     public WriterName findById(final Long id) {
         return writerNameRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
     }
 
