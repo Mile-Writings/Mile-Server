@@ -65,7 +65,7 @@ public class MoimControllerTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final int OK = 200;
     private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
+    private static final int NOT_FOUND = 404;
     private static Long USER_ID;
     private static String MOIM_ID;
     private static String randomString;
@@ -132,7 +132,7 @@ public class MoimControllerTest {
         ).andDo(print()).andReturn();
 
         //then
-        assertThat(result.getResponse().getStatus()).isEqualTo(BAD_REQUEST);
+        assertThat(result.getResponse().getStatus()).isEqualTo(NOT_FOUND);
 
     }
 
