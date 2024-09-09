@@ -141,7 +141,7 @@ public class TopicRetriever {
             final List<Topic> topicList
     ) {
         if (topicList.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.KEYWORD_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.TOPIC_NOT_FOUND);
         }
     }
 
@@ -186,7 +186,7 @@ public class TopicRetriever {
     ) {
         return topicRepository.findLatestTopicByMoim(moim)
                 .orElseThrow(
-                        () -> new NotFoundException(ErrorMessage.MOIM_TOPIC_NOT_FOUND)
+                        () -> new NotFoundException(ErrorMessage.TOPIC_NOT_FOUND)
                 );
     }
 
