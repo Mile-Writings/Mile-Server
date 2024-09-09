@@ -21,8 +21,7 @@ public enum ErrorMessage {
     CURIOUS_NOT_FOUND(40407, "해당 궁금해요는 존재하지 않습니다."),
     TOPIC_NOT_FOUND(40408, "글감이 존재하지 않습니다."),
     RECOMMEND_NOT_FOUND(40412, "추천 글감을 받아오는데 실패했습니다."),
-    PATH_PARAMETER_INVALID_ERROR(40413, "해당 URI는 자원을 표시할 수 없습니다."),
-    INVALID_URL_EXCEPTION(40414, "해당 URI는 자원을 표시할 수 없습니다."),
+    INVALID_URL_EXCEPTION(40413, "해당 URI는 자원을 표시할 수 없습니다."),
     /*
     Bad Request
      */

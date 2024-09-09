@@ -18,7 +18,7 @@ public class SecureUrlUtil {
         try {
             return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
         } catch (IllegalArgumentException e) {
-            throw new NotFoundException(ErrorMessage.PATH_PARAMETER_INVALID_ERROR);
+            throw new NotFoundException(ErrorMessage.INVALID_URL_EXCEPTION);
         }
     }
 
