@@ -200,8 +200,10 @@ public class MoimControllerTest {
     @DisplayName("글모임에 정상적으로 가입된다.")
     public void joinMoimTest() throws Exception {
         //given
+        randomString = UUID.randomUUID().toString().substring(0, 6);
+        User user = userRepository.saveAndFlush(User.of(randomString, randomString, SocialType.GOOGLE));
         String randomShortString = UUID.randomUUID().toString().substring(0, 6);
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(user.getId(), joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/user";
         String requestBody = objectMapper.writeValueAsString(
                 WriterMemberJoinRequest.of(
