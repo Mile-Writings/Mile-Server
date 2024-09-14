@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,9 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if(handler instanceof ResourceHttpRequestHandler) {
+            return true;
+        }
         HandlerMethod method = (HandlerMethod) handler;
 
         UserAuthAnnotation annotation = method.getMethodAnnotation(UserAuthAnnotation.class);
