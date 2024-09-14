@@ -115,8 +115,12 @@ public class JwtTokenProvider {
         return Long.valueOf(claims.get(MEMBER_ID).toString());
     }
 
+    public HashMap<Long, MoimRole> getJoinedRoleFromHeader(final String token) {
+        return getJoinedRoleFromJwt(getTokenFromHeader(token));
+    }
+
     public HashMap<Long, MoimRole> getJoinedRoleFromJwt(final String token) {
-        Claims claims = getBody(getTokenFromHeader(token));
+        Claims claims = getBody(token);
         Object joinedRole = claims.get(JOINED_ROLE);
         return objectMapper.convertValue(joinedRole, HashMap.class);
     }

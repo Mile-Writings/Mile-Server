@@ -2,6 +2,7 @@ package com.mile.config;
 
 
 import com.mile.common.interceptor.DuplicatedInterceptor;
+import com.mile.common.interceptor.MoimAuthInterceptor;
 import com.mile.common.resolver.comment.CommentVariableResolver;
 import com.mile.common.resolver.moim.MoimVariableResolver;
 import com.mile.common.resolver.post.PostVariableResolver;
@@ -27,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final CommentVariableResolver commentVariableResolver;
     private final ReplyVariableResolver replyVariableResolver;
     private final DuplicatedInterceptor duplicatedInterceptor;
+    private final MoimAuthInterceptor moimAuthInterceptor;
     private final UserIdHeaderResolver userIdHeaderResolver;
 
     @Value("${client.local}")
@@ -60,6 +62,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(duplicatedInterceptor)
                 .addPathPatterns("/api/post/temporary", "/api/post", "/api/post/{postId}/comment","/api/comment/{commentId}", "/api/moim/{moimId}/topic");
+        registry.addInterceptor(moimAuthInterceptor);
     }
 
     @Override

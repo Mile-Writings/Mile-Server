@@ -78,10 +78,8 @@ public class MoimService {
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
 
     public ContentListResponse getContentsFromMoim(
-            final Long moimId,
-            final Long userId
+            final Long moimId
     ) {
-        postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
         return ContentListResponse.of(topicRetriever.getContentsFromMoim(moimId));
     }
 
@@ -335,11 +333,9 @@ public class MoimService {
     }
 
     public MoimInfoOwnerResponse getMoimInfoForOwner(
-            final Long moimId,
-            final Long userId
+            final Long moimId
     ) {
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         return MoimInfoOwnerResponse.of(moim);
     }
 

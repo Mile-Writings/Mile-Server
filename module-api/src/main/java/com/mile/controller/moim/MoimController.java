@@ -1,31 +1,33 @@
 package com.mile.controller.moim;
 
+import com.mile.common.auth.annotation.UserAuthAnnotation;
+import com.mile.common.auth.annotation.UserAuthenticationType;
 import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.request.MoimCreateRequest;
+import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
+import com.mile.moim.service.dto.request.TopicCreateRequest;
+import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.BestMoimListResponse;
 import com.mile.moim.service.dto.response.ContentListResponse;
 import com.mile.moim.service.dto.response.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.response.MoimAuthenticateResponse;
-import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.response.MoimCreateResponse;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
-import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.response.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.response.MoimInfoResponse;
 import com.mile.moim.service.dto.response.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.response.MoimMostCuriousWriterResponse;
 import com.mile.moim.service.dto.response.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.response.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.response.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.response.MoimTopicResponse;
 import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
-import com.mile.moim.service.dto.response.MoimMostCuriousWriterResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
-import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.moim.service.dto.response.TopicListResponse;
-import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
 import com.mile.writername.service.dto.response.WriterNameShortResponse;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,7 +48,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,13 +58,14 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}")
+    @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @MoimIdPathVariable final Long moimId,
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TOPIC_SEARCH_SUCCESS,
-                moimService.getContentsFromMoim(moimId, userId));
+                moimService.getContentsFromMoim(moimId));
     }
 
 
@@ -167,12 +169,13 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/info/owner")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
             @MoimIdPathVariable final Long moimId,
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId)));
     }
 
     @Override
