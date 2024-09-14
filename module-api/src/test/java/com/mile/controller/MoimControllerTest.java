@@ -127,7 +127,7 @@ public class MoimControllerTest {
     public void parameterErrorTest() throws Exception {
         //given
         String variable = UUID.randomUUID().toString();
-        String requestUri = "/api/moim/" + variable;
+        String requestUri = "/api/moim/" + variable + "/information";
 
         //when
         MvcResult result = mockMvc.perform(
