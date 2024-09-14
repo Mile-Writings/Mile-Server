@@ -9,6 +9,7 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.domain.popular.MoimCuriousWriter;
 import com.mile.moim.domain.popular.MoimPopularInfo;
+import com.mile.moim.service.dto.MoimIdValueDto;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
@@ -296,7 +297,7 @@ public class MoimService {
     }
 
     @AtomicValidateUniqueMoimName
-    public MoimCreateResponse createMoim(
+    public MoimIdValueDto createMoim(
             final Long userId,
             final MoimCreateRequest createRequest
     ) {
@@ -307,7 +308,7 @@ public class MoimService {
         setMoimOwner(moim, user, createRequest);
         setFirstTopic(moim, userId, createRequest);
 
-        return MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl());
+        return MoimIdValueDto.of(moim.getId(), MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl()));
     }
 
     private void setMoimOwner(

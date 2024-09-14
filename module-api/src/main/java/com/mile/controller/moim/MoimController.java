@@ -1,12 +1,15 @@
 package com.mile.controller.moim;
 
+import com.mile.common.auth.JwtTokenUpdater;
 import com.mile.common.auth.annotation.UserAuthAnnotation;
 import com.mile.common.auth.annotation.UserAuthenticationType;
+import com.mile.common.auth.dto.AccessTokenDto;
 import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.MoimIdValueDto;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
@@ -29,6 +32,7 @@ import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
+import com.mile.writername.domain.MoimRole;
 import com.mile.writername.service.dto.response.WriterNameShortResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -48,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +60,7 @@ import java.net.URI;
 public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
+    private final JwtTokenUpdater jwtTokenUpdater;
 
     @Override
     @GetMapping("/{moimId}")
@@ -81,16 +87,17 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
-    @PostMapping("{moimId}/user")
+    @PostMapping("/{moimId}/user")
     public ResponseEntity<SuccessResponse> joinMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final WriterMemberJoinRequest joinRequest,
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(
-                        moimService.joinMoim(moimId, userId, joinRequest).toString()))
-                .body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS));
+        return ResponseEntity.created(URI.create(moimService.joinMoim(moimId, userId, joinRequest).toString()))
+                .body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS,
+                        AccessTokenDto.of(jwtTokenUpdater.setAccessToken(userId, moimId, MoimRole.WRITER)
+                        )));
     }
 
     @Override
@@ -241,11 +248,19 @@ public class MoimController implements MoimControllerSwagger {
 
     @PostMapping
     @Override
-    public ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
+    public ResponseEntity<SuccessResponse<AccessTokenDto>> createMoim(
             @RequestBody @Valid final MoimCreateRequest creatRequest,
             @UserId final Long userId
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_CREATE_SUCCESS, moimService.createMoim(userId, creatRequest)));
+        MoimIdValueDto moimIdValueDto = moimService.createMoim(userId, creatRequest);
+        return ResponseEntity.ok(
+                SuccessResponse.of(
+                        SuccessMessage.MOIM_CREATE_SUCCESS,
+                        AccessTokenDto.of(
+                                moimIdValueDto.data(),
+                                jwtTokenUpdater.setAccessToken(userId, moimIdValueDto.moimId(), MoimRole.OWNER))
+                )
+        );
     }
 
     @GetMapping("/{moimId}/invitation-code")

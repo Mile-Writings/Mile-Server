@@ -61,7 +61,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(duplicatedInterceptor)
-                .addPathPatterns("/api/post/temporary", "/api/post", "/api/post/{postId}/comment","/api/comment/{commentId}", "/api/moim/{moimId}/topic");
+                .addPathPatterns("/api/post/temporary", "/api/post", "/api/post/{postId}/comment", "/api/comment/{commentId}", "/api/moim/{moimId}/topic");
         registry.addInterceptor(moimAuthInterceptor);
     }
 
