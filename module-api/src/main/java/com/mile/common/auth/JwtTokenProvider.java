@@ -14,6 +14,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.redisson.misc.Hash;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -122,6 +123,7 @@ public class JwtTokenProvider {
     public HashMap<Long, MoimRole> getJoinedRoleFromJwt(final String token) {
         Claims claims = getBody(token);
         Object joinedRole = claims.get(JOINED_ROLE);
-        return objectMapper.convertValue(joinedRole, HashMap.class);
+        HashMap<Long, MoimRole> roleMap = objectMapper.convertValue(joinedRole, HashMap.class);
+        return roleMap;
     }
 }

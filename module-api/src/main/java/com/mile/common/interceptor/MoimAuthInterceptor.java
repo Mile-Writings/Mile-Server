@@ -63,7 +63,7 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
                                             final Map<String, String> pathVariables) {
         switch (annotation.value()) {
             case OWNER -> {
-                final String requestMoimId = secureUrlUtil.decodeUrl(pathVariables.get(MOIM_ID)).toString();
+                final Long requestMoimId = secureUrlUtil.decodeUrl(pathVariables.get(MOIM_ID));
                 if (!userRoles.containsKey(requestMoimId) || !userRoles.get(requestMoimId).equals(MoimRole.OWNER)) {
                     throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
                 }
