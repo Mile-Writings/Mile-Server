@@ -41,6 +41,9 @@ public class TokenService {
     public void deleteRefreshToken(
             final Long userId
     ) {
-        tokenRepository.deleteById(userId);
+        Token token = tokenRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.REFRESH_TOKEN_NOT_FOUND)
+        );
+        tokenRepository.delete(token);
     }
 }

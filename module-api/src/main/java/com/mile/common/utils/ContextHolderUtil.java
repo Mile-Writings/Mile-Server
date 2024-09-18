@@ -32,7 +32,7 @@ public class ContextHolderUtil {
             throw new UnauthorizedException(ErrorMessage.TOKEN_VALIDATION_ERROR);
         }
 
-        return jwtTokenProvider.getUserFromAuthHeader(token).toString();
+        return jwtTokenProvider.getUserFromJwt(token).toString();
     }
 
 }

@@ -4,14 +4,11 @@ import com.mile.client.SocialType;
 import com.mile.moim.service.dto.response.MoimListOfUserResponse;
 import com.mile.moim.service.dto.response.MoimOfUserResponse;
 import com.mile.user.domain.User;
-import com.mile.writername.domain.MoimRole;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
-import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,9 +47,5 @@ public class UserService {
                 .stream()
                 .map(MoimOfUserResponse::of)
                 .collect(Collectors.toList()));
-    }
-
-    public Map<Long, WriterNameInfo> getJoinedRoleFromUser(final Long userId) {
-        return writerNameRetriever.getJoinedRoleFromUserId(userId);
     }
 }
