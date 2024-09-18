@@ -1,6 +1,6 @@
-package com.mile.common.auth.thread;
+package com.mile.common.utils.thread;
 
-public class WriterNameContext {
+public class WriterNameContextUtil {
     private static final ThreadLocal<Long> writerNameContext = new ThreadLocal<>();
 
     public static void setWriterNameContext(Long writerNameId) {
