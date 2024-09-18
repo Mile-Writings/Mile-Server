@@ -18,7 +18,6 @@ import com.mile.moim.service.dto.response.BestMoimListResponse;
 import com.mile.moim.service.dto.response.ContentListResponse;
 import com.mile.moim.service.dto.response.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.response.MoimAuthenticateResponse;
-import com.mile.moim.service.dto.response.MoimCreateResponse;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.response.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.response.MoimInfoResponse;
@@ -52,7 +51,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -94,9 +92,10 @@ public class MoimController implements MoimControllerSwagger {
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(moimService.joinMoim(moimId, userId, joinRequest).toString()))
-                .body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS,
-                        AccessTokenDto.of(jwtTokenUpdater.setAccessToken(userId, moimId, MoimRole.WRITER)
+        final Long writerNameId = moimService.joinMoim(moimId, userId, joinRequest);
+        return ResponseEntity
+                .ok(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS,
+                        AccessTokenDto.of(jwtTokenUpdater.setAccessToken(userId, moimId, writerNameId, MoimRole.WRITER)
                         )));
     }
 
@@ -258,7 +257,7 @@ public class MoimController implements MoimControllerSwagger {
                         SuccessMessage.MOIM_CREATE_SUCCESS,
                         AccessTokenDto.of(
                                 moimIdValueDto.data(),
-                                jwtTokenUpdater.setAccessToken(userId, moimIdValueDto.moimId(), MoimRole.OWNER))
+                                jwtTokenUpdater.setAccessToken(userId, moimIdValueDto.moimId(), moimIdValueDto.writerNameId(), MoimRole.OWNER))
                 )
         );
     }

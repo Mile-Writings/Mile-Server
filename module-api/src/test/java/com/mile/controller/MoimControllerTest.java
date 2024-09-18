@@ -19,6 +19,7 @@ import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.vo.WriterNameInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,8 +72,8 @@ public class MoimControllerTest {
     private static Long USER_ID;
     private static String MOIM_ID;
     private static String randomString;
-    private static HashMap<Long, MoimRole> joinedRole = new HashMap<>();
-
+    private static HashMap<Long, WriterNameInfo> joinedRole = new HashMap<>();
+    private static HashMap<Long, WriterNameInfo> newJoinedRole = new HashMap<>();
 
     @BeforeEach
     @Transactional
@@ -98,9 +99,9 @@ public class MoimControllerTest {
         moim.setOwner(writerName);
         moimRepository.saveAndFlush(moim);
 
-        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString.substring(0,4), randomString)));
+        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString.substring(0, 4), randomString)));
         MOIM_ID = secureUrlUtil.encodeUrl(moim.getId());
-        joinedRole.put(moim.getId(), MoimRole.OWNER);
+        joinedRole.put(moim.getId(), WriterNameInfo.of(writerName.getId(), MoimRole.OWNER));
     }
 
     /*
@@ -203,7 +204,7 @@ public class MoimControllerTest {
         randomString = UUID.randomUUID().toString().substring(0, 6);
         User user = userRepository.saveAndFlush(User.of(randomString, randomString, SocialType.GOOGLE));
         String randomShortString = UUID.randomUUID().toString().substring(0, 6);
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(user.getId(), joinedRole);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(user.getId(), newJoinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/user";
         String requestBody = objectMapper.writeValueAsString(
                 WriterMemberJoinRequest.of(
@@ -222,7 +223,7 @@ public class MoimControllerTest {
                 .andReturn();
 
         //then
-        assertThat(result.getResponse().getStatus()).isEqualTo(CREATED);
+        assertThat(result.getResponse().getStatus()).isEqualTo(OK);
     }
 
     @Test

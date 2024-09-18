@@ -12,6 +12,7 @@ import com.mile.strategy.dto.UserInfoResponse;
 import com.mile.user.service.UserService;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,7 +34,7 @@ public class AuthFacade {
             final String refreshToken
     ) {
         final Long userId = tokenService.findIdByRefreshToken(refreshToken);
-        final Map<Long, MoimRole> role = jwtTokenProvider.getJoinedRoleFromJwt(refreshToken);
+        final Map<Long, WriterNameInfo> role = jwtTokenProvider.getJoinedRoleFromJwt(refreshToken);
 
         return AccessTokenGetSuccess.of(
                 jwtTokenProvider.issueAccessToken(userId, role)
@@ -100,7 +101,7 @@ public class AuthFacade {
 
     public LoginSuccessResponse getTokenByUserId(
             final Long id,
-            final Map<Long, MoimRole> role
+            final Map<Long, WriterNameInfo> role
     ) {
         String refreshToken = jwtTokenProvider.issueRefreshToken(id, role);
         tokenService.saveRefreshToken(id, refreshToken);

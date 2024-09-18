@@ -17,6 +17,7 @@ import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.vo.WriterNameInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ public class DuplicatedInterceptorTest {
     private static Long USER_ID;
     private static String MOIM_ID;
     private static String TOPIC_ID;
-    private static Map<Long, MoimRole> joinedRole = new HashMap<>();
+    private static Map<Long, WriterNameInfo> joinedRole = new HashMap<>();
 
     @BeforeEach
     @Transactional
@@ -95,7 +96,7 @@ public class DuplicatedInterceptorTest {
         MOIM_ID = secureUrlUtil.encodeUrl(moim.getId());
 
         TOPIC_ID = secureUrlUtil.encodeUrl(topic.getId());
-        joinedRole.put(moim.getId(), MoimRole.OWNER);
+        joinedRole.put(moim.getId(), WriterNameInfo.of(writerName.getId(), MoimRole.OWNER));
     }
 
     @Test
