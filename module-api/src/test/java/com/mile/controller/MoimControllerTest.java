@@ -16,8 +16,10 @@ import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
 import com.mile.common.utils.SecureUrlUtil;
+import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.vo.WriterNameInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -69,7 +72,8 @@ public class MoimControllerTest {
     private static Long USER_ID;
     private static String MOIM_ID;
     private static String randomString;
-
+    private static HashMap<Long, WriterNameInfo> joinedRole = new HashMap<>();
+    private static HashMap<Long, WriterNameInfo> newJoinedRole = new HashMap<>();
 
     @BeforeEach
     @Transactional
@@ -95,8 +99,9 @@ public class MoimControllerTest {
         moim.setOwner(writerName);
         moimRepository.saveAndFlush(moim);
 
-        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString.substring(0,4), randomString)));
+        Topic topic = topicRepository.saveAndFlush(Topic.create(moim, new TopicCreateRequest(randomString, randomString.substring(0, 4), randomString)));
         MOIM_ID = secureUrlUtil.encodeUrl(moim.getId());
+        joinedRole.put(moim.getId(), WriterNameInfo.of(writerName.getId(), MoimRole.OWNER));
     }
 
     /*
@@ -123,7 +128,7 @@ public class MoimControllerTest {
     public void parameterErrorTest() throws Exception {
         //given
         String variable = UUID.randomUUID().toString();
-        String requestUri = "/api/moim/" + variable;
+        String requestUri = "/api/moim/" + variable + "/information";
 
         //when
         MvcResult result = mockMvc.perform(
@@ -159,7 +164,7 @@ public class MoimControllerTest {
     @DisplayName("모임 초대 코드가 정상적으로 조회된다.")
     public void getMoimInvitationCodeTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/invitation-code";
 
         //when
@@ -177,7 +182,7 @@ public class MoimControllerTest {
     @DisplayName("글모임의 주제들이 정상적으로 조회된다.")
     public void getTopicFromMoimTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID;
 
         //when
@@ -196,8 +201,10 @@ public class MoimControllerTest {
     @DisplayName("글모임에 정상적으로 가입된다.")
     public void joinMoimTest() throws Exception {
         //given
+        randomString = UUID.randomUUID().toString().substring(0, 6);
+        User user = userRepository.saveAndFlush(User.of(randomString, randomString, SocialType.GOOGLE));
         String randomShortString = UUID.randomUUID().toString().substring(0, 6);
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(user.getId(), newJoinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/user";
         String requestBody = objectMapper.writeValueAsString(
                 WriterMemberJoinRequest.of(
@@ -216,7 +223,7 @@ public class MoimControllerTest {
                 .andReturn();
 
         //then
-        assertThat(result.getResponse().getStatus()).isEqualTo(CREATED);
+        assertThat(result.getResponse().getStatus()).isEqualTo(OK);
     }
 
     @Test
@@ -275,7 +282,7 @@ public class MoimControllerTest {
     public void getTemporaryPostOfMoim() throws Exception {
         //given
         String requestUri = "/api/moim/" + MOIM_ID + "/temporary";
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
 
         //when
         MvcResult result = mockMvc.perform(
@@ -293,7 +300,7 @@ public class MoimControllerTest {
     @DisplayName("글 모임 뷰의 본인 필명이 정상적으로 반환된다.")
     public void getWriterNameForUserTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/writername";
 
         //when
@@ -318,7 +325,7 @@ public class MoimControllerTest {
         String randomString = UUID.randomUUID().toString().substring(0, 7);
         String randemTagString = UUID.randomUUID().toString().substring(0, 3);
         User user = userRepository.save(User.of(randomString, randomString, SocialType.GOOGLE));
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(user.getId());
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(user.getId(), new HashMap<>());
         String createRequest = objectMapper.writeValueAsString(
                 new MoimCreateRequest(
                         randomString,
@@ -350,7 +357,7 @@ public class MoimControllerTest {
     @DisplayName("관리자 페이지 글감 조회가 정상적으로 반환된다.")
     public void getTopicForOwnerTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/admin/topics";
 
 
@@ -372,7 +379,7 @@ public class MoimControllerTest {
     @Transactional
     public void getWriterNamesForOwnerTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/writernames";
 
         //when
@@ -395,7 +402,7 @@ public class MoimControllerTest {
         //given
         String randomTagString = UUID.randomUUID().toString().substring(0, 3);
         String requestUri = "/api/moim/" + MOIM_ID + "/info";
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
 
         String request = objectMapper.writeValueAsString(new MoimInfoModifyRequest(
                 randomString,
@@ -420,7 +427,7 @@ public class MoimControllerTest {
     @DisplayName("글감을 정상적으로 등록한다.")
     public void createTopicTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID + "/topic";
         String request = objectMapper.writeValueAsString(
                 TopicCreateRequest.of(randomString, "---", randomString));
@@ -440,7 +447,7 @@ public class MoimControllerTest {
     @DisplayName("글모임이 정상적으로 삭제된다.")
     public void deleteMoimTest() throws Exception {
         //given
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
         String requestUri = "/api/moim/" + MOIM_ID;
 
         //when
