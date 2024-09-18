@@ -1,10 +1,12 @@
 package com.mile.common.auth;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.BadRequestException;
 import com.mile.exception.model.UnauthorizedException;
 import com.mile.writername.domain.MoimRole;
+import com.mile.writername.service.vo.WriterNameInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -53,18 +55,18 @@ public class JwtTokenProvider {
         return token.substring("Bearer ".length());
     }
 
-    public String issueAccessToken(final Long userId, final Map<Long, MoimRole> joinedRole) {
+    public String issueAccessToken(final Long userId, final Map<Long, WriterNameInfo> joinedRole) {
         return issueToken(userId, joinedRole, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 
 
-    public String issueRefreshToken(final Long userId, final Map<Long, MoimRole> joinedRole) {
+    public String issueRefreshToken(final Long userId, final Map<Long, WriterNameInfo> joinedRole) {
         return issueToken(userId, joinedRole, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     private String issueToken(
             final Long userId,
-            final Map<Long, MoimRole> role,
+            final Map<Long, WriterNameInfo> role,
             final Long expiredTime
     ) {
         final Date now = new Date();
@@ -116,14 +118,14 @@ public class JwtTokenProvider {
         return Long.valueOf(claims.get(MEMBER_ID).toString());
     }
 
-    public HashMap<Long, MoimRole> getJoinedRoleFromHeader(final String token) {
+    public HashMap<Long, WriterNameInfo> getJoinedRoleFromHeader(final String token) {
         return getJoinedRoleFromJwt(getTokenFromHeader(token));
     }
 
-    public HashMap<Long, MoimRole> getJoinedRoleFromJwt(final String token) {
+    public HashMap<Long, WriterNameInfo> getJoinedRoleFromJwt(final String token) {
         Claims claims = getBody(token);
         Object joinedRole = claims.get(JOINED_ROLE);
-        HashMap<Long, MoimRole> roleMap = objectMapper.convertValue(joinedRole, HashMap.class);
+        HashMap<Long, WriterNameInfo> roleMap = objectMapper.convertValue(joinedRole, new TypeReference<HashMap<Long, WriterNameInfo>>() {});
         return roleMap;
     }
 }

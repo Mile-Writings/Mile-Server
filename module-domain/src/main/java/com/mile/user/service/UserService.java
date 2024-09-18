@@ -7,6 +7,7 @@ import com.mile.user.domain.User;
 import com.mile.writername.domain.MoimRole;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,7 @@ public class UserService {
                 .collect(Collectors.toList()));
     }
 
-    public Map<Long, MoimRole> getJoinedRoleFromUser(final Long userId) {
+    public Map<Long, WriterNameInfo> getJoinedRoleFromUser(final Long userId) {
         return writerNameRetriever.getJoinedRoleFromUserId(userId);
     }
 }

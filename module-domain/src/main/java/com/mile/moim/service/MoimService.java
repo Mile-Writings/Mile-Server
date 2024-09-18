@@ -305,13 +305,13 @@ public class MoimService {
         Moim moim = moimCreator.createMoim(createRequest);
         User user = userRetriever.findById(userId);
 
-        setMoimOwner(moim, user, createRequest);
+        final Long writerNameId = setMoimOwner(moim, user, createRequest);
         setFirstTopic(moim, userId, createRequest);
 
-        return MoimIdValueDto.of(moim.getId(), MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl()));
+        return MoimIdValueDto.of(moim.getId(), writerNameId, MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl()));
     }
 
-    private void setMoimOwner(
+    private Long setMoimOwner(
             final Moim moim,
             final User user,
             final MoimCreateRequest createRequest
@@ -320,6 +320,7 @@ public class MoimService {
         WriterName owner = writerNameRetriever.findById(writerNameService.createWriterName(user, moim, joinRequest));
         moim.setOwner(owner);
         moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
+        return owner.getId();
     }
 
 

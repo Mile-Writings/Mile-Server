@@ -9,6 +9,7 @@ import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
 import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -122,14 +123,14 @@ public class WriterNameRetriever {
         return writerNameRepository.countByMoim(moim);
     }
 
-    public Map<Long, MoimRole> getJoinedRoleFromUserId(final Long userId) {
+    public Map<Long, WriterNameInfo> getJoinedRoleFromUserId(final Long userId) {
         return writerNameRepository.findAllByWriterId(userId).stream().collect(
                 Collectors.toMap(writerName -> writerName.getMoim().getId(), this::getWriterNameMoimRole)
         );
     }
 
-    private MoimRole getWriterNameMoimRole(final WriterName writerName) {
-        return writerName.getMoim().getOwner().equals(writerName) ? MoimRole.OWNER : MoimRole.WRITER;
+    private WriterNameInfo getWriterNameMoimRole(final WriterName writerName) {
+        return WriterNameInfo.of(writerName.getId(), writerName.getMoim().getOwner().equals(writerName) ? MoimRole.OWNER : MoimRole.WRITER);
     }
 
     public List<WriterName> findTop2ByCuriousCount(final Moim moim) {
