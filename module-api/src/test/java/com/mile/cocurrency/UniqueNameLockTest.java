@@ -6,6 +6,7 @@ import com.mile.common.auth.JwtTokenProvider;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
+import com.mile.writername.domain.MoimRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -68,7 +70,7 @@ public class UniqueNameLockTest {
                 MoimCreateRequest(randomName, "string", false, "string", "string", "string", "string", "str", "string");
 
         String body = objectMapper.writeValueAsString(bodyDto);
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, new HashMap<>());
 
 
         // when

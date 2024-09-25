@@ -39,7 +39,7 @@ public class UserIdHeaderResolver implements HandlerMethodArgumentResolver {
             throw new UnauthorizedException(ErrorMessage.TOKEN_VALIDATION_ERROR);
         }
 
-        return jwtTokenProvider.getUserFromJwt(token);
+        return jwtTokenProvider.getUserFromAuthHeader(token);
     }
 
 }

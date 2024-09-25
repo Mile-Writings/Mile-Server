@@ -1,5 +1,6 @@
 package com.mile.controller.moim;
 
+import com.mile.common.auth.dto.AccessTokenDto;
 import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
@@ -309,7 +310,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
+    ResponseEntity<SuccessResponse<AccessTokenDto>> createMoim(
             @RequestBody final MoimCreateRequest creatRequest,
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId
     );

@@ -1,6 +1,8 @@
 package com.mile.controller.user;
 
 import com.mile.client.dto.UserLoginRequest;
+import com.mile.common.auth.annotation.UserAuthAnnotation;
+import com.mile.common.auth.annotation.UserAuthenticationType;
 import com.mile.common.resolver.user.UserId;
 import com.mile.controller.user.facade.AuthFacade;
 import com.mile.dto.SuccessResponse;
@@ -55,6 +57,7 @@ public class UserController implements UserControllerSwagger {
 
     @GetMapping("/refresh-token")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public SuccessResponse<AccessTokenGetSuccess> refreshToken(
             @CookieValue(name = REFRESH_TOKEN) Cookie cookie
     ) {

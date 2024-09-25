@@ -9,6 +9,7 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.domain.popular.MoimCuriousWriter;
 import com.mile.moim.domain.popular.MoimPopularInfo;
+import com.mile.moim.service.dto.MoimIdValueDto;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
@@ -78,10 +79,8 @@ public class MoimService {
     private static final int BEST_MOIM_DEFAULT_NUMBER = 3;
 
     public ContentListResponse getContentsFromMoim(
-            final Long moimId,
-            final Long userId
+            final Long moimId
     ) {
-        postRetriever.authenticateUserOfMoim(writerNameRetriever.isUserInMoim(moimId, userId));
         return ContentListResponse.of(topicRetriever.getContentsFromMoim(moimId));
     }
 
@@ -298,7 +297,7 @@ public class MoimService {
     }
 
     @AtomicValidateUniqueMoimName
-    public MoimCreateResponse createMoim(
+    public MoimIdValueDto createMoim(
             final Long userId,
             final MoimCreateRequest createRequest
     ) {
@@ -306,13 +305,13 @@ public class MoimService {
         Moim moim = moimCreator.createMoim(createRequest);
         User user = userRetriever.findById(userId);
 
-        setMoimOwner(moim, user, createRequest);
+        final Long writerNameId = setMoimOwner(moim, user, createRequest);
         setFirstTopic(moim, userId, createRequest);
 
-        return MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl());
+        return MoimIdValueDto.of(moim.getId(), writerNameId, MoimCreateResponse.of(moim.getIdUrl(), moim.getIdUrl()));
     }
 
-    private void setMoimOwner(
+    private Long setMoimOwner(
             final Moim moim,
             final User user,
             final MoimCreateRequest createRequest
@@ -321,6 +320,7 @@ public class MoimService {
         WriterName owner = writerNameRetriever.findById(writerNameService.createWriterName(user, moim, joinRequest));
         moim.setOwner(owner);
         moim.setIdUrl(secureUrlUtil.encodeUrl(moim.getId()));
+        return owner.getId();
     }
 
 
@@ -335,11 +335,9 @@ public class MoimService {
     }
 
     public MoimInfoOwnerResponse getMoimInfoForOwner(
-            final Long moimId,
-            final Long userId
+            final Long moimId
     ) {
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         return MoimInfoOwnerResponse.of(moim);
     }
 

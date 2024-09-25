@@ -5,9 +5,10 @@ public record MoimCreateResponse(
         String inviteCode
 ) {
     public static MoimCreateResponse of(
-            String moimId,
-            String inviteCode
+            final String moimId,
+            final String inviteCode
     ) {
         return new MoimCreateResponse(moimId, inviteCode);
     }
+
 }
