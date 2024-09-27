@@ -19,6 +19,7 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
 
@@ -32,7 +33,7 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (handler instanceof ResourceHttpRequestHandler) {
+        if (handler instanceof ResourceHttpRequestHandler || Objects.equals(request.getMethod(), "OPTIONS")) {
             return true;
         }
         HandlerMethod method = (HandlerMethod) handler;
