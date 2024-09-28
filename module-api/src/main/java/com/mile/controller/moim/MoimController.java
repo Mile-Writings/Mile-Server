@@ -6,6 +6,7 @@ import com.mile.common.auth.annotation.UserAuthenticationType;
 import com.mile.common.auth.dto.AccessTokenDto;
 import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.common.resolver.user.UserId;
+import com.mile.common.utils.thread.WriterNameContextUtil;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
@@ -32,7 +33,7 @@ import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
 import com.mile.writername.domain.MoimRole;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -284,13 +285,13 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     @GetMapping("/{moimId}/writername")
-    public ResponseEntity<SuccessResponse<WriterNameShortResponse>> getWriterNameOfUser(
+    public ResponseEntity<SuccessResponse<WriterNameInformationResponse>> getWriterNameOfUser(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(moimId, userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(WriterNameContextUtil.getWriterNameContext())));
     }
 
     @Override
