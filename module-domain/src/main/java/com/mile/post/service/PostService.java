@@ -27,14 +27,17 @@ import com.mile.topic.service.TopicRetriever;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.response.ContentWithIsSelectedResponse;
 import com.mile.common.utils.SecureUrlUtil;
+import com.mile.util.MoimWriterNameMapUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.dto.response.WriterNameResponse;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -80,12 +83,12 @@ public class PostService {
     @Transactional
     public PostCuriousResponse createCuriousOnPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
-        postRetriever.authenticateUserWithPost(post, userId);
-        curiousService.createCurious(post, writerNameRetriever.findByMoimAndUser(moimId, userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterNameMap);
+        curiousService.createCurious(post, writerNameRetriever.findById(writerNameId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
@@ -104,20 +107,26 @@ public class PostService {
     @Transactional(readOnly = true)
     public CuriousInfoResponse getCuriousInfoOfPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        postRetriever.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(
+                post.getTopic().getMoim().getId(),
+                moimWriterNameMap
+        );
+        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameRetriever.findById(writerNameId));
     }
 
     @Transactional
     public PostCuriousResponse deleteCuriousOnPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        curiousService.deleteCurious(post, writerNameRetriever.findByMoimAndUserWithNotExceptionCase(post.getTopic().getMoim().getId(), userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(
+                post.getTopic().getMoim().getId(),
+                moimWriterNameMap);
+        curiousService.deleteCurious(post, writerNameRetriever.findByIdNonException(writerNameId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
