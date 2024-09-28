@@ -62,7 +62,7 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
     }
 
     private boolean authenticateUserFromMap(final UserAuthAnnotation annotation,
-                                            final Map<Long, WriterNameInfo> userRoles,
+                                            final HashMap<Long, WriterNameInfo> userRoles,
                                             final Map<String, String> pathVariables) {
         switch (annotation.value()) {
             case OWNER -> {
@@ -70,7 +70,7 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
                 if (!userRoles.containsKey(requestMoimId) || !userRoles.get(requestMoimId).moimRole().equals(MoimRole.OWNER)) {
                     throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
                 }
-                WriterNameContextUtil.setWriterNameContext(userRoles.get(requestMoimId).writerNameId());
+                WriterNameContextUtil.setWriterNameIdContext(userRoles.get(requestMoimId).writerNameId());
                 return true;
             }
             case WRITER_NAME -> {
@@ -78,10 +78,11 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
                 if (!userRoles.containsKey(requestMoimId)) {
                     throw new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR);
                 }
-                WriterNameContextUtil.setWriterNameContext(userRoles.get(requestMoimId).writerNameId());
+                WriterNameContextUtil.setWriterNameIdContext(userRoles.get(requestMoimId).writerNameId());
                 return true;
             }
             case USER -> {
+                WriterNameContextUtil.setMoimWriterNameMapContext(userRoles);
                 return true;
             }
         }
