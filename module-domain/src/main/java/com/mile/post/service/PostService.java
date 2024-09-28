@@ -132,12 +132,13 @@ public class PostService {
 
     public void updatePost(
             final Long postId,
-            final Long userId,
+            final HashMap<Long, WriterNameInfo> moimWriteNameMap,
             final PostPutRequest putRequest
     ) {
         Post post = postRetriever.findById(postId);
-        postRetriever.authenticateWriter(postId,
-                writerNameRetriever.findWriterNameByMoimIdAndUserId(post.getTopic().getMoim().getId(), userId));
+        final Long moimId = post.getTopic().getMoim().getId();
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriteNameMap);
+        postRetriever.authenticateWriterWithPost(postId, writerNameId);
         Topic topic = topicRetriever.findById(decodeUrlToLong(putRequest.topicId()));
         postUpdator.update(post, topic, putRequest);
     }
@@ -175,7 +176,7 @@ public class PostService {
         Post post = postRetriever.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
         WriterName writerName = writerNameRetriever.findByMoimAndUser(moimId, userId);
-        if(!postRetriever.isWriterOfPost(post, writerName) && !moimRetriever.isMoimOwnerEqualsUser(post.getTopic().getMoim(), userId)){
+        if (!postRetriever.isWriterOfPost(post, writerName) && !moimRetriever.isMoimOwnerEqualsUser(post.getTopic().getMoim(), userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
         postRemover.delete(post);
@@ -184,12 +185,13 @@ public class PostService {
     @Transactional(readOnly = true)
     public TemporaryPostGetResponse getTemporaryPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
         Topic selectedTopic = post.getTopic();
         Moim moim = selectedTopic.getMoim();
-        postRetriever.authenticateWriter(postId, writerNameRetriever.findByMoimAndUser(moim.getId(), userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moim.getId(), moimWriterNameMap);
+        postRetriever.authenticateWriterWithPost(postId, writerNameId);
         isPostTemporary(post);
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(moim.getId(), selectedTopic.getId());
         return TemporaryPostGetResponse.of(post, contentResponse);
@@ -224,9 +226,11 @@ public class PostService {
         return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
     }
 
-    public void deleteTemporaryPost(final Long userId, final Long postId) {
-        Long moimId = getMoimIdFromPostId(postId);
-        postRetriever.authenticateWriter(postId, writerNameRetriever.findByMoimAndUser(moimId, userId));
+    public void deleteTemporaryPost(final Long postId,
+                                    final HashMap<Long, WriterNameInfo> moimWriterNameMap) {
+        final Long moimId = getMoimIdFromPostId(postId);
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterNameMap);
+        postRetriever.authenticateWriterWithPost(postId, writerNameId);
         Post post = postRetriever.findById(postId);
         postRemover.deleteTemporaryPost(post);
     }
@@ -255,11 +259,14 @@ public class PostService {
         postCreator.createTemporaryPost(writerName, topic, temporaryPostCreateRequest);
     }
 
+    /*
+    FIX ME 아래 메서드는 리턴 값에 writerName의 name이 포함되어야 해서 Interceptor 인가가 필요 없을 듯 함
+    * */
     @Transactional
     public WriterNameResponse putTemporaryToFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
         Post post = postRetriever.findById(postId);
         WriterName writerName = writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId);
-        postRetriever.authenticateWriter(postId, writerName);
+        postRetriever.authenticateWriterWithPost(postId, writerName.getId());
         isPostTemporary(post);
         postUpdator.updateTemporaryPost(post, post.getTopic(), request);
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
@@ -267,10 +274,12 @@ public class PostService {
 
     public ModifyPostGetResponse getPostForModifying(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        postRetriever.authenticateUserWithPost(post, userId);
+        final Long moimId = post.getTopic().getMoim().getId();
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterNameMap);
+        postRetriever.authenticateWriterWithPost(post.getId(), writerNameId);
         isPostNotTemporary(post);
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(post.getTopic().getMoim().getId(), post.getTopic().getId());
         return ModifyPostGetResponse.of(post, contentResponse);
