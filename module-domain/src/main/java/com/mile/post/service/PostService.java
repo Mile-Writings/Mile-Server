@@ -67,14 +67,14 @@ public class PostService {
     @Transactional
     public void createCommentOnPost(
             final Long postId,
-            final Long userId,
+            final HashMap<Long, WriterNameInfo> moimWriterInfoMap,
             final CommentCreateRequest commentCreateRequest
 
     ) {
         Post post = postRetriever.findById(postId);
         final Long moimId = post.getTopic().getMoim().getId();
-        postRetriever.authenticateUserWithPost(post, userId);
-        commentCreator.createComment(post, writerNameRetriever.findByMoimAndUser(moimId, userId), commentCreateRequest);
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterInfoMap);
+        commentCreator.createComment(post, writerNameRetriever.findByIdNonException(writerNameId), commentCreateRequest);
     }
 
     @Transactional
@@ -91,10 +91,14 @@ public class PostService {
 
     public CommentListResponse getComments(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        return CommentListResponse.of(commentService.getCommentResponse(post.getTopic().getMoim().getId(), post, userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(
+                post.getTopic().getMoim().getId(),
+                moimWriterNameMap
+        );
+        return CommentListResponse.of(commentService.getCommentResponse(post, writerNameId));
     }
 
     @Transactional(readOnly = true)
