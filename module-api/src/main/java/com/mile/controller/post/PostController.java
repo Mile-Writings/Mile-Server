@@ -39,15 +39,15 @@ public class PostController implements PostControllerSwagger {
 
     @PostMapping("/{postId}/comment")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public SuccessResponse postComment(
             @PostIdPathVariable final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
-            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
         postService.createCommentOnPost(
                 postId,
-                userId,
+                WriterNameContextUtil.getMoimWriterNameMapContext(),
                 commentCreateRequest
         );
         return SuccessResponse.of(SuccessMessage.COMMENT_CREATE_SUCCESS);
@@ -66,12 +66,12 @@ public class PostController implements PostControllerSwagger {
 
     @GetMapping("/{postId}/comment")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public ResponseEntity<SuccessResponse<CommentListResponse>> getComments(
             @PostIdPathVariable final Long postId,
-            @UserId Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.COMMENT_SEARCH_SUCCESS, postService.getComments(postId, WriterNameContextUtil.getMoimWriterNameMapContext())));
     }
 
 
