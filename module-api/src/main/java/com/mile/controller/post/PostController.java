@@ -56,12 +56,12 @@ public class PostController implements PostControllerSwagger {
 
     @PostMapping("/{postId}/curious")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public SuccessResponse<PostCuriousResponse> postCurious(
             @PostIdPathVariable final Long postId,
-            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, userId));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_CREATE_SUCCESS, postService.createCuriousOnPost(postId, WriterNameContextUtil.getMoimWriterNameMapContext()));
     }
 
     @GetMapping("/{postId}/comment")
@@ -77,22 +77,30 @@ public class PostController implements PostControllerSwagger {
 
     @GetMapping("/{postId}/info/curious")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @PostIdPathVariable final Long postId,
-            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS, postService.getCuriousInfoOfPost(postId, userId)));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.CURIOUS_INFO_SEARCH_SUCCESS,
+                postService.getCuriousInfoOfPost(
+                        postId,
+                        WriterNameContextUtil.getMoimWriterNameMapContext()
+                )));
     }
 
     @DeleteMapping("/{postId}/curious")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public SuccessResponse<PostCuriousResponse> deleteCurious(
             @PostIdPathVariable final Long postId,
-            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS, postService.deleteCuriousOnPost(postId, userId));
+        return SuccessResponse.of(SuccessMessage.CURIOUS_DELETE_SUCCESS,
+                postService.deleteCuriousOnPost(
+                        postId,
+                        WriterNameContextUtil.getMoimWriterNameMapContext()
+                ));
     }
 
     @GetMapping("/{postId}/authenticate")
