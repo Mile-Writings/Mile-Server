@@ -47,7 +47,7 @@ import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRemover;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.WriterNameService;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -84,11 +84,10 @@ public class MoimService {
         return ContentListResponse.of(topicRetriever.getContentsFromMoim(moimId));
     }
 
-    public WriterNameShortResponse getWriterNameOfUser(
-            final Long moimId,
-            final Long userId
+    public WriterNameInformationResponse getWriterNameOfUser(
+            final Long writerNameId
     ) {
-        return writerNameRetriever.findWriterNameInfo(moimId, userId);
+        return writerNameRetriever.findWriterNameInfo(writerNameId);
     }
 
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {

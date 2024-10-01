@@ -27,14 +27,17 @@ import com.mile.topic.service.TopicRetriever;
 import com.mile.topic.service.TopicService;
 import com.mile.topic.service.dto.response.ContentWithIsSelectedResponse;
 import com.mile.common.utils.SecureUrlUtil;
+import com.mile.util.MoimWriterNameMapUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
 import com.mile.writername.service.dto.response.WriterNameResponse;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -67,64 +70,75 @@ public class PostService {
     @Transactional
     public void createCommentOnPost(
             final Long postId,
-            final Long userId,
+            final HashMap<Long, WriterNameInfo> moimWriterInfoMap,
             final CommentCreateRequest commentCreateRequest
 
     ) {
         Post post = postRetriever.findById(postId);
         final Long moimId = post.getTopic().getMoim().getId();
-        postRetriever.authenticateUserWithPost(post, userId);
-        commentCreator.createComment(post, writerNameRetriever.findByMoimAndUser(moimId, userId), commentCreateRequest);
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterInfoMap);
+        commentCreator.createComment(post, writerNameRetriever.findByIdNonException(writerNameId), commentCreateRequest);
     }
 
     @Transactional
     public PostCuriousResponse createCuriousOnPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
-        postRetriever.authenticateUserWithPost(post, userId);
-        curiousService.createCurious(post, writerNameRetriever.findByMoimAndUser(moimId, userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterNameMap);
+        curiousService.createCurious(post, writerNameRetriever.findById(writerNameId));
         return PostCuriousResponse.of(CURIOUS_TRUE);
     }
 
     public CommentListResponse getComments(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        return CommentListResponse.of(commentService.getCommentResponse(post.getTopic().getMoim().getId(), post, userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(
+                post.getTopic().getMoim().getId(),
+                moimWriterNameMap
+        );
+        return CommentListResponse.of(commentService.getCommentResponse(post, writerNameId));
     }
 
     @Transactional(readOnly = true)
     public CuriousInfoResponse getCuriousInfoOfPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        postRetriever.authenticateUserWithPost(post, userId);
-        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(
+                post.getTopic().getMoim().getId(),
+                moimWriterNameMap
+        );
+        return curiousService.getCuriousInfoOfPostAndWriterName(post, writerNameRetriever.findById(writerNameId));
     }
 
     @Transactional
     public PostCuriousResponse deleteCuriousOnPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        curiousService.deleteCurious(post, writerNameRetriever.findByMoimAndUserWithNotExceptionCase(post.getTopic().getMoim().getId(), userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(
+                post.getTopic().getMoim().getId(),
+                moimWriterNameMap);
+        curiousService.deleteCurious(post, writerNameRetriever.findByIdNonException(writerNameId));
         return PostCuriousResponse.of(CURIOUS_FALSE);
     }
 
     public void updatePost(
             final Long postId,
-            final Long userId,
+            final HashMap<Long, WriterNameInfo> moimWriteNameMap,
             final PostPutRequest putRequest
     ) {
         Post post = postRetriever.findById(postId);
-        postRetriever.authenticateWriter(postId,
-                writerNameRetriever.findWriterNameByMoimIdAndUserId(post.getTopic().getMoim().getId(), userId));
+        final Long moimId = post.getTopic().getMoim().getId();
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriteNameMap);
+        postRetriever.authenticateWriterWithPost(postId, writerNameId);
         Topic topic = topicRetriever.findById(decodeUrlToLong(putRequest.topicId()));
         postUpdator.update(post, topic, putRequest);
     }
@@ -162,7 +176,7 @@ public class PostService {
         Post post = postRetriever.findById(postId);
         Long moimId = post.getTopic().getMoim().getId();
         WriterName writerName = writerNameRetriever.findByMoimAndUser(moimId, userId);
-        if(!postRetriever.isWriterOfPost(post, writerName) && !moimRetriever.isMoimOwnerEqualsUser(post.getTopic().getMoim(), userId)){
+        if (!postRetriever.isWriterOfPost(post, writerName) && !moimRetriever.isMoimOwnerEqualsUser(post.getTopic().getMoim(), userId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
         postRemover.delete(post);
@@ -171,12 +185,13 @@ public class PostService {
     @Transactional(readOnly = true)
     public TemporaryPostGetResponse getTemporaryPost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
         Topic selectedTopic = post.getTopic();
         Moim moim = selectedTopic.getMoim();
-        postRetriever.authenticateWriter(postId, writerNameRetriever.findByMoimAndUser(moim.getId(), userId));
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moim.getId(), moimWriterNameMap);
+        postRetriever.authenticateWriterWithPost(postId, writerNameId);
         isPostTemporary(post);
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(moim.getId(), selectedTopic.getId());
         return TemporaryPostGetResponse.of(post, contentResponse);
@@ -211,9 +226,11 @@ public class PostService {
         return Long.parseLong(new String(Base64.getUrlDecoder().decode(url)));
     }
 
-    public void deleteTemporaryPost(final Long userId, final Long postId) {
-        Long moimId = getMoimIdFromPostId(postId);
-        postRetriever.authenticateWriter(postId, writerNameRetriever.findByMoimAndUser(moimId, userId));
+    public void deleteTemporaryPost(final Long postId,
+                                    final HashMap<Long, WriterNameInfo> moimWriterNameMap) {
+        final Long moimId = getMoimIdFromPostId(postId);
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterNameMap);
+        postRetriever.authenticateWriterWithPost(postId, writerNameId);
         Post post = postRetriever.findById(postId);
         postRemover.deleteTemporaryPost(post);
     }
@@ -242,11 +259,14 @@ public class PostService {
         postCreator.createTemporaryPost(writerName, topic, temporaryPostCreateRequest);
     }
 
+    /*
+    FIX ME 아래 메서드는 리턴 값에 writerName의 name이 포함되어야 해서 Interceptor 인가가 필요 없을 듯 함
+    * */
     @Transactional
     public WriterNameResponse putTemporaryToFixedPost(final Long userId, final PostPutRequest request, final Long postId) {
         Post post = postRetriever.findById(postId);
         WriterName writerName = writerNameRetriever.findByMoimAndUser(post.getTopic().getMoim().getId(), userId);
-        postRetriever.authenticateWriter(postId, writerName);
+        postRetriever.authenticateWriterWithPost(postId, writerName.getId());
         isPostTemporary(post);
         postUpdator.updateTemporaryPost(post, post.getTopic(), request);
         return WriterNameResponse.of(post.getIdUrl(), writerName.getName());
@@ -254,10 +274,12 @@ public class PostService {
 
     public ModifyPostGetResponse getPostForModifying(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriterNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        postRetriever.authenticateUserWithPost(post, userId);
+        final Long moimId = post.getTopic().getMoim().getId();
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moimId, moimWriterNameMap);
+        postRetriever.authenticateWriterWithPost(post.getId(), writerNameId);
         isPostNotTemporary(post);
         List<ContentWithIsSelectedResponse> contentResponse = topicService.getContentsWithIsSelectedFromMoim(post.getTopic().getMoim().getId(), post.getTopic().getId());
         return ModifyPostGetResponse.of(post, contentResponse);

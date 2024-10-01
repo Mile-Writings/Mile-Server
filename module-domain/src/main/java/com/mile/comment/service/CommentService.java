@@ -54,13 +54,10 @@ public class CommentService {
     }
 
     public List<CommentResponse> getCommentResponse(
-            final Long moimId,
             final Post post,
-            final Long userId
+            final Long writerNameId
     ) {
-        postRetriever.authenticateUserWithPost(post, userId);
         List<Comment> commentList = commentRetriever.findByPostId(post.getId());
-        Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
 
         return commentList.stream()
                 .map(comment -> CommentResponse.of(

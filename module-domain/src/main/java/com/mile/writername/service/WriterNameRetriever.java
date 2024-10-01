@@ -8,7 +8,7 @@ import com.mile.user.domain.User;
 import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
 import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,15 +40,14 @@ public class WriterNameRetriever {
 
     public WriterName findById(final Long id) {
         return writerNameRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+                () -> new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR)
         );
     }
 
-    public WriterNameShortResponse findWriterNameInfo(
-            final Long moimId,
-            final Long userId
+    public WriterNameInformationResponse findWriterNameInfo(
+            final Long writerNameId
     ) {
-        return WriterNameShortResponse.of(findByMoimAndUserWithNotExceptionCase(moimId, userId));
+        return WriterNameInformationResponse.of(findByIdNonException(writerNameId));
     }
 
     public boolean isUserInMoim(
@@ -72,11 +71,10 @@ public class WriterNameRetriever {
                 );
     }
 
-    public WriterName findByMoimAndUserWithNotExceptionCase(
-            final Long moimId,
-            final Long writerId
+    public WriterName findByIdNonException(
+            final Long writerNameId
     ) {
-        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId)
+        return writerNameRepository.findById(writerNameId)
                 .orElseThrow(() -> new ForbiddenException(ErrorMessage.WRITER_NAME_NON_AUTHENTICATE)
                 );
     }

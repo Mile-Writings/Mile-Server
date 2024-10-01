@@ -9,7 +9,6 @@ import com.mile.moim.service.dto.response.BestMoimListResponse;
 import com.mile.moim.service.dto.response.ContentListResponse;
 import com.mile.moim.service.dto.response.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
-import com.mile.moim.service.dto.response.MoimCreateResponse;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.response.MoimInfoOwnerResponse;
@@ -25,7 +24,7 @@ import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -395,9 +394,8 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    ResponseEntity<SuccessResponse<WriterNameShortResponse>> getWriterNameOfUser(
+    ResponseEntity<SuccessResponse<WriterNameInformationResponse>> getWriterNameOfUser(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 

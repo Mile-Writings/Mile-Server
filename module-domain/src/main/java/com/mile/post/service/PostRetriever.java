@@ -79,23 +79,6 @@ public class PostRetriever {
         return postList;
     }
 
-    public void authenticateUserWithPost(
-            final Post post,
-            final Long userId
-    ) {
-        Long moimId = post.getTopic().getMoim().getId();
-        writerNameRetriever.findByMoimAndUserWithNotExceptionCase(moimId, userId);
-    }
-
-    public void authenticateUserOfMoim(
-            final boolean isUserInMoim
-    ) {
-        if (!isUserInMoim) {
-            throw new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR);
-        }
-    }
-
-
     public boolean existsPostByWriterWithPost(
             final Long postId,
             final Long writerNameId
@@ -112,12 +95,6 @@ public class PostRetriever {
         }
     }
 
-    public void authenticateWriter(
-            final Long postId,
-            final WriterName writerName
-    ) {
-        authenticateWriterWithPost(postId, writerName.getId());
-    }
 
     public boolean isWriterOfPost(final Post post, final WriterName writerName) {
         return post.getWriterName().equals(writerName);
