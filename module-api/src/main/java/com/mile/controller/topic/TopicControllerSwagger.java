@@ -74,7 +74,6 @@ public interface TopicControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deleteTopic(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long topicId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     );
 

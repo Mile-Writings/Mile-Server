@@ -51,12 +51,12 @@ public class TopicController implements TopicControllerSwagger {
 
     @Override
     @DeleteMapping("/{topicId}")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> deleteTopic(
             @TopicIdPathVariable final Long topicId,
-            @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     ) {
-        topicService.deleteTopic(userId, topicId);
+        topicService.deleteTopic(topicId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DELETE_SUCCESS));
     }
 
