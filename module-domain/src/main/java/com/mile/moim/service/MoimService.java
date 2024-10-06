@@ -358,12 +358,9 @@ public class MoimService {
     }
 
     public void deleteMoim(
-            final Long moimId,
-            final Long userId
+            final Long moimId
     ) {
-
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         moimRemover.deleteRelatedData(moim);
         writerNameRemover.deleteWriterNamesByMoim(moim);
         topicRemover.deleteTopicsByMoim(moim);

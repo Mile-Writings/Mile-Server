@@ -306,12 +306,12 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @DeleteMapping("/{moimId}")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> deleteMoim(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        moimService.deleteMoim(moimId, userId);
+        moimService.deleteMoim(moimId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
     }
 

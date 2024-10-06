@@ -426,7 +426,6 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deleteMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
