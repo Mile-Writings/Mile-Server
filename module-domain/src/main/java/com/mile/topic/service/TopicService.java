@@ -57,11 +57,10 @@ public class TopicService {
     }
 
     public void putTopic(
-            final Long userId,
             final Long topicId,
             final TopicPutRequest topicPutRequest
     ) {
-        topicUpdator.putTopic(userId, topicId, topicPutRequest);
+        topicUpdator.putTopic(topicId, topicPutRequest);
     }
 
 }

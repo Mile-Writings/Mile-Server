@@ -90,6 +90,7 @@ public class MoimService {
         return writerNameRetriever.findWriterNameInfo(writerNameId);
     }
 
+
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
         if (writerName.length() > WRITER_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
