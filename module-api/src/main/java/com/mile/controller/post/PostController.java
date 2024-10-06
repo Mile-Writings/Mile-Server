@@ -130,12 +130,12 @@ public class PostController implements PostControllerSwagger {
 
     @DeleteMapping("/{postId}")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     public ResponseEntity<SuccessResponse> deletePost(
             @PostIdPathVariable final Long postId,
-            @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     ) {
-        postService.deletePost(postId, userId);
+        postService.deletePost(postId, WriterNameContextUtil.getMoimWriterNameMapContext());
         return ResponseEntity.status(HttpStatus.OK).body(SuccessResponse.of(SuccessMessage.POST_DELETE_SUCCESS));
     }
 
