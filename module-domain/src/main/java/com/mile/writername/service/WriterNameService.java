@@ -64,11 +64,9 @@ public class WriterNameService {
 
 
     public void deleteWriterNameById(
-            final Long writerNameId,
-            final Long userId
+            final Long writerNameId
     ) {
         WriterName writerName = writerNameRetriever.findById(writerNameId);
-        moimRetriever.authenticateOwnerOfMoim(writerName.getMoim(), userRetriever.findById(userId));
         writerNameRemover.deleteWriterName(writerName);
     }
 
