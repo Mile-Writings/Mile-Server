@@ -1,5 +1,5 @@
 <included>
-    <appender name="DISCORD" class="com.mile.log.discord.DiscordAppender">
+    <appender name="DISCORD" class="com.mile.exception.log.discord.DiscordAppender">
         <discordWebhookUrl>${DISCORD_WEBHOOK_URI}</discordWebhookUrl>
         <username>에러났대...</username>
         <avatarUrl>https://www.greenart.co.kr/upimage/new_editor/20212/20210201112021.jpg</avatarUrl>

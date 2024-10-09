@@ -5,8 +5,10 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
+import com.mile.moim.service.dto.response.MoimInfoResponse;
 import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
 import com.mile.user.domain.User;
+import com.mile.common.utils.DateUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,19 @@ public class MoimRetriever {
     ) {
         return moimRepository.findById(moimId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MOIM_NOT_FOUND)
+        );
+    }
+    public MoimInfoResponse getMoimInfoForTotal(
+            final Moim moim,
+            final int numberOfWriters
+    ) {
+        return MoimInfoResponse.of(
+                moim.getImageUrl(),
+                moim.getName(),
+                moim.getOwner().getName(),
+                moim.getInformation(),
+                numberOfWriters,
+                DateUtil.getStringDateOfLocalDate(moim.getCreatedAt())
         );
     }
 

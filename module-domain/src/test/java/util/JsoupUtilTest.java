@@ -1,6 +1,6 @@
 package util;
 
-import com.mile.utils.JsoupUtil;
+import com.mile.common.utils.JsoupUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

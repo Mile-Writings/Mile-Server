@@ -1,5 +1,6 @@
 package com.mile.controller.moim;
 
+import com.mile.common.auth.dto.AccessTokenDto;
 import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.ErrorResponse;
@@ -8,7 +9,6 @@ import com.mile.moim.service.dto.response.BestMoimListResponse;
 import com.mile.moim.service.dto.response.ContentListResponse;
 import com.mile.moim.service.dto.response.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
-import com.mile.moim.service.dto.response.MoimCreateResponse;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.response.MoimInfoOwnerResponse;
@@ -18,13 +18,13 @@ import com.mile.moim.service.dto.response.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.response.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.response.MoimTopicResponse;
 import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
-import com.mile.moim.service.dto.response.PopularWriterListResponse;
+import com.mile.moim.service.dto.response.MoimMostCuriousWriterResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -85,7 +85,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    ResponseEntity<SuccessResponse<PopularWriterListResponse>> getMostCuriousWritersOfMoim(
+    ResponseEntity<SuccessResponse<MoimMostCuriousWriterResponse>> getMostCuriousWritersOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
@@ -309,7 +309,7 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
+    ResponseEntity<SuccessResponse<AccessTokenDto>> createMoim(
             @RequestBody final MoimCreateRequest creatRequest,
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId
     );
@@ -394,9 +394,8 @@ public interface MoimControllerSwagger {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    ResponseEntity<SuccessResponse<WriterNameShortResponse>> getWriterNameOfUser(
+    ResponseEntity<SuccessResponse<WriterNameInformationResponse>> getWriterNameOfUser(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -428,6 +427,20 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> deleteMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
+            @PathVariable("moimId") final String moimUrl
+    );
+
+    @Operation(summary = "글모임 정보, 가장 궁금한 글, 가장 궁금한 작가")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "글모임의 개괄적인 정보가 조회되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당 모임은 존재하지 않습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    ResponseEntity<SuccessResponse> getMoimTotalInformation(
+            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @PathVariable("moimId") final String moimUrl
     );
 }

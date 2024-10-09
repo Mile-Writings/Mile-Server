@@ -6,14 +6,13 @@ import com.mile.writername.domain.WriterName;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
@@ -27,7 +26,9 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
 
     boolean existsWriterNameByMoimAndNormalizedName(final Moim moim, final String normalizedName);
 
-    List<WriterName> findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Long moimId, final int totalCuriousCount);
+    int countByMoim(final Moim moim);
+
+    List<WriterName> findTop2ByMoimAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(final Moim moim, final int totalCuriousCount);
 
     @Query("SELECT w FROM WriterName w WHERE w.moim.id = :moimId ORDER BY CASE WHEN w = :owner THEN 0 ELSE 1 END, w.id ASC")
     Page<WriterName> findByMoimIdOrderByOwnerFirstAndIdAsc(@Param("moimId") Long moimId, @Param("owner") WriterName owner, Pageable pageable);
@@ -36,7 +37,7 @@ public interface WriterNameRepository extends JpaRepository<WriterName, Long> {
     Optional<WriterName> findById(final Long id);
 
     @Query("select w from WriterName w join fetch w.moim where w.writer.id = :writerId")
-    List<WriterName> findAllByWriterId(final Long writerId);
+    List<WriterName> findAllByWriterId(final long writerId);
 
     Integer countAllByWriter(final User user);
 

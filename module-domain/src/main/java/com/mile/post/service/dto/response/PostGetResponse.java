@@ -2,7 +2,7 @@ package com.mile.post.service.dto.response;
 
 import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
-import com.mile.utils.DateUtil;
+import com.mile.common.utils.DateUtil;
 
 public record PostGetResponse(
         String topic,

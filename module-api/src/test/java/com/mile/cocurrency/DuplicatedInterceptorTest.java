@@ -13,9 +13,11 @@ import com.mile.topic.domain.Topic;
 import com.mile.topic.repository.TopicRepository;
 import com.mile.user.domain.User;
 import com.mile.user.repository.UserRepository;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
+import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
+import com.mile.writername.service.vo.WriterNameInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +31,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -62,6 +66,7 @@ public class DuplicatedInterceptorTest {
     private static Long USER_ID;
     private static String MOIM_ID;
     private static String TOPIC_ID;
+    private static Map<Long, WriterNameInfo> joinedRole = new HashMap<>();
 
     @BeforeEach
     @Transactional
@@ -91,6 +96,7 @@ public class DuplicatedInterceptorTest {
         MOIM_ID = secureUrlUtil.encodeUrl(moim.getId());
 
         TOPIC_ID = secureUrlUtil.encodeUrl(topic.getId());
+        joinedRole.put(moim.getId(), WriterNameInfo.of(writerName.getId(), MoimRole.OWNER));
     }
 
     @Test
@@ -101,7 +107,7 @@ public class DuplicatedInterceptorTest {
         int numberOfThread = 4;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThread);
         CountDownLatch latch = new CountDownLatch(numberOfThread);
-        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID);
+        String token = "Bearer " + jwtTokenProvider.issueAccessToken(USER_ID, joinedRole);
 
         PostCreateRequest bodyDto = new PostCreateRequest(
                 MOIM_ID,

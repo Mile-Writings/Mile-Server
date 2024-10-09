@@ -1,7 +1,7 @@
 package com.mile.moim.service.dto.response;
 
 import com.mile.moim.domain.Moim;
-import com.mile.utils.DateUtil;
+import com.mile.common.utils.DateUtil;
 
 public record MoimInvitationInfoResponse(
         String moimTitle,

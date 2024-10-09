@@ -4,12 +4,13 @@ import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
+import com.mile.moim.domain.popular.MoimCuriousPost;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.response.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.topic.domain.Topic;
-import com.mile.utils.SecureUrlUtil;
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
@@ -78,31 +79,6 @@ public class PostRetriever {
         return postList;
     }
 
-    public void authenticateUserWithPostId(
-            final Long postId,
-            final Long userId
-    ) {
-        Post post = findById(postId);
-        authenticateUserWithPost(post, userId);
-    }
-
-    public void authenticateUserWithPost(
-            final Post post,
-            final Long userId
-    ) {
-        Long moimId = post.getTopic().getMoim().getId();
-        writerNameRetriever.findByMoimAndUserWithNotExceptionCase(moimId, userId);
-    }
-
-    public void authenticateUserOfMoim(
-            final boolean isUserInMoim
-    ) {
-        if (!isUserInMoim) {
-            throw new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR);
-        }
-    }
-
-
     public boolean existsPostByWriterWithPost(
             final Long postId,
             final Long writerNameId
@@ -119,26 +95,19 @@ public class PostRetriever {
         }
     }
 
-    public void authenticateWriter(
-            final Long postId,
-            final WriterName writerName
-    ) {
-        authenticateWriterWithPost(postId, writerName.getId());
-    }
 
     public boolean isWriterOfPost(final Post post, final WriterName writerName) {
         return post.getWriterName().equals(writerName);
     }
 
-
     public MoimCuriousPostListResponse getMostCuriousPostByMoim(final Moim moim) {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
         return MoimCuriousPostListResponse.of(postList
                 .stream()
-                .map(p ->
-                        MoimMostCuriousPostResponse.of(p.getIdUrl(), p.getImageUrl(), p.getTopic().getContent(), p.getTitle(), p.getContent(), p.isContainPhoto())
-                ).collect(Collectors.toList()));
+                .map(p->MoimMostCuriousPostResponse.of(MoimCuriousPost.of(p))
+                ).toList());
     }
+
 
     public int findPostCountByWriterNameId(
             final Long writerNameId
@@ -153,5 +122,4 @@ public class PostRetriever {
                 .flatMap(topic -> postRepository.findByTopic(topic).stream())
                 .collect(Collectors.toList());
     }
-
 }

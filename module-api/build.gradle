@@ -15,6 +15,9 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    //Sentry
+    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.9.0'
 }
 
 tasks.named('test') {

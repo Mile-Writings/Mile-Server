@@ -5,15 +5,18 @@ import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.user.domain.User;
+import com.mile.writername.domain.MoimRole;
 import com.mile.writername.domain.WriterName;
 import com.mile.writername.repository.WriterNameRepository;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,15 +40,14 @@ public class WriterNameRetriever {
 
     public WriterName findById(final Long id) {
         return writerNameRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.WRITER_NOT_FOUND)
+                () -> new ForbiddenException(ErrorMessage.USER_MOIM_AUTHENTICATE_ERROR)
         );
     }
 
-    public WriterNameShortResponse findWriterNameInfo(
-            final Long moimId,
-            final Long userId
+    public WriterNameInformationResponse findWriterNameInfo(
+            final Long writerNameId
     ) {
-        return WriterNameShortResponse.of(findByMoimAndUserWithNotExceptionCase(moimId, userId));
+        return WriterNameInformationResponse.of(findByIdNonException(writerNameId));
     }
 
     public boolean isUserInMoim(
@@ -69,12 +71,11 @@ public class WriterNameRetriever {
                 );
     }
 
-    public WriterName findByMoimAndUserWithNotExceptionCase(
-            final Long moimId,
-            final Long writerId
+    public WriterName findByIdNonException(
+            final Long writerNameId
     ) {
-        return writerNameRepository.findByMoimIdAndWriterId(moimId, writerId)
-                .orElseThrow( () -> new ForbiddenException(ErrorMessage.WRITER_NAME_NON_AUTHENTICATE)
+        return writerNameRepository.findById(writerNameId)
+                .orElseThrow(() -> new ForbiddenException(ErrorMessage.WRITER_NAME_NON_AUTHENTICATE)
                 );
     }
 
@@ -114,10 +115,25 @@ public class WriterNameRetriever {
         return writerNameRepository.findByMoimId(moimId).size();
     }
 
-    public List<WriterName> findTop2ByCuriousCount(final Long moimid) {
-        return writerNameRepository.findTop2ByMoimIdAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moimid, MIN_TOTAL_CURIOUS_COUNT);
+    public int findNumbersOfWritersByMoim(
+            final Moim moim
+    ) {
+        return writerNameRepository.countByMoim(moim);
     }
 
+    public Map<Long, WriterNameInfo> getJoinedRoleFromUserId(final Long userId) {
+        return writerNameRepository.findAllByWriterId(userId).stream().collect(
+                Collectors.toMap(writerName -> writerName.getMoim().getId(), this::getWriterNameMoimRole)
+        );
+    }
+
+    private WriterNameInfo getWriterNameMoimRole(final WriterName writerName) {
+        return WriterNameInfo.of(writerName.getId(), writerName.getMoim().getOwner().equals(writerName) ? MoimRole.OWNER : MoimRole.WRITER);
+    }
+
+    public List<WriterName> findTop2ByCuriousCount(final Moim moim) {
+        return writerNameRepository.findTop2ByMoimAndTotalCuriousCountGreaterThanOrderByTotalCuriousCountDesc(moim, MIN_TOTAL_CURIOUS_COUNT);
+    }
 
     public Page<WriterName> findWriterNameByMoimIdOrderByOwnerFirstAndIdAsc(final Long moimId, final WriterName owner, final PageRequest pageRequest) {
         return writerNameRepository.findByMoimIdOrderByOwnerFirstAndIdAsc(moimId, owner, pageRequest);

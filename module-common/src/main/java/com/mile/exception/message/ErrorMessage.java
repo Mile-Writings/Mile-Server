@@ -19,12 +19,9 @@ public enum ErrorMessage {
     HANDLER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "요청하신 URL은 정보가 없습니다."),
     COMMENT_NOT_FOUND(40406, "해당 댓글이 존재하지 않습니다."),
     CURIOUS_NOT_FOUND(40407, "해당 궁금해요는 존재하지 않습니다."),
-    TOPIC_NOT_FOUND(40408, "해당 글감이 존재하지 않습니다."),
-    KEYWORD_NOT_FOUND(40409, "해당 글모임의 글감 키워드가 존재하지 않습니다."),
-    WRITER_NOT_FOUND(40411, "해당 작가는 존재하지 않습니다."),
+    TOPIC_NOT_FOUND(40408, "글감이 존재하지 않습니다."),
     RECOMMEND_NOT_FOUND(40412, "추천 글감을 받아오는데 실패했습니다."),
-    MOIM_TOPIC_NOT_FOUND(40413, "해당 모임의 글감이 존재하지 않습니다."),
-    REPLY_NOT_FOUND(40416, "Id에 해당하는 대댓글이 없습니다."),
+    INVALID_URL_EXCEPTION(40413, "해당 URI는 자원을 표시할 수 없습니다."),
     /*
     Bad Request
      */
@@ -38,11 +35,9 @@ public enum ErrorMessage {
     BEARER_LOST_ERROR(HttpStatus.BAD_REQUEST.value(), "토큰의 요청에 Bearer이 담겨 있지 않습니다."),
     POST_NOT_TEMPORARY_ERROR(40008, "해당 글은 임시저장 글이 아닙니다."),
     POST_TEMPORARY_ERROR(HttpStatus.BAD_REQUEST.value(), "해당 글은 임시저장글입니다."),
-    PATH_PARAMETER_INVALID_ERROR(40010, "해당 URI는 자원을 표시할 수 없습니다."),
     REQUEST_URL_WRONG_ERROR(HttpStatus.BAD_REQUEST.value(), "요청 URL를 다시 확인해주세요"),
     IMAGE_EXTENSION_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 확장자는 jpg, png, webp만 가능합니다."),
     IMAGE_SIZE_INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "이미지 사이즈는 5MB를 넘을 수 없습니다."),
-    INVALID_URL_EXCEPTION(40014, "해당 URI는 자원을 표시할 수 없습니다."),
     LEAST_TOPIC_SIZE_OF_MOIM_ERROR(40015, "모임에는 최소 하나의 글감이 있어야 합니다."),
     USER_MOIM_ALREADY_JOIN(40016, "사용자는 이미 모임에 가입했습니다."),
     WRITER_NAME_LENGTH_WRONG(40017, "사용 불가능한 필명입니다."),

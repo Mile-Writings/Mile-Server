@@ -22,14 +22,14 @@ public class CuriousService {
         curiousRetriever.checkCuriousNotExists(post, writerName);
         curiousRemover.deleteCurious(post, writerName);
         post.decreaseCuriousCount();
-        writerNameUpdator.decreaseTotalCuriousCountByWriterName(writerName);
+        writerNameUpdator.decreaseTotalCuriousCountByWriterName(post.getWriterName());
     }
 
     public void createCurious(final Post post, final WriterName writerName) {
         curiousRetriever.checkCuriousExists(post, writerName);
         curiousCreator.createCurious(post, writerName);
         post.increaseCuriousCount();
-        writerNameUpdator.increaseTotalCuriousCountByWriterName(writerName);
+        writerNameUpdator.increaseTotalCuriousCountByWriterName(post.getWriterName());
     }
 
 

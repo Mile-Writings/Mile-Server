@@ -1,33 +1,42 @@
 package com.mile.controller.moim;
 
+import com.mile.common.auth.JwtTokenUpdater;
+import com.mile.common.auth.annotation.UserAuthAnnotation;
+import com.mile.common.auth.annotation.UserAuthenticationType;
+import com.mile.common.auth.dto.AccessTokenDto;
 import com.mile.common.resolver.moim.MoimIdPathVariable;
 import com.mile.common.resolver.user.UserId;
+import com.mile.common.utils.thread.WriterNameContextUtil;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
 import com.mile.moim.service.MoimService;
+import com.mile.moim.service.dto.MoimIdValueDto;
+import com.mile.moim.service.dto.request.MoimCreateRequest;
+import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
+import com.mile.moim.service.dto.request.TopicCreateRequest;
+import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.BestMoimListResponse;
 import com.mile.moim.service.dto.response.ContentListResponse;
 import com.mile.moim.service.dto.response.InvitationCodeGetResponse;
 import com.mile.moim.service.dto.response.MoimAuthenticateResponse;
-import com.mile.moim.service.dto.request.MoimCreateRequest;
-import com.mile.moim.service.dto.response.MoimCreateResponse;
 import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
-import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
 import com.mile.moim.service.dto.response.MoimInfoOwnerResponse;
 import com.mile.moim.service.dto.response.MoimInfoResponse;
 import com.mile.moim.service.dto.response.MoimInvitationInfoResponse;
+import com.mile.moim.service.dto.response.MoimMostCuriousWriterResponse;
 import com.mile.moim.service.dto.response.MoimNameConflictCheckResponse;
 import com.mile.moim.service.dto.response.MoimPublicStatusResponse;
 import com.mile.moim.service.dto.response.MoimTopicInfoListResponse;
 import com.mile.moim.service.dto.response.MoimTopicResponse;
 import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
-import com.mile.moim.service.dto.response.PopularWriterListResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
-import com.mile.moim.service.dto.request.TopicCreateRequest;
 import com.mile.moim.service.dto.response.TopicListResponse;
-import com.mile.moim.service.dto.request.WriterMemberJoinRequest;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
-import com.mile.writername.service.dto.response.WriterNameShortResponse;
+import com.mile.writername.domain.MoimRole;
+import com.mile.writername.service.dto.response.WriterNameInformationResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,16 +59,18 @@ import java.net.URI;
 public class MoimController implements MoimControllerSwagger {
 
     private final MoimService moimService;
+    private final JwtTokenUpdater jwtTokenUpdater;
 
     @Override
     @GetMapping("/{moimId}")
+    @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @MoimIdPathVariable final Long moimId,
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TOPIC_SEARCH_SUCCESS,
-                moimService.getContentsFromMoim(moimId, userId));
+                moimService.getContentsFromMoim(moimId));
     }
 
 
@@ -75,16 +86,18 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
-    @PostMapping("{moimId}/user")
+    @PostMapping("/{moimId}/user")
     public ResponseEntity<SuccessResponse> joinMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final WriterMemberJoinRequest joinRequest,
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(
-                        moimService.joinMoim(moimId, userId, joinRequest).toString()))
-                .body(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS));
+        final Long writerNameId = moimService.joinMoim(moimId, userId, joinRequest);
+        return ResponseEntity
+                .ok(SuccessResponse.of(SuccessMessage.WRITER_JOIN_SUCCESS,
+                        AccessTokenDto.of(jwtTokenUpdater.setAccessToken(userId, moimId, writerNameId, MoimRole.WRITER)
+                        )));
     }
 
     @Override
@@ -112,7 +125,7 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/writers/top-rank")
-    public ResponseEntity<SuccessResponse<PopularWriterListResponse>> getMostCuriousWritersOfMoim(
+    public ResponseEntity<SuccessResponse<MoimMostCuriousWriterResponse>> getMostCuriousWritersOfMoim(
             @MoimIdPathVariable final Long moimId,
             @PathVariable("moimId") final String moimUrl
     ) {
@@ -163,12 +176,13 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/info/owner")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse<MoimInfoOwnerResponse>> getMoimInfoForOwner(
             @MoimIdPathVariable final Long moimId,
             @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId, userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_FOR_OWNER_GET_SUCCESS, moimService.getMoimInfoForOwner(moimId)));
     }
 
     @Override
@@ -234,11 +248,19 @@ public class MoimController implements MoimControllerSwagger {
 
     @PostMapping
     @Override
-    public ResponseEntity<SuccessResponse<MoimCreateResponse>> createMoim(
+    public ResponseEntity<SuccessResponse<AccessTokenDto>> createMoim(
             @RequestBody @Valid final MoimCreateRequest creatRequest,
             @UserId final Long userId
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_CREATE_SUCCESS, moimService.createMoim(userId, creatRequest)));
+        MoimIdValueDto moimIdValueDto = moimService.createMoim(userId, creatRequest);
+        return ResponseEntity.ok(
+                SuccessResponse.of(
+                        SuccessMessage.MOIM_CREATE_SUCCESS,
+                        AccessTokenDto.of(
+                                moimIdValueDto.data(),
+                                jwtTokenUpdater.setAccessToken(userId, moimIdValueDto.moimId(), moimIdValueDto.writerNameId(), MoimRole.OWNER))
+                )
+        );
     }
 
     @GetMapping("/{moimId}/invitation-code")
@@ -263,13 +285,13 @@ public class MoimController implements MoimControllerSwagger {
     }
 
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     @GetMapping("/{moimId}/writername")
-    public ResponseEntity<SuccessResponse<WriterNameShortResponse>> getWriterNameOfUser(
+    public ResponseEntity<SuccessResponse<WriterNameInformationResponse>> getWriterNameOfUser(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(moimId, userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.WRITER_NAME_GET_SUCCESS, moimService.getWriterNameOfUser(WriterNameContextUtil.getWriterNameContext())));
     }
 
     @Override
@@ -293,4 +315,12 @@ public class MoimController implements MoimControllerSwagger {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
     }
 
+    @Override
+    @GetMapping("/{moimId}/information")
+    public ResponseEntity<SuccessResponse> getMoimTotalInformation(
+            @MoimIdPathVariable @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFO_SUCCESS, moimService.getMoimTotalInformation(moimId)));
+    }
 }

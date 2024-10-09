@@ -24,7 +24,6 @@ import static com.mile.writername.domain.QWriterName.writerName;
 public class PostRepositoryCustomImpl implements PostRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
-    // select p from post p join moim m on p.topic = m.topic orderby p.curiousCount limit 2
     public List<Post> findTop2ByMoimOrderByCuriousCountDesc(final Moim requestMoim) {
         return jpaQueryFactory
                 .selectFrom(post)
@@ -36,7 +35,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                 .fetch();
 
     }
-
     public List<Post> findLatest4NonTemporaryPostsByMoim(Moim moim) {
 
         List<Post> result = jpaQueryFactory

@@ -1,9 +1,7 @@
 package com.mile.curious.repository;
+
 import com.mile.curious.domain.Curious;
 import com.mile.post.domain.Post;
-import com.mile.user.domain.User;
-import java.util.List;
-
 import com.mile.writername.domain.WriterName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,8 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface CuriousRepository extends JpaRepository<Curious, Long> {
+import java.util.List;
+
+public interface CuriousRepository extends JpaRepository<Curious, Long>, CuriousRepositoryCustom {
     boolean existsByPostAndWriterName(final Post post, final WriterName writerName);
+
     Curious findByPostAndWriterName(final Post post, final WriterName writerName);
 
     @Transactional

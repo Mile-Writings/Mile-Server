@@ -4,6 +4,7 @@ package com.mile.controller.user.facade;
 import com.mile.client.SocialType;
 import com.mile.client.dto.UserLoginRequest;
 import com.mile.common.auth.JwtTokenProvider;
+import com.mile.writername.domain.MoimRole;
 import com.mile.jwt.service.TokenService;
 import com.mile.moim.service.dto.response.MoimListOfUserResponse;
 import com.mile.strategy.LoginStrategyManager;
@@ -11,13 +12,17 @@ import com.mile.strategy.dto.UserInfoResponse;
 import com.mile.user.service.UserService;
 import com.mile.user.service.dto.AccessTokenGetSuccess;
 import com.mile.user.service.dto.LoginSuccessResponse;
+import com.mile.writername.service.vo.WriterNameInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthFacade {
 
     private final UserService userService;
@@ -29,9 +34,10 @@ public class AuthFacade {
             final String refreshToken
     ) {
         final Long userId = tokenService.findIdByRefreshToken(refreshToken);
+        final Map<Long, WriterNameInfo> role = jwtTokenProvider.getJoinedRoleFromJwt(refreshToken);
 
         return AccessTokenGetSuccess.of(
-                jwtTokenProvider.issueAccessToken(userId)
+                jwtTokenProvider.issueAccessToken(userId, role)
         );
     }
 
@@ -42,8 +48,8 @@ public class AuthFacade {
         return getTokenDto(getUserInfoResponse(authorizationCode, loginRequest));
     }
 
-    public void deleteUser(final Long userId, final String authoriztionCode, final UserLoginRequest userLoginRequest) {
-        revokeUser(authoriztionCode, userLoginRequest);
+    public void deleteUser(final Long userId, final String authorizationCode, final UserLoginRequest userLoginRequest) {
+        revokeUser(authorizationCode, userLoginRequest);
         userService.deleteUser(userId);
         tokenService.deleteRefreshToken(userId);
     }
@@ -59,13 +65,15 @@ public class AuthFacade {
     ) {
         try {
             if (userService.isExistingUser(userResponse.socialId(), userResponse.socialType())) {
-                return getTokenByUserId(userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
+                Long userId = userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId();
+                return getTokenByUserId(userId, userService.getJoinedRoleFromUser(userId));
             } else {
                 Long id = userService.createUser(userResponse.socialId(), userResponse.socialType(), userResponse.email());
-                return getTokenByUserId(id);
+                return getTokenByUserId(id, new HashMap<>());
             }
         } catch (DataIntegrityViolationException e) {
-            return getTokenByUserId(userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId());
+            Long userId = userService.getBySocialId(userResponse.socialId(), userResponse.socialType()).getId();
+            return getTokenByUserId(userId, userService.getJoinedRoleFromUser(userId));
         }
     }
 
@@ -92,12 +100,13 @@ public class AuthFacade {
 
 
     public LoginSuccessResponse getTokenByUserId(
-            final Long id
+            final Long id,
+            final Map<Long, WriterNameInfo> role
     ) {
-        String refreshToken = jwtTokenProvider.issueRefreshToken(id);
+        String refreshToken = jwtTokenProvider.issueRefreshToken(id, role);
         tokenService.saveRefreshToken(id, refreshToken);
         return LoginSuccessResponse.of(
-                jwtTokenProvider.issueAccessToken(id),
+                jwtTokenProvider.issueAccessToken(id, role),
                 refreshToken
         );
     }

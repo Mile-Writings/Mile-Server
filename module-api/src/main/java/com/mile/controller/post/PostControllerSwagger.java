@@ -48,7 +48,6 @@ public interface PostControllerSwagger {
     SuccessResponse postComment(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @Valid @RequestBody final CommentCreateRequest commentCreateRequest,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -65,7 +64,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostCuriousResponse> postCurious(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -83,7 +81,6 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse<CommentListResponse>> getComments(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -100,7 +97,6 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse<CuriousInfoResponse>> getCuriousInfo(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -117,7 +113,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<PostCuriousResponse> deleteCurious(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -167,7 +162,6 @@ public interface PostControllerSwagger {
     ResponseEntity<SuccessResponse> putPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
             @RequestBody final PostPutRequest putRequest,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -185,7 +179,6 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deleteTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -219,7 +212,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<TemporaryPostGetResponse> getTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 
@@ -312,7 +304,6 @@ public interface PostControllerSwagger {
     )
     SuccessResponse<ModifyPostGetResponse> getPostForModifying(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 }
