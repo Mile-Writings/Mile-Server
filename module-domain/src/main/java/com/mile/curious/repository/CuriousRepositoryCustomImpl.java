@@ -35,10 +35,13 @@ public class CuriousRepositoryCustomImpl implements CuriousRepositoryCustom {
     }
 
     @Override
-    public List<Post> findPostByLatestCurious(final Moim moim, final int requestSize, final List<Post> posts) {
+    public List<Post> findPostByLatestCurious(final Moim targetMoim, final int requestSize, final List<Post> posts) {
         return queryFactory.select(post)
                 .from(curious)
                 .join(curious.post, post)
+                .join(topic).on(post.topic.id.eq(topic.id))
+                .join(moim).on(topic.moim.id.eq(moim.id))
+                .where(moim.id.eq(targetMoim.getId()))
                 .where(post.notIn(posts))
                 .orderBy(curious.createdAt.desc())
                 .limit(requestSize)
