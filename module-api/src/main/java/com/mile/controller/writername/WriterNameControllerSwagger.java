@@ -27,8 +27,7 @@ public interface WriterNameControllerSwagger {
             }
     )
     ResponseEntity<SuccessResponse> deleteMember(
-            @PathVariable("writerNameId") final Long writerNameId,
-            @UserId final Long userId
+            @PathVariable("writerNameId") final Long writerNameId
     );
 
     @Operation(summary = "필명, 소개글 조회")

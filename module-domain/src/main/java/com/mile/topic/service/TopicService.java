@@ -46,22 +46,18 @@ public class TopicService {
 
     @Transactional
     public void deleteTopic(
-            final Long userId,
             final Long topicId
     ) {
         Topic topic = topicRetriever.findById(topicId);
-        User user = userService.findById(userId);
-        topicRetriever.authenticateTopicWithUser(topic, user);
         topicRetriever.checkSingleTopicDeletion(topic);
         topicRemover.deleteTopic(topic);
     }
 
     public void putTopic(
-            final Long userId,
             final Long topicId,
             final TopicPutRequest topicPutRequest
     ) {
-        topicUpdator.putTopic(userId, topicId, topicPutRequest);
+        topicUpdator.putTopic(topicId, topicPutRequest);
     }
 
 }

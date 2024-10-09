@@ -1,5 +1,7 @@
 package com.mile.controller.topic;
 
+import com.mile.common.auth.annotation.UserAuthAnnotation;
+import com.mile.common.auth.annotation.UserAuthenticationType;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
@@ -49,23 +51,24 @@ public class TopicController implements TopicControllerSwagger {
 
     @Override
     @DeleteMapping("/{topicId}")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> deleteTopic(
             @TopicIdPathVariable final Long topicId,
-            @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     ) {
-        topicService.deleteTopic(userId, topicId);
+        topicService.deleteTopic(topicId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_DELETE_SUCCESS));
     }
 
     @PutMapping("/{topicId}")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> putTopic(
             @RequestBody @Valid final TopicPutRequest topicPutRequest,
             @TopicIdPathVariable final Long topicId,
-            @UserId final Long userId,
             @PathVariable("topicId") final String topicUrl
     ) {
-        topicService.putTopic(userId, topicId, topicPutRequest);
+        topicService.putTopic(topicId, topicPutRequest);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.TOPIC_PUT_SUCCESS));
     }
+
 }

@@ -18,13 +18,10 @@ public class TopicUpdator {
 
     @Transactional
     public void putTopic(
-            final Long userId,
             final Long topicId,
             final TopicPutRequest topicPutRequest
     ) {
         Topic topic = topicRetriever.findById(topicId);
-        User user = userService.findById(userId);
-        topicRetriever.authenticateTopicWithUser(topic, user);
         topic.updateTopic(topicPutRequest);
     }
 
