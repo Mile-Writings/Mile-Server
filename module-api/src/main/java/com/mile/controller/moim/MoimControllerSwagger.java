@@ -90,20 +90,6 @@ public interface MoimControllerSwagger {
             @PathVariable("moimId") final String moimUrl
     );
 
-    @Operation(summary = "글모임 최근 글감 ")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "글감 조회가 완료되었습니다."),
-                    @ApiResponse(responseCode = "404", description = "1. 해당 글모임이 존재하지 않습니다.\n 2.해당 모임의 주제가 존재하지 않습니다.",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "500", description = "서버 내부 오류입니다.",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-    )
-    SuccessResponse<MoimTopicResponse> getTopicFromMoim(
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @PathVariable("moimId") final String moimUrl
-    );
 
     @Operation(summary = "글모임 뷰 - 글모임 정보 조회")
     @ApiResponses(
