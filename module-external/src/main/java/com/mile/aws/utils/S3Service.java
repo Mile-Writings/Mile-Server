@@ -27,9 +27,6 @@ import java.util.UUID;
 @Component
 public class S3Service {
 
-    private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("image/jpeg", "image/png", "image/jpg", "image/webp");
-    private static final Long MAX_FILE_SIZE = 5 * 1024 * 1024L;
-
     private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 120L;  // 만료시간 2시간
 
     private final String bucketName;
