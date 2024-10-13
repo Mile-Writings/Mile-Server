@@ -1,5 +1,7 @@
 package com.mile.controller.writername;
 
+import com.mile.common.auth.annotation.UserAuthAnnotation;
+import com.mile.common.auth.annotation.UserAuthenticationType;
 import com.mile.common.resolver.user.UserId;
 import com.mile.dto.SuccessResponse;
 import com.mile.exception.message.SuccessMessage;
@@ -26,11 +28,11 @@ public class WriterNameController implements WriterNameControllerSwagger {
 
     @Override
     @DeleteMapping("/{writerNameId}")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> deleteMember(
-            @PathVariable("writerNameId") final Long writerNameId,
-            @UserId final Long userId
+            @PathVariable("writerNameId") final Long writerNameId
     ) {
-        writerNameService.deleteWriterNameById(writerNameId, userId);
+        writerNameService.deleteWriterNameById(writerNameId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_MEMBER_DELETE_SUCCESS));
     }
 

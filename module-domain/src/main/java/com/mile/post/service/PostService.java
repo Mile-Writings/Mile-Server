@@ -171,16 +171,17 @@ public class PostService {
     @Transactional
     public void deletePost(
             final Long postId,
-            final Long userId
+            final HashMap<Long, WriterNameInfo> moimWriteNameMap
     ) {
         Post post = postRetriever.findById(postId);
-        Long moimId = post.getTopic().getMoim().getId();
-        WriterName writerName = writerNameRetriever.findByMoimAndUser(moimId, userId);
-        if (!postRetriever.isWriterOfPost(post, writerName) && !moimRetriever.isMoimOwnerEqualsUser(post.getTopic().getMoim(), userId)) {
+        Moim moim = post.getTopic().getMoim();
+        final Long writerNameId = MoimWriterNameMapUtil.getWriterNameIdMoimWriterNameMap(moim.getId(), moimWriteNameMap);
+        if (!postRetriever.existsPostByWriterWithPost(postId, writerNameId) && !moimRetriever.isMoimOwnerEqualsWriterName(moim, writerNameId)) {
             throw new ForbiddenException(ErrorMessage.WRITER_AUTHENTICATE_ERROR);
         }
         postRemover.delete(post);
     }
+
 
     @Transactional(readOnly = true)
     public TemporaryPostGetResponse getTemporaryPost(

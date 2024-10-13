@@ -196,7 +196,6 @@ public interface PostControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deletePost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long postId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("postId") final String postUrl
     );
 

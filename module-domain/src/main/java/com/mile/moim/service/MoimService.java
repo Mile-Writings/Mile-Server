@@ -90,6 +90,7 @@ public class MoimService {
         return writerNameRetriever.findWriterNameInfo(writerNameId);
     }
 
+
     public WriterNameConflictCheckResponse checkConflictOfWriterName(Long moimId, String writerName) {
         if (writerName.length() > WRITER_NAME_MAX_VALUE) {
             throw new BadRequestException(ErrorMessage.WRITER_NAME_LENGTH_WRONG);
@@ -357,12 +358,9 @@ public class MoimService {
     }
 
     public void deleteMoim(
-            final Long moimId,
-            final Long userId
+            final Long moimId
     ) {
-
         Moim moim = moimRetriever.findById(moimId);
-        moimRetriever.authenticateOwnerOfMoim(moim, userRetriever.findById(userId));
         moimRemover.deleteRelatedData(moim);
         writerNameRemover.deleteWriterNamesByMoim(moim);
         topicRemover.deleteTopicsByMoim(moim);

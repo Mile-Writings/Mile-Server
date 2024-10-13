@@ -62,6 +62,13 @@ public class MoimRetriever {
         return moim.getOwner().getWriter().getId().equals(userId);
     }
 
+    public boolean isMoimOwnerEqualsWriterName(
+            final Moim moim,
+            final Long writerNameId
+    ) {
+        return moim.getOwner().getId().equals(writerNameId);
+    }
+
     public List<Moim> findBestMoims() {
         LocalDateTime endOfWeek = LocalDateTime.now();
         LocalDateTime startOfWeek = endOfWeek.minusDays(7);
