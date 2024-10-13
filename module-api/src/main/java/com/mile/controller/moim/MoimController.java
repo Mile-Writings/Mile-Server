@@ -134,6 +134,15 @@ public class MoimController implements MoimControllerSwagger {
                         moimService.getMostCuriousWritersOfMoim(moimId)));
     }
 
+    @Override
+    @GetMapping("/{moimId}/topic/today")
+    public SuccessResponse<MoimTopicResponse> getTopicFromMoim(
+            @MoimIdPathVariable final Long moimId,
+            @PathVariable("moimId") final String moimUrl
+    ) {
+        return SuccessResponse.of(SuccessMessage.MOIM_TOPIC_GET_SUCCESS, moimService.getTopicFromMoim(moimId));
+
+    }
 
     @GetMapping("/{moimId}/info")
     @Override
