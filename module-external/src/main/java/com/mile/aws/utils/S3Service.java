@@ -27,7 +27,7 @@ import java.util.UUID;
 @Component
 public class S3Service {
 
-    private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1L;  // 만료시간 2시간
+    private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1000L * 60 * 60 * 2;  // 만료시간 2시간
 
     private final String bucketName;
     private final AwsConfig awsConfig;
