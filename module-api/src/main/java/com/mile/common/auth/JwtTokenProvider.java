@@ -35,8 +35,8 @@ public class JwtTokenProvider {
     private final ObjectMapper objectMapper;
     private static final String MEMBER_ID = "memberId";
     private static final String JOINED_ROLE = "joinedRole";
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 4 * 60 * 60 * 1000L;
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 24 * 1000L * 14;
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 48 * 60 * 60 * 1000L;
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 24 * 1000L * 30;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
