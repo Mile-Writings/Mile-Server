@@ -68,7 +68,6 @@ public class MoimService {
     private final MoimRetriever moimRetriever;
     private final MoimCreator moimCreator;
     private final WriterNameRemover writerNameRemover;
-    private final CuriousRetriever curiousRetriever;
     private final TopicRemover topicRemover;
     private final TopicRetriever topicRetriever;
     private final TopicCreator topicCreator;
