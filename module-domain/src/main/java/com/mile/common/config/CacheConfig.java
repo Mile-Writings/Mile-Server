@@ -35,7 +35,7 @@ public class CacheConfig {
     private Caffeine<Object, Object> caffeineConfig() {
         return Caffeine.newBuilder()
                 .maximumSize(200)
-                .expireAfterAccess(5, TimeUnit.DAYS)
+                .expireAfterAccess(1, TimeUnit.DAYS)
                 .scheduler(getScheduler());
     }
 }
