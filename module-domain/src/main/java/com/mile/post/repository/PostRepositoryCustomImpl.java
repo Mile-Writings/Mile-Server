@@ -48,12 +48,12 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return result;
     }
 
-    public Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim requestMoim, final WriterName requestWriterName) {
+    public Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim requestMoim, final Long requestWriterNameId) {
         return Optional.ofNullable(jpaQueryFactory.selectFrom(post)
                 .join(moim)
                 .on(post.topic.moim.eq(requestMoim))
                 .join(writerName)
-                .on(post.writerName.eq(requestWriterName))
+                .on(post.writerName.id.eq(requestWriterNameId))
                 .where(post.isTemporary.eq(true)).fetchOne());
     }
 

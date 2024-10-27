@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class MoimPopularInfoRegister {
-    private final MoimPopularInfoRepository moimPopularInfoRepository;
 
+    private final MoimPopularInfoRepository moimPopularInfoRepository;
     private final CuriousRetriever curiousRetriever;
 
 

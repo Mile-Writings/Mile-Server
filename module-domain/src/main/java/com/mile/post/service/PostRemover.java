@@ -28,7 +28,7 @@ public class PostRemover {
             final Moim moim,
             final WriterName writerName
     ) {
-        postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName).ifPresent(
+        postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName.getId()).ifPresent(
                 this::delete
         );
     }

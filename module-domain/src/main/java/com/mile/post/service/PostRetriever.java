@@ -1,5 +1,6 @@
 package com.mile.post.service;
 
+import com.mile.common.utils.SecureUrlUtil;
 import com.mile.exception.message.ErrorMessage;
 import com.mile.exception.model.ForbiddenException;
 import com.mile.exception.model.NotFoundException;
@@ -10,9 +11,7 @@ import com.mile.moim.service.dto.response.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
 import com.mile.topic.domain.Topic;
-import com.mile.common.utils.SecureUrlUtil;
 import com.mile.writername.domain.WriterName;
-import com.mile.writername.service.WriterNameRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -30,7 +29,6 @@ public class PostRetriever {
     private final PostRepository postRepository;
     private final SecureUrlUtil secureUrlUtil;
     private static final int POST_BY_TOPIC_PER_PAGE_SIZE = 6;
-    private final WriterNameRetriever writerNameRetriever;
 
     public Post findById(
             final Long postId
@@ -43,9 +41,9 @@ public class PostRetriever {
 
     public String getTemporaryPostExist(
             final Moim moim,
-            final WriterName writerName
+            final Long writerNameId
     ) {
-        Optional<Post> post = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerName);
+        Optional<Post> post = postRepository.findByMoimAndWriterNameWhereIsTemporary(moim, writerNameId);
         if (post.isEmpty()) {
             return secureUrlUtil.encodeUrl(0L);
         }

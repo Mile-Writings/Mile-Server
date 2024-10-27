@@ -66,7 +66,6 @@ public class MoimController implements MoimControllerSwagger {
     @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     public SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.TOPIC_SEARCH_SUCCESS,
@@ -85,6 +84,15 @@ public class MoimController implements MoimControllerSwagger {
                 moimService.checkConflictOfWriterName(moimId, writerName)));
     }
 
+    /**
+     * 인가체제 예외 사항 - > user Id를 넘기는게 필요하기 때문에 User Authentication 처리하지 않음
+     *
+     * @param moimId
+     * @param joinRequest
+     * @param userId
+     * @param moimUrl
+     * @return ResponseEntity
+     */
     @Override
     @PostMapping("/{moimId}/user")
     public ResponseEntity<SuccessResponse> joinMoim(
@@ -102,24 +110,24 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/invite")
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public ResponseEntity<SuccessResponse<MoimInvitationInfoResponse>> getInvitationInfo(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INVITE_INFO_GET_SUCCESS,
-                moimService.getMoimInvitationInfo(userId, moimId)));
+                moimService.getMoimInvitationInfo(moimId, WriterNameContextUtil.getMoimWriterNameMapContext())));
     }
 
     @Override
     @GetMapping("/{moimId}/authenticate")
+    @UserAuthAnnotation(UserAuthenticationType.USER)
     public SuccessResponse<MoimAuthenticateResponse> getAuthenticationOfMoim(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.MOIM_AUTHENTICATE_SUCCESS,
-                moimService.getAuthenticateUserOfMoim(moimId, userId));
+                moimService.getAuthenticateUserOfMoim(moimId, WriterNameContextUtil.getMoimWriterNameMapContext()));
     }
 
 
@@ -187,13 +195,13 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @PostMapping("/{moimId}/topic")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> createTopicOfMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final TopicCreateRequest createRequest,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.created(URI.create(moimService.createTopic(moimId, userId, createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
+        return ResponseEntity.created(URI.create(moimService.createTopic(moimId, createRequest))).body(SuccessResponse.of(SuccessMessage.TOPIC_CREATE_SUCCESS));
     }
 
     @GetMapping("/best")
@@ -204,36 +212,36 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @GetMapping("/{moimId}/temporary")
+    @UserAuthAnnotation(UserAuthenticationType.WRITER_NAME)
     public SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
         return SuccessResponse.of(SuccessMessage.IS_TEMPORARY_POST_EXIST_GET_SUCCESS,
-                moimService.getTemporaryPost(moimId, userId));
+                moimService.getTemporaryPost(moimId, WriterNameContextUtil.getWriterNameContext()));
     }
 
 
     @Override
     @GetMapping("/{moimId}/admin/topics")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final int page,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, userId, page)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_TOPIC_LIST_GET_SUCCESS, moimService.getMoimTopicList(moimId, page)));
     }
 
     @Override
     @PutMapping("/{moimId}/info")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> modifyMoimInformation(
             @MoimIdPathVariable final Long moimId,
             @RequestBody @Valid final MoimInfoModifyRequest request,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        moimService.modifyMoimInforation(moimId, userId, request);
+        moimService.modifyMoimInforation(moimId, request);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_INFORMATION_PUT_SUCCESS));
     }
 
@@ -246,6 +254,13 @@ public class MoimController implements MoimControllerSwagger {
                 moimService.validateMoimName(moimName)));
     }
 
+    /**
+     * 모임 생성에는 UserID가 필요하기 때문에 Authentication 적용 X
+     *
+     * @param creatRequest
+     * @param userId
+     * @return
+     */
     @PostMapping
     @Override
     public ResponseEntity<SuccessResponse<AccessTokenDto>> createMoim(
@@ -265,23 +280,23 @@ public class MoimController implements MoimControllerSwagger {
 
     @GetMapping("/{moimId}/invitation-code")
     @Override
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.INVITATION_CODE_GET_SUCCESS, moimService.getInvitationCode(moimId, userId)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.INVITATION_CODE_GET_SUCCESS, moimService.getInvitationCode(moimId)));
     }
 
     @Override
     @GetMapping("/{moimId}/writernames")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
             @MoimIdPathVariable final Long moimId,
             @RequestParam final int page,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, userId, page)));
+        return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_WRITERNAME_LIST_GET_SUCCESS, moimService.getWriterNameListOfMoim(moimId, page)));
     }
 
     @Override
@@ -306,12 +321,12 @@ public class MoimController implements MoimControllerSwagger {
 
     @Override
     @DeleteMapping("/{moimId}")
+    @UserAuthAnnotation(UserAuthenticationType.OWNER)
     public ResponseEntity<SuccessResponse> deleteMoim(
             @MoimIdPathVariable final Long moimId,
-            @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     ) {
-        moimService.deleteMoim(moimId, userId);
+        moimService.deleteMoim(moimId);
         return ResponseEntity.ok(SuccessResponse.of(SuccessMessage.MOIM_DELETE_SUCCESS));
     }
 
