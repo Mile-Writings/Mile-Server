@@ -54,7 +54,6 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<ContentListResponse> getTopicsFromMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -72,7 +71,6 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse getAuthenticationOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -173,7 +171,6 @@ public interface MoimControllerSwagger {
     )
     SuccessResponse<TemporaryPostExistResponse> getTemporaryPost(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -189,7 +186,6 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<MoimInvitationInfoResponse>> getInvitationInfo(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -243,7 +239,6 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse<MoimTopicInfoListResponse>> getMoimTopicList(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             final int page,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -262,7 +257,6 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> modifyMoimInformation(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final MoimInfoModifyRequest request,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -293,7 +287,6 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse<InvitationCodeGetResponse>> getInvitationCode(
             @MoimIdPathVariable final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -336,7 +329,6 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse> createTopicOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestBody final TopicCreateRequest createRequest,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -379,7 +371,6 @@ public interface MoimControllerSwagger {
     ResponseEntity<SuccessResponse<MoimWriterNameListGetResponse>> getWriterNameListOfMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
             @RequestParam final int page,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final @UserId Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
@@ -426,7 +417,6 @@ public interface MoimControllerSwagger {
     )
     ResponseEntity<SuccessResponse> deleteMoim(
             @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) final Long moimId,
-            @Parameter(schema = @Schema(implementation = String.class), in = ParameterIn.PATH) @UserId final Long userId,
             @PathVariable("moimId") final String moimUrl
     );
 
