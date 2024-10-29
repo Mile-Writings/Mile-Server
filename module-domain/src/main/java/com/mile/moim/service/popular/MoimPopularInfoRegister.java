@@ -11,11 +11,13 @@ import com.mile.moim.service.lock.AtomicValidateMoimPopulerInfo;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.scheduling.concurrent.ScheduledExecutorTask;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,12 +28,12 @@ public class MoimPopularInfoRegister {
     private final CuriousRetriever curiousRetriever;
 
 
-    private List<MoimCuriousPost> getMoimCuriousPost(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
+    private Set<MoimCuriousPost> getMoimCuriousPost(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
         return mostCuriousPostsInLastWeek.stream().map(p ->
-                MoimCuriousPost.of(p.getPost())).limit(2).toList();
+                MoimCuriousPost.of(p.getPost())).limit(2).collect(Collectors.toUnmodifiableSet());
     }
 
-    private List<MoimCuriousWriter> getMoimCuriousWriter(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
+    private Set<MoimCuriousWriter> getMoimCuriousWriter(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
         Map<WriterName, Long> writerNameCount = mostCuriousPostsInLastWeek.stream()
                 .collect(Collectors.groupingBy(p -> p.getPost().getWriterName(), Collectors.summingLong(PostAndCuriousCountInLastWeek::getCount)));
 
@@ -40,7 +42,7 @@ public class MoimPopularInfoRegister {
                 .limit(2)
                 .map(Map.Entry::getKey).toList();
 
-        return topTwoWriters.stream().map(MoimCuriousWriter::of).toList();
+        return topTwoWriters.stream().map(MoimCuriousWriter::of).collect(Collectors.toUnmodifiableSet());
     }
 
     @CachePut(value = "moimPopularInfo", key = "#moim.id")
@@ -48,9 +50,9 @@ public class MoimPopularInfoRegister {
     public MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
         List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
 
-        List<MoimCuriousPost> moimCuriousPosts = getMoimCuriousPost(mostCuriousPostsInLastWeek);
+        Set<MoimCuriousPost> moimCuriousPosts = getMoimCuriousPost(mostCuriousPostsInLastWeek);
 
-        List<MoimCuriousWriter> moimCuriousWriters = getMoimCuriousWriter(mostCuriousPostsInLastWeek);
+        Set<MoimCuriousWriter> moimCuriousWriters = getMoimCuriousWriter(mostCuriousPostsInLastWeek);
 
         MoimPopularInfo moimPopularInfo = MoimPopularInfo.of(moim.getId(), moimCuriousPosts, moimCuriousWriters);
 

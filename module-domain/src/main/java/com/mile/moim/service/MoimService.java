@@ -55,6 +55,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -141,7 +142,7 @@ public class MoimService {
     ) {
         Moim moim = moimRetriever.findById(moimId);
         List<WriterName> writers = writerNameRetriever.findTop2ByCuriousCount(moim);
-        List<MoimCuriousWriter> curiousWriters = writers.stream().map(MoimCuriousWriter::of).toList();
+        Set<MoimCuriousWriter> curiousWriters = writers.stream().map(MoimCuriousWriter::of).collect(Collectors.toSet());
         return MoimMostCuriousWriterResponse.of(curiousWriters);
     }
 

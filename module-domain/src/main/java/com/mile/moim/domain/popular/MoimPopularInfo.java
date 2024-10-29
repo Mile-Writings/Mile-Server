@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,18 +27,18 @@ public class MoimPopularInfo {
     private Long moimId;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<MoimCuriousPost> posts;
+    private Set<MoimCuriousPost> posts;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<MoimCuriousWriter> writers;
+    private Set<MoimCuriousWriter> writers;
 
-    private MoimPopularInfo(final Long moimId, final List<MoimCuriousPost> posts, final List<MoimCuriousWriter> writers) {
+    private MoimPopularInfo(final Long moimId, final Set<MoimCuriousPost> posts, final Set<MoimCuriousWriter> writers) {
         this.moimId = moimId;
         this.posts = posts;
         this.writers = writers;
     }
 
-    public static MoimPopularInfo of(final Long moimId, final List<MoimCuriousPost> posts, final List<MoimCuriousWriter> writers) {
+    public static MoimPopularInfo of(final Long moimId, final Set<MoimCuriousPost> posts, final Set<MoimCuriousWriter> writers) {
         return new MoimPopularInfo(moimId, posts, writers);
     }
 }
