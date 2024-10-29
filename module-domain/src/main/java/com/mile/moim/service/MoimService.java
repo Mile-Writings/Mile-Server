@@ -129,11 +129,13 @@ public class MoimService {
             final Long moimId,
             final HashMap<Long, WriterNameInfo> writerNameMap
     ) {
+
+        final boolean isMember = writerNameMap.containsKey(moimId);
         return MoimAuthenticateResponse.of(
                 //멤버인지
-                writerNameMap.containsKey(moimId),
+                isMember,
                 //Owner인지
-                writerNameMap.get(moimId).moimRole().equals(MoimRole.OWNER)
+                isMember && writerNameMap.get(moimId).moimRole().equals(MoimRole.OWNER)
         );
     }
 
