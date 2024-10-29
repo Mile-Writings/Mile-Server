@@ -15,7 +15,7 @@ public interface PostRepositoryCustom {
 
     List<Post> findLatest4NonTemporaryPostsByMoim(final Moim moim);
 
-    Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim moim, final WriterName writerName);
+    Optional<Post> findByMoimAndWriterNameWhereIsTemporary(final Moim moim, final Long writerNameId);
 
     Slice<Post> findByTopicAndLastPostId(final Topic topic, final Pageable pageable, final Long lastPostId);
 }

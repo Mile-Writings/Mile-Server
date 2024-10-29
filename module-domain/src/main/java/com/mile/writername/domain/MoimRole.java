@@ -11,4 +11,5 @@ public enum MoimRole {
     OWNER("OWNER");
 
     private final String role;
+
 }
