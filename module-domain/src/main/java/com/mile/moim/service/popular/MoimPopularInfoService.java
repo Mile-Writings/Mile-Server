@@ -17,7 +17,6 @@ public class MoimPopularInfoService {
 
 
     @Cacheable(value = "moimPopularInfo", key = "#moim.id")
-    @AtomicValidateMoimPopulerInfo
     public MoimPopularInfo getMoimPopularInfo(final Moim moim) {
         return moimPopularInfoRepository.findByMoimId(moim.getId()).orElseGet(
                 () -> moimPopularInfoRegister.setMostPopularInfoOfMoim(moim)
