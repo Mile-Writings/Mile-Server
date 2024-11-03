@@ -1,7 +1,6 @@
 package com.mile.moim.repository;
 
 import com.mile.moim.domain.Moim;
-import com.mile.post.domain.Post;
 import com.mile.writername.domain.WriterName;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
