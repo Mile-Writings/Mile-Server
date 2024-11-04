@@ -26,7 +26,6 @@ public class MoimPopularInfoService {
         );
     }
 
-    @Async
     @Scheduled(cron = "59 59 23 * * SUN")
     public void deleteAllForScheduled() {
         sendMessageModule.sendMessage("글모임 별 인기 글/ 인기 작가 삭제 완료 : 총 " + moimPopularInfoRepository.countAll() + "개의 모임");
