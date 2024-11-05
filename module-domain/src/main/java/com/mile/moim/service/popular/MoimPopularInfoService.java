@@ -1,8 +1,10 @@
 package com.mile.moim.service.popular;
 
+import com.mile.common.CacheService;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.domain.popular.MoimPopularInfo;
 import com.mile.moim.repository.MoimPopularInfoRepository;
+import com.mile.moim.service.lock.AtomicMoimPopulerInfo;
 import com.mile.slack.module.SendMessageModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +18,11 @@ public class MoimPopularInfoService {
     private final MoimPopularInfoRepository moimPopularInfoRepository;
     private final MoimPopularInfoRegister moimPopularInfoRegister;
     private final SendMessageModule sendMessageModule;
+    private final CacheService cacheService;
 
 
     @Cacheable(value = "moimPopularInfo", key = "#moim.id")
+    @AtomicMoimPopulerInfo
     public MoimPopularInfo getMoimPopularInfo(final Moim moim) {
         return moimPopularInfoRepository.findByMoimId(moim.getId()).orElseGet(
                 () -> moimPopularInfoRegister.setMostPopularInfoOfMoim(moim)
@@ -29,6 +33,12 @@ public class MoimPopularInfoService {
     public void deleteAllForScheduled() {
         sendMessageModule.sendMessage("글모임 별 인기 글/ 인기 작가 삭제 완료 : 총 " + moimPopularInfoRepository.countAll() + "개의 모임");
         moimPopularInfoRepository.deleteAllInBatch();
+    }
+
+    @Scheduled(cron = "59 59 23 * * *")
+    public void deleteCacheForScheduled() {
+        sendMessageModule.sendMessage("글모임 별 인기 글/인기 작가 캐시 삭제 완료");
+        cacheService.deleteMoimCache();
     }
 
 }
