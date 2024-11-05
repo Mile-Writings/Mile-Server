@@ -12,7 +12,7 @@ public record PostPutRequest(
         String topicId,
 
         @NotBlank(message = "제목을 입력해주세요.")
-        @Size(max = 29, message = "제목 최대 글자를 초과했습니다.")
+        @Size(max = 34, message = "제목 최대 글자를 초과했습니다.")
         @Schema(description = "글 제목", example = "편안한 글쓰기")
         String title,
 
