@@ -23,7 +23,7 @@ public class MoimPopularInfoAspect {
     private final static String MOIM_POPULAR_LOCK = "MOIM_POPULAR_LOCK : ";
     private final AopForTransaction aopForTransaction;
 
-    @Pointcut("@annotation(com.mile.moim.service.lock.AtomicValidateMoimPopulerInfo)")
+    @Pointcut("@annotation(com.mile.moim.service.lock.AtomicMoimPopulerInfo)")
     public void setMoimPoplarInfoCut() {
     }
 
