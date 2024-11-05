@@ -12,7 +12,6 @@ public interface MoimPopularInfoRepository extends JpaRepository<MoimPopularInfo
     @Query("select m from MoimPopularInfo m join fetch m.posts join fetch m.writers where m.moimId = :moimId")
     Optional<MoimPopularInfo> findByMoimId(final long moimId);
 
-
-    @Scheduled(cron = "59 59 23 * * SUN")
-    void deleteAll();
+    @Query("select count(m) from MoimPopularInfo m")
+    Long countAll();
 }
