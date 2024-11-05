@@ -7,11 +7,10 @@ import com.mile.moim.domain.popular.MoimCuriousPost;
 import com.mile.moim.domain.popular.MoimCuriousWriter;
 import com.mile.moim.domain.popular.MoimPopularInfo;
 import com.mile.moim.repository.MoimPopularInfoRepository;
-import com.mile.moim.service.lock.AtomicValidateMoimPopulerInfo;
+import com.mile.moim.service.lock.AtomicMoimPopulerInfo;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.scheduling.concurrent.ScheduledExecutorTask;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -46,7 +45,6 @@ public class MoimPopularInfoRegister {
     }
 
     @CachePut(value = "moimPopularInfo", key = "#moim.id")
-    @AtomicValidateMoimPopulerInfo
     public MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
         List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
 
