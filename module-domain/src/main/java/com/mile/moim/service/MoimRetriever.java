@@ -6,7 +6,7 @@ import com.mile.exception.model.NotFoundException;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.repository.MoimRepository;
 import com.mile.moim.service.dto.response.MoimInfoResponse;
-import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
+import com.mile.common.lock.AtomicValidateUniqueMoimName;
 import com.mile.user.domain.User;
 import com.mile.common.utils.DateUtil;
 import com.mile.writername.domain.WriterName;
