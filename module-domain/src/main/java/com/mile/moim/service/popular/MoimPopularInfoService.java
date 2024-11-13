@@ -4,7 +4,6 @@ import com.mile.common.CacheService;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.domain.popular.MoimPopularInfo;
 import com.mile.moim.repository.MoimPopularInfoRepository;
-import com.mile.moim.service.lock.AtomicMoimPopulerInfo;
 import com.mile.slack.module.SendMessageModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ public class MoimPopularInfoService {
 
 
     @Cacheable(value = "moimPopularInfo", key = "#moim.id")
-    @AtomicMoimPopulerInfo
     public MoimPopularInfo getMoimPopularInfo(final Moim moim) {
         return moimPopularInfoRepository.findByMoimId(moim.getId()).orElseGet(
                 () -> moimPopularInfoRegister.setMostPopularInfoOfMoim(moim)

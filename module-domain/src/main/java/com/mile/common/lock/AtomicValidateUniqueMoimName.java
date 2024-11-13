@@ -1,5 +1,4 @@
-package com.mile.moim.service.lock;
-
+package com.mile.common.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AtomicMoimPopulerInfo {
+public @interface AtomicValidateUniqueMoimName {
 }
