@@ -1,8 +1,10 @@
 package com.mile.slack.module;
 
-import org.springframework.lang.NonNull;
-
-public interface SendWebhookMessage {
-    void sendMessage(@NonNull final String message);
-
+public abstract class SendWebhookMessage {
+    void sendMessage(String message) {
+        // TODO() - 상속받아 구현하기
+    }
+    void sendError(Exception exception){
+        // TODO() - 상속받아 구현하기
+    }
 }

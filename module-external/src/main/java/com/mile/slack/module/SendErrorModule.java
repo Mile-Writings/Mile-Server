@@ -3,34 +3,30 @@ package com.mile.slack.module;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-
-@Component
 @Slf4j
-public class SendMessageModule extends SendWebhookMessage {
+@Component
+public class SendErrorModule extends SendWebhookMessage {
     private final StringBuilder sb = new StringBuilder();
 
-    @Value("${webhook.url-for-event}")
+    @Value("${webhook.url-for-error}")
     private String webHookUri;
 
     @Override
-    public void sendMessage(@NonNull final String message) {
+    public void sendError(@NonNull final Exception exception) {
         WebClient webClient = WebClient.builder()
                 .baseUrl(webHookUri).build();
 
 
         webClient.post()
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(generateMessage(message))
+                .bodyValue(generateMessage(exception))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -38,11 +34,17 @@ public class SendMessageModule extends SendWebhookMessage {
                 .subscribe();
     }
 
-    private SlackMessage generateMessage(final String message) {
-        sb.append("*[인기글 삭제 작업 완료]*").append("\n").append(message).append("\n");
-        sb.append("*[진행일자]*").append("\n").append(LocalDateTime.now()).append("\n");
 
-        return new SlackMessage(sb.toString());
+    private String readRootStackTrace(Exception error) {
+        return error.getStackTrace()[0].toString();
+    }
+
+    private SendErrorModule.SlackMessage generateMessage(final Exception exception) {
+        sb.append("🚨 ERROR").append("\n").append("\n").append(exception.toString()).append("\n");
+        sb.append("REQUEST ID").append("\n").append("\n").append(MDC.get("request_id")).append("\n");
+        sb.append("DETAILS").append("\n").append("\n").append(readRootStackTrace(exception)).append("\n");
+
+        return new SendErrorModule.SlackMessage(sb.toString());
     }
 
     @Getter
