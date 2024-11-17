@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -43,18 +42,18 @@ public class SendErrorModule extends SendWebhookMessage {
         return error.getStackTrace()[0].toString();
     }
 
-    private SendErrorModule.SlackMessage generateMessage(final Exception exception) {
-        sb.append("🚨 ERROR").append("\n").append("\n").append(exception.toString()).append("\n");
-        sb.append("PROFILE").append("\n").append("\n").append(profile).append("\n");
-        sb.append("REQUEST ID").append("\n").append("\n").append(MDC.get("request_id")).append("\n");
-        sb.append("DETAILS").append("\n").append("\n").append(readRootStackTrace(exception)).append("\n");
+    private Message generateMessage(final Exception exception) {
+        sb.append("🚨 ERROR🚨").append("\n").append(exception.toString()).append("\n").append("\n");
+        sb.append("🏃🏻PROFILE🏃🏻").append("\n").append(profile).append("\n").append("\n");
+        sb.append("🆔REQUEST ID🆔").append("\n").append(MDC.get("request_id")).append("\n").append("\n");
+        sb.append("️✏️DETAILS✏️").append("\n").append(readRootStackTrace(exception)).append("\n");
 
-        return new SendErrorModule.SlackMessage(sb.toString());
+        return new Message(sb.toString());
     }
 
     @Getter
     @AllArgsConstructor
-    private class SlackMessage {
+    private class Message {
         private String text;
     }
 }
