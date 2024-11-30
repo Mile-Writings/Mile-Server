@@ -1,5 +1,6 @@
 package com.mile.moim.service.popular;
 
+import com.mile.common.lock.DistributedLock;
 import com.mile.curious.repository.dto.PostAndCuriousCountInLastWeek;
 import com.mile.curious.service.CuriousRetriever;
 import com.mile.moim.domain.Moim;
@@ -7,7 +8,6 @@ import com.mile.moim.domain.popular.MoimCuriousPost;
 import com.mile.moim.domain.popular.MoimCuriousWriter;
 import com.mile.moim.domain.popular.MoimPopularInfo;
 import com.mile.moim.repository.MoimPopularInfoRepository;
-import com.mile.moim.service.lock.AtomicMoimPopulerInfo;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
@@ -25,6 +25,7 @@ public class MoimPopularInfoRegister {
 
     private final MoimPopularInfoRepository moimPopularInfoRepository;
     private final CuriousRetriever curiousRetriever;
+    private final DistributedLock distributedLock;
 
 
     private Set<MoimCuriousPost> getMoimCuriousPost(final List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek) {
@@ -46,6 +47,7 @@ public class MoimPopularInfoRegister {
 
     @CachePut(value = "moimPopularInfo", key = "#moim.id")
     public MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
+
         List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
 
         Set<MoimCuriousPost> moimCuriousPosts = getMoimCuriousPost(mostCuriousPostsInLastWeek);
@@ -54,7 +56,11 @@ public class MoimPopularInfoRegister {
 
         MoimPopularInfo moimPopularInfo = MoimPopularInfo.of(moim.getId(), moimCuriousPosts, moimCuriousWriters);
 
-        return moimPopularInfoRepository.saveAndFlush(moimPopularInfo);
+        moimPopularInfoRepository.saveAndFlush(moimPopularInfo);
+
+        distributedLock.afterLock("MOIM_POPULAR_LOCK" + moim.getId());
+
+        return moimPopularInfo;
     }
 
 }

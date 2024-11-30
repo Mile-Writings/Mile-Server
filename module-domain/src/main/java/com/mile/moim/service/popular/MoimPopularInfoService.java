@@ -1,10 +1,10 @@
 package com.mile.moim.service.popular;
 
 import com.mile.common.CacheService;
+import com.mile.common.lock.DistributedLock;
 import com.mile.moim.domain.Moim;
 import com.mile.moim.domain.popular.MoimPopularInfo;
 import com.mile.moim.repository.MoimPopularInfoRepository;
-import com.mile.moim.service.lock.AtomicMoimPopulerInfo;
 import com.mile.slack.module.SendMessageModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +18,17 @@ public class MoimPopularInfoService {
     private final MoimPopularInfoRepository moimPopularInfoRepository;
     private final MoimPopularInfoRegister moimPopularInfoRegister;
     private final SendMessageModule sendMessageModule;
+    private final DistributedLock distributedLock;
     private final CacheService cacheService;
 
 
     @Cacheable(value = "moimPopularInfo", key = "#moim.id")
-    @AtomicMoimPopulerInfo
     public MoimPopularInfo getMoimPopularInfo(final Moim moim) {
         return moimPopularInfoRepository.findByMoimId(moim.getId()).orElseGet(
-                () -> moimPopularInfoRegister.setMostPopularInfoOfMoim(moim)
+                () -> {
+                    distributedLock.getLock("MOIM_POPULAR_LOCK" + moim.getId());
+                    return moimPopularInfoRegister.setMostPopularInfoOfMoim(moim);
+                }
         );
     }
 

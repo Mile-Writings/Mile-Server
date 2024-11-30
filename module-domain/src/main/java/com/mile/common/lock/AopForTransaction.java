@@ -1,4 +1,4 @@
-package com.mile.moim.service.lock;
+package com.mile.common.lock;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;

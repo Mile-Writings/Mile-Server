@@ -9,6 +9,7 @@ import com.mile.exception.model.JwtValidationException;
 import com.mile.exception.model.NotFoundException;
 import com.mile.exception.model.TooManyRequestException;
 import com.mile.exception.model.UnauthorizedException;
+import com.mile.slack.module.SendErrorModule;
 import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -31,22 +32,25 @@ import java.util.Objects;
 public class GlobalExceptionHandler {
 
     private static final int INDEX_ZERO = 0;
+    private final SendErrorModule sendErrorModule;
+
+    public GlobalExceptionHandler(SendErrorModule sendErrorModule) {
+        this.sendErrorModule = sendErrorModule;
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
-        Sentry.captureException(e);
+        ;
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.ENUM_VALUE_BAD_REQUEST));
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<ErrorResponse> handleHandlerMethodValidationException(final HandlerMethodValidationException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), Objects.requireNonNull(e.getAllValidationResults().get(INDEX_ZERO).getResolvableErrors().get(INDEX_ZERO).getDefaultMessage())));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(ErrorMessage.REQUEST_URL_WRONG_ERROR));
     }
 
@@ -58,13 +62,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(final UnauthorizedException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
     @ExceptionHandler(JwtValidationException.class)
     public ResponseEntity<ErrorResponse> handleJwtValidationException(final JwtValidationException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
@@ -92,25 +94,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorResponse> handleForbiddenException(final ForbiddenException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> handleConflictException(final ConflictException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
     @ExceptionHandler(TooManyRequestException.class)
     public ResponseEntity<ErrorResponse> handleTooManyRequestException(final TooManyRequestException e) {
-        Sentry.captureException(e);
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ErrorResponse.of(e.getErrorMessage()));
     }
 
@@ -121,7 +119,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(final Exception error, final HttpServletRequest request) {
-        Sentry.captureException(error);
+        sendErrorModule.sendError(error);
+
         log.error("================================================NEW===============================================");
         log.error(error.getMessage(), error);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.of(ErrorMessage.INTERNAL_SERVER_ERROR));

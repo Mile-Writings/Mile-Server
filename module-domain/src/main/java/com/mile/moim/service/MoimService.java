@@ -33,7 +33,7 @@ import com.mile.moim.service.dto.response.MoimWriterNameListGetResponse;
 import com.mile.moim.service.dto.response.TemporaryPostExistResponse;
 import com.mile.moim.service.dto.response.TopicListResponse;
 import com.mile.moim.service.dto.response.WriterNameConflictCheckResponse;
-import com.mile.moim.service.lock.AtomicValidateUniqueMoimName;
+import com.mile.common.lock.AtomicValidateUniqueMoimName;
 import com.mile.moim.service.popular.MoimPopularInfoService;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostRetriever;
