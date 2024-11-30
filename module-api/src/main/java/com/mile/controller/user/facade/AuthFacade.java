@@ -4,7 +4,9 @@ package com.mile.controller.user.facade;
 import com.mile.client.SocialType;
 import com.mile.client.dto.UserLoginRequest;
 import com.mile.common.auth.JwtTokenProvider;
-import com.mile.writername.domain.MoimRole;
+import com.mile.common.auth.JwtValidationType;
+import com.mile.exception.message.ErrorMessage;
+import com.mile.exception.model.UnauthorizedException;
 import com.mile.jwt.service.TokenService;
 import com.mile.moim.service.dto.response.MoimListOfUserResponse;
 import com.mile.strategy.LoginStrategyManager;
@@ -34,6 +36,10 @@ public class AuthFacade {
             final String refreshToken
     ) {
         final Long userId = tokenService.findIdByRefreshToken(refreshToken);
+
+        if(jwtTokenProvider.validateToken(refreshToken).equals(JwtValidationType.VALID_JWT)) {
+            throw new UnauthorizedException(ErrorMessage.TOKEN_INCORRECT_ERROR);
+        }
         final Map<Long, WriterNameInfo> role = jwtTokenProvider.getJoinedRoleFromJwt(refreshToken);
 
         return AccessTokenGetSuccess.of(
