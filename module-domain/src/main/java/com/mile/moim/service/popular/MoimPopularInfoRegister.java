@@ -58,7 +58,7 @@ public class MoimPopularInfoRegister {
 
         moimPopularInfoRepository.saveAndFlush(moimPopularInfo);
 
-        distributedLock.afterLock("MOIM_POPULAR_LOCK");
+        distributedLock.afterLock("MOIM_POPULAR_LOCK" + moim.getId());
 
         return moimPopularInfo;
     }

@@ -26,7 +26,7 @@ public class MoimPopularInfoService {
     public MoimPopularInfo getMoimPopularInfo(final Moim moim) {
         return moimPopularInfoRepository.findByMoimId(moim.getId()).orElseGet(
                 () -> {
-                    distributedLock.getLock("MOIM_POPULAR_LOCK");
+                    distributedLock.getLock("MOIM_POPULAR_LOCK" + moim.getId());
                     return moimPopularInfoRegister.setMostPopularInfoOfMoim(moim);
                 }
         );
