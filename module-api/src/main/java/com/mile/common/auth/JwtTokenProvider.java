@@ -123,6 +123,10 @@ public class JwtTokenProvider {
     }
 
     public HashMap<Long, WriterNameInfo> getJoinedRoleFromJwt(final String token) {
+
+        if(!validateToken(token).equals(JwtValidationType.VALID_JWT)) {
+            throw new UnauthorizedException(ErrorMessage.TOKEN_INCORRECT_ERROR);
+        }
         Claims claims = getBody(token);
         Object joinedRole = claims.get(JOINED_ROLE);
         HashMap<Long, WriterNameInfo> roleMap = objectMapper.convertValue(joinedRole, new TypeReference<HashMap<Long, WriterNameInfo>>() {});
