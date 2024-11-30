@@ -47,7 +47,6 @@ public class MoimPopularInfoRegister {
 
     @CachePut(value = "moimPopularInfo", key = "#moim.id")
     public MoimPopularInfo setMostPopularInfoOfMoim(final Moim moim) {
-        distributedLock.getLock("MOIM_POPULAR_LOCK");
 
         List<PostAndCuriousCountInLastWeek> mostCuriousPostsInLastWeek = curiousRetriever.findMostCuriousPostsInLastWeek(moim);
 
