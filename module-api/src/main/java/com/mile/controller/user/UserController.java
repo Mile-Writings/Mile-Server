@@ -57,7 +57,6 @@ public class UserController implements UserControllerSwagger {
 
     @GetMapping("/refresh-token")
     @Override
-    @UserAuthAnnotation(UserAuthenticationType.USER)
     public SuccessResponse<AccessTokenGetSuccess> refreshToken(
             @CookieValue(name = REFRESH_TOKEN) Cookie cookie
     ) {
