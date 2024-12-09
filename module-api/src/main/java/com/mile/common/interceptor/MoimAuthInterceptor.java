@@ -1,6 +1,7 @@
 package com.mile.common.interceptor;
 
 import com.mile.common.auth.JwtTokenProvider;
+import com.mile.common.auth.JwtValidationType;
 import com.mile.common.auth.annotation.UserAuthAnnotation;
 import com.mile.common.utils.thread.WriterNameContextUtil;
 import com.mile.common.utils.SecureUrlUtil;
@@ -42,7 +43,9 @@ public class MoimAuthInterceptor implements HandlerInterceptor {
 
         if (annotation != null) {
             final String userToken = getUserTokenFromHeader(request);
-
+            if(jwtTokenProvider.validateToken(userToken) != JwtValidationType.VALID_JWT) {
+                throw new UnauthorizedException(ErrorMessage.TOKEN_VALIDATION_ERROR);
+            }
             final HashMap<Long, WriterNameInfo> roleFromUser = jwtTokenProvider.getJoinedRoleFromHeader(userToken);
             final Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
