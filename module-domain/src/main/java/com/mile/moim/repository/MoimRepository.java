@@ -16,6 +16,9 @@ public interface MoimRepository extends JpaRepository<Moim, Long> {
     @Query("select m from Moim m join fetch m.owner where m.id = :id")
     Optional<Moim> findById(final long id);
 
+    @Query("select m from Moim m")
+    List<Moim> findAll();
+
     Boolean existsByNormalizedName(final String normalizedName);
 
     @Query("SELECT m FROM Post p JOIN p.topic t JOIN t.moim m WHERE m.isPublic = true AND p.isTemporary = false AND p.createdAt BETWEEN :startOfWeek AND :endOfWeek GROUP BY m ORDER BY COUNT(p)")

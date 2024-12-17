@@ -84,6 +84,10 @@ public class MoimRetriever {
         return !moimRepository.existsByNormalizedName(normalizedName);
     }
 
+
+    public List<Moim> findAll() {
+        return moimRepository.findAll();
+    }
     public Optional<Moim> findByOwner(final WriterName writerName) {
         return moimRepository.findByOwner(writerName);
     }
