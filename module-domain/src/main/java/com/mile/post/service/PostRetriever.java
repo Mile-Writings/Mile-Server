@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.response.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.post.service.dto.response.PostDataResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
@@ -119,5 +120,14 @@ public class PostRetriever {
         return topics.stream()
                 .flatMap(topic -> postRepository.findByTopic(topic).stream())
                 .collect(Collectors.toList());
+    }
+
+    public PostDataResponse getAllPostDataByMoim(final List<Moim> moimList) {
+        return PostDataResponse.of(
+                moimList.stream().collect(Collectors.toMap(
+                        entry -> entry,
+                        postRepository::findAllByMoim
+                ))
+        );
     }
 }
