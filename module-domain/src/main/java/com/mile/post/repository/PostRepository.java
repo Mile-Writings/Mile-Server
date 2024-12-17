@@ -20,6 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
         SELECT p
         FROM Post p
         WHERE p.topic.moim = :moim
+        AND p.isTemporary = false
     """)
     List<Post> findAllByMoim(final Moim moim);
     List<Post> findByTopic(final Topic topic);

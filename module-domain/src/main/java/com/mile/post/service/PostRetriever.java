@@ -103,7 +103,7 @@ public class PostRetriever {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
         return MoimCuriousPostListResponse.of(postList
                 .stream()
-                .map(p->MoimMostCuriousPostResponse.of(MoimCuriousPost.of(p))
+                .map(p -> MoimMostCuriousPostResponse.of(MoimCuriousPost.of(p))
                 ).toList());
     }
 
@@ -124,10 +124,14 @@ public class PostRetriever {
 
     public PostDataResponse getAllPostDataByMoim(final List<Moim> moimList) {
         return PostDataResponse.of(
-                moimList.stream().collect(Collectors.toMap(
-                        entry -> entry,
-                        postRepository::findAllByMoim
-                ))
+                moimList.stream().filter(moim -> {
+                            List<Post> posts = postRepository.findAllByMoim(moim);
+                            return posts != null && !posts.isEmpty();
+                        })
+                        .collect(Collectors.toMap(
+                                moim -> moim,                       // 키: Moim 객체 그대로 사용
+                                postRepository::findAllByMoim       // 값: findAllByMoim 결과 리스트
+                        ))
         );
     }
 }
