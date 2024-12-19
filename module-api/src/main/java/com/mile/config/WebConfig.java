@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${client.develop}")
     private String clientDevelop;
 
-    @Value("${cleint.dev-local}")
+    @Value("${client.dev-local}")
     private String clientDevLocal;
 
     @Value("${client.deploy}")
