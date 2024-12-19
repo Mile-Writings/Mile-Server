@@ -37,6 +37,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${client.develop}")
     private String clientDevelop;
 
+    @Value("${cleint.dev-local}")
+    private String clientDevLocal;
+
     @Value("${client.deploy}")
     private String clientDeploy;
 
@@ -55,7 +58,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(clientLocal, clientDeploy, serverLocalSet1, serverLocalSet2, serverDevelop, serverDeploy, clientDevelop)
+                .allowedOrigins(clientLocal, clientDeploy, serverLocalSet1, serverLocalSet2, serverDevelop, serverDeploy, clientDevelop, clientDevLocal)
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS")
                 .allowCredentials(true)
                 .maxAge(3000);
