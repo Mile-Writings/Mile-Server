@@ -17,6 +17,7 @@ import com.mile.post.service.dto.response.CommentListResponse;
 import com.mile.post.service.dto.response.ModifyPostGetResponse;
 import com.mile.post.service.dto.request.PostCreateRequest;
 import com.mile.post.service.dto.response.PostCuriousResponse;
+import com.mile.post.service.dto.response.PostDataResponse;
 import com.mile.post.service.dto.response.PostGetResponse;
 import com.mile.post.service.dto.request.PostPutRequest;
 import com.mile.post.service.dto.request.TemporaryPostCreateRequest;
@@ -39,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service

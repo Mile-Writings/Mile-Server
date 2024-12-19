@@ -37,6 +37,7 @@ import com.mile.common.lock.AtomicValidateUniqueMoimName;
 import com.mile.moim.service.popular.MoimPopularInfoService;
 import com.mile.post.domain.Post;
 import com.mile.post.service.PostRetriever;
+import com.mile.post.service.dto.response.PostDataResponse;
 import com.mile.topic.service.TopicCreator;
 import com.mile.topic.service.TopicRemover;
 import com.mile.topic.service.TopicRetriever;
@@ -364,5 +365,9 @@ public class MoimService {
         topicRemover.deleteTopicsByMoim(moim);
         writerNameRemover.setWriterNameMoimNull(moim.getOwner());
         moimRemover.deleteMoim(moim);
+    }
+
+    public PostDataResponse getAllPostMoimMap() {
+        return postRetriever.getAllPostDataByMoim(moimRetriever.findAll());
     }
 }

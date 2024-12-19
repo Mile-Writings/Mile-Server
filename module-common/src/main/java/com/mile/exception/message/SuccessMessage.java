@@ -54,6 +54,7 @@ public enum SuccessMessage {
     WRITER_NAME_DESCRIPTION_UPDATE_SUCCESS(HttpStatus.OK.value(), "소개글 수정이 완료 되었습니다."),
     MOIM_PUBLIC_STATUS_GET_SUCCESS(HttpStatus.OK.value(), "글모임 공개여부 조회가 완료되었습니다."),
     MOIM_DELETE_SUCCESS(HttpStatus.OK.value(), "글모임 삭제가 완료되었습니다."),
+    MOIM_POST_MAP_GET_SUCCESS(HttpStatus.OK.value(), "메타데이터를 위한 글-글모임 전체데이터가 조회가 완료되었습니다"),
     /*
     201 CREATED
      */
