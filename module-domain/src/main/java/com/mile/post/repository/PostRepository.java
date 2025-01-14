@@ -1,5 +1,6 @@
 package com.mile.post.repository;
 
+import com.mile.moim.domain.Moim;
 import com.mile.post.domain.Post;
 import com.mile.topic.domain.Topic;
 
@@ -15,6 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     boolean existsPostByIdAndWriterNameId(final Long postId, final Long userId);
 
+    @Query("""
+        SELECT p
+        FROM Post p
+        WHERE p.topic.moim = :moim
+        AND p.isTemporary = false
+    """)
+    List<Post> findAllByMoim(final Moim moim);
     List<Post> findByTopic(final Topic topic);
 
     int countByWriterNameId(final Long writerNameId);

@@ -10,6 +10,7 @@ import com.mile.moim.service.dto.response.MoimCuriousPostListResponse;
 import com.mile.moim.service.dto.response.MoimMostCuriousPostResponse;
 import com.mile.post.domain.Post;
 import com.mile.post.repository.PostRepository;
+import com.mile.post.service.dto.response.PostDataResponse;
 import com.mile.topic.domain.Topic;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
@@ -102,7 +103,7 @@ public class PostRetriever {
         List<Post> postList = getPostHaveCuriousCount(postRepository.findTop2ByMoimOrderByCuriousCountDesc(moim));
         return MoimCuriousPostListResponse.of(postList
                 .stream()
-                .map(p->MoimMostCuriousPostResponse.of(MoimCuriousPost.of(p))
+                .map(p -> MoimMostCuriousPostResponse.of(MoimCuriousPost.of(p))
                 ).toList());
     }
 
@@ -119,5 +120,18 @@ public class PostRetriever {
         return topics.stream()
                 .flatMap(topic -> postRepository.findByTopic(topic).stream())
                 .collect(Collectors.toList());
+    }
+
+    public PostDataResponse getAllPostDataByMoim(final List<Moim> moimList) {
+        return PostDataResponse.of(
+                moimList.stream().filter(moim -> {
+                            List<Post> posts = postRepository.findAllByMoim(moim);
+                            return posts != null && !posts.isEmpty();
+                        })
+                        .collect(Collectors.toMap(
+                                moim -> moim,                       // 키: Moim 객체 그대로 사용
+                                postRepository::findAllByMoim       // 값: findAllByMoim 결과 리스트
+                        ))
+        );
     }
 }
