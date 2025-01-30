@@ -47,19 +47,19 @@ jobs:
           docker build --platform linux/amd64 -t mile1217/mile-server .
           docker push mile1217/mile-server
         working-directory: ${{ env.working-directory }}
-
   production-deploy-cd:
     needs: production-deploy-ci
     runs-on: ubuntu-22.04
 
     steps:
-      - name: 도커 컨테이너 배포
+      - name: deploy run
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.NEW_PROD_IP }}
           username: ${{ secrets.NEW_PROD_USER }}
           key: ${{ secrets.NEW_PROD_SSH }}
           script: |
+            cd ~
             if docker ps | grep -q redis && docker ps | grep -q nginx; then
               docker-compose pull app
               docker-compose up -d --no-deps app
