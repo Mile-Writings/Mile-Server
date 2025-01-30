@@ -1,8 +1,6 @@
 name: PROD-CD
 
-on:
-  push:
-    branches: [ "main" ]
+on: [ "push" ]
 
 jobs:
   production-deploy-ci:
