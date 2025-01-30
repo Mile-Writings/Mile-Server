@@ -64,7 +64,6 @@ jobs:
               docker-compose pull app
               docker-compose up -d --no-deps app
             else
-              echo "all service is not running"
-              docker-compose down
-              docker-compose pull
-              docker-compose up -d --build
+              docker-compose pull  
+              docker-compose up -d --build --remove-orphans
+            fi
