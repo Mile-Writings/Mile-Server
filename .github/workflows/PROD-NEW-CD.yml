@@ -1,6 +1,7 @@
-name: PROD-CD
+name: PROD-NEW-CD
 
-on: [ "push" ]
+on:
+  push: [ "main" ]
 
 jobs:
   production-deploy-ci:
