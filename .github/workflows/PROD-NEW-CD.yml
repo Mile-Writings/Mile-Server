@@ -60,12 +60,4 @@ jobs:
           username: ${{ secrets.NEW_PROD_USER }}
           key: ${{ secrets.NEW_PROD_SSH }}
           script: |
-            docker login
-            cd ~
-            if docker ps | grep -q redis && docker ps | grep -q nginx; then
-              docker-compose pull app
-              docker-compose up -d --no-deps app
-            else
-              docker-compose pull  
-              docker-compose up -d --build --remove-orphans
-            fi
+            docker-compose up -d --build --remove-orphans
