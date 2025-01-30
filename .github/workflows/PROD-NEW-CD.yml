@@ -44,6 +44,7 @@ jobs:
 
       - name: Docker 이미지 빌드 및 푸시
         run: |
+          docker login
           docker build --platform linux/amd64 -t mile1217/mile-server .
           docker push mile1217/mile-server
         working-directory: ${{ env.working-directory }}
@@ -59,6 +60,7 @@ jobs:
           username: ${{ secrets.NEW_PROD_USER }}
           key: ${{ secrets.NEW_PROD_SSH }}
           script: |
+            docker login
             cd ~
             if docker ps | grep -q redis && docker ps | grep -q nginx; then
               docker-compose pull app
