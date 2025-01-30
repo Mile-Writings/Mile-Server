@@ -1,7 +1,7 @@
 version : "3.8"
 services:
   app:
-    image: "mile-server"
+    image: "mile1217/mile-server"
     container_name: mile
     ports:
         - "8080:8080"
