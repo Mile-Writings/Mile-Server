@@ -1,4 +1,4 @@
-name: PROD-NEW-CD
+name: PROD-V2-CD
 
 on:
   release:
