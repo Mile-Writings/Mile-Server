@@ -1,8 +1,8 @@
 name: PROD-NEW-CD
 
 on:
-  push:
-    branches: [ "main" ]
+  release:
+    types: [published]
 
 jobs:
   production-deploy-ci:
@@ -63,10 +63,4 @@ jobs:
           key: ${{ secrets.NEW_PROD_SSH }}
           script: |
             cd ~
-            if docker ps | grep -q redis && docker ps | grep -q nginx; then
-              docker-compose pull app
-              docker-compose up -d --no-deps app
-            else
-              docker-compose pull  
-              docker-compose up -d --build --remove-orphans
-            fi
+            ./deploy.sh
