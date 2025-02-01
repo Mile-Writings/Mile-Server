@@ -1,8 +1,8 @@
 name: PROD-V2-CD
 
-on: [push]
-#  release:
-#    types: [published]
+on:
+  release:
+    types: [published]
 
 
 jobs:
