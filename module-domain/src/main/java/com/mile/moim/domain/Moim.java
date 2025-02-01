@@ -3,6 +3,7 @@ package com.mile.moim.domain;
 import com.mile.common.config.BaseTimeEntity;
 import com.mile.moim.service.dto.request.MoimCreateRequest;
 import com.mile.moim.service.dto.request.MoimInfoModifyRequest;
+import com.mile.util.ImageUrlUtil;
 import com.mile.writername.domain.WriterName;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -76,7 +77,7 @@ public class Moim extends BaseTimeEntity {
     public static Moim create(
             final MoimCreateRequest moimCreateRequest
     ) {
-        String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
+        String DEFAULT_IMG_URL = ImageUrlUtil.defaultV1;
 
         return Moim.builder()
                 .name(moimCreateRequest.moimName())

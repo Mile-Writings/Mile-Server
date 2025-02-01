@@ -6,6 +6,7 @@ import com.mile.post.service.dto.request.PostCreateRequest;
 import com.mile.post.service.dto.request.TemporaryPostCreateRequest;
 import com.mile.topic.domain.Topic;
 import com.mile.common.utils.SecureUrlUtil;
+import com.mile.util.ImageUrlUtil;
 import com.mile.writername.domain.WriterName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class PostCreator {
     private final PostRepository postRepository;
     private final SecureUrlUtil secureUrlUtil;
     private static final boolean TEMPORARY_TRUE = true;
-    private static final String DEFAULT_IMG_URL = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
+    private static final String DEFAULT_IMG_URL = ImageUrlUtil.defaultV1;
     private static final boolean TEMPORARY_FALSE = false;
 
     private boolean checkContainPhoto(final String imageUrl) {
