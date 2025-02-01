@@ -1,9 +1,9 @@
 name: PROD-NEW-CD
 
-on: [push]
-#  release:
-#    types: [published]
-#  [push]
+on:
+  release:
+    types: [published]
+
 
 jobs:
   production-deploy-ci:
