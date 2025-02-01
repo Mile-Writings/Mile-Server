@@ -3,6 +3,7 @@ package com.mile.post.domain;
 import com.mile.common.config.BaseTimeEntity;
 import com.mile.post.service.dto.request.PostPutRequest;
 import com.mile.topic.domain.Topic;
+import com.mile.util.ImageUrlUtil;
 import com.mile.writername.domain.WriterName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -91,7 +92,7 @@ public class Post extends BaseTimeEntity {
             final Topic topic,
             final PostPutRequest putRequest
     ) {
-        final String DEFAULT_IMAGE = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
+        final String DEFAULT_IMAGE = ImageUrlUtil.defaultV1;
         this.topic = topic;
         this.title = putRequest.title();
         this.content = putRequest.content();
@@ -112,7 +113,7 @@ public class Post extends BaseTimeEntity {
             final String imageUrl,
             final boolean containPhoto
     ) {
-        final String DEFAULT_IMAGE = "https://mile-s3.s3.ap-northeast-2.amazonaws.com/test/groupMile.png";
+        final String DEFAULT_IMAGE = ImageUrlUtil.defaultV1;
         if (!containPhoto) {
             return DEFAULT_IMAGE;
         } else {
