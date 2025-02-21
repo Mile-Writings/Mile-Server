@@ -17,7 +17,7 @@ public record TemporaryPostCreateRequest(
         @Schema(description = "글 제목", example = "편안한 글쓰기")
         String title,
 
-        @Size(max = 2500, message = "내용 최대 글자를 초과했습니다.")
+        @Size(max = 10000, message = "내용 최대 글자를 초과했습니다.")
         @Schema(description = "글 내용", example = "내용입니다.")
         String content,
 
