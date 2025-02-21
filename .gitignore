@@ -9,5 +9,3 @@ module-auth/build/
 module-api/src/main/resources/application.yml
 
 module-domain/src/test/resources/application.yml
-
-Dockerfile
