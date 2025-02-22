@@ -41,7 +41,7 @@ public class WriterNameService {
     private final MoimRemover moimRemover;
 
     private static final int WRITERNAME_PER_PAGE_SIZE = 5;
-    private static final int WRITERNAME_MAX_SIZE = 5;
+    private static final int WRITERNAME_MAX_SIZE = 10;
     private final CommentReplyRetriever commentReplyRetriever;
 
     public WriterNameDescriptionResponse findWriterNameDescription(
