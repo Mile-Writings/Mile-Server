@@ -47,7 +47,7 @@ jobs:
       - name: Docker 이미지 빌드 및 푸시
         run: |
           docker login
-          docker build --platform linux/amd64 -t mile1217/mile-server .
+          docker build -f Dockerfile.prod --platform linux/amd64 -t mile1217/mile-server .
           docker push mile1217/mile-server
         working-directory: ${{ env.working-directory }}
   production-deploy-cd:
