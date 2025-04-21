@@ -8,7 +8,7 @@ public record MoimCreateRequest(
         @Size(max = 10, message = "글모임명은 최대 10자 이내로 작성해주세요.")
         @NotBlank(message = "글감 제목이 비어 있습니다.")
         String moimName,
-        @Size(max = 90, message = "글모임 소개글은 90자 이내로 작성해주세요.")
+        @Size(max = 100, message = "글모임 소개글은 90자 이내로 작성해주세요.")
         String moimDescription,
         @NotNull(message = "공개 여부를 선택해 주세요.")
         Boolean isPublic,
