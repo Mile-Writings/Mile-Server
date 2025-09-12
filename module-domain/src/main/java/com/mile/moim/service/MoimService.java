@@ -193,18 +193,6 @@ public class MoimService {
         return TopicListResponse.of(topicRetriever.getKeywordsFromMoim(moimId));
     }
 
-    public void getAuthenticateOwnerOfMoim(
-            final Long moimId,
-            final Long userId
-    ) {
-        Long writerNameId = writerNameRetriever.getWriterNameIdByMoimIdAndUserId(moimId, userId);
-        Moim moim = moimRetriever.findById(moimId);
-        if (!moim.getOwner().getId().equals(writerNameId)) {
-            throw new ForbiddenException(ErrorMessage.MOIM_OWNER_AUTHENTICATION_ERROR);
-        }
-    }
-
-
     public List<Moim> getBestMoimByPostNumber() {
 
         List<Moim> moims = moimRetriever.findBestMoims();
