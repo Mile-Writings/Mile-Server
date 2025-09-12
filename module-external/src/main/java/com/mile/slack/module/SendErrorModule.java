@@ -47,7 +47,7 @@ public class SendErrorModule extends SendWebhookMessage {
         sb.append("🏃🏻PROFILE🏃🏻").append("\n").append(profile).append("\n").append("\n");
         sb.append("🆔REQUEST ID🆔").append("\n").append(MDC.get("request_id")).append("\n").append("\n");
         sb.append("️✏️DETAILS✏️").append("\n").append(readRootStackTrace(exception)).append("\n");
-
+        sb.append("☑️REQUEST URL☑️").append("\n").append(MDC.get("path")).append("\n").append("\n");
         return new Message(sb.toString());
     }
 
