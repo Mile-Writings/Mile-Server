@@ -1,0 +1,149 @@
+name: RDS Snapshot Share → Copy → Restore (source -> target)
+
+on:
+  workflow_dispatch:
+    inputs:
+      cleanup:
+        description: 'Delete temp DB and manual snapshot in source after success? (true/false)'
+        required: false
+        default: 'false'
+
+env:
+  AWS_REGION: ap-northeast-2
+  TEMP_DB_IDENTIFIER: mile2026
+  TGT_DB_IDENTIFIER: mile2026
+  TGT_DB_INSTANCE_CLASS: db.t3.micro
+
+jobs:
+  share-manual-snapshot:
+    name: Create manual snapshot from temp DB & share to target account
+    runs-on: ubuntu-latest
+    outputs:
+      manual_snap: ${{ steps.create_snapshot.outputs.manual_snap }}
+    steps:
+      - name: Configure AWS (source account)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.SRC_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SRC_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Create manual DB snapshot from TEMP DB
+        id: create_snapshot
+        run: |
+          set -e
+          MANUAL_SNAP="${{ env.TEMP_DB_IDENTIFIER }}-manual-$(date +%s)"
+          echo "Creating snapshot: $MANUAL_SNAP from DB: ${{ env.TEMP_DB_IDENTIFIER }}"
+          aws rds create-db-snapshot \
+            --db-instance-identifier "${{ env.TEMP_DB_IDENTIFIER }}" \
+            --db-snapshot-identifier "$MANUAL_SNAP" \
+            --region "${{ env.AWS_REGION }}"
+          echo "Waiting for snapshot to become available..."
+          aws rds wait db-snapshot-available \
+            --db-snapshot-identifier "$MANUAL_SNAP" \
+            --region "${{ env.AWS_REGION }}"
+          echo "manual_snap=$MANUAL_SNAP" >> "$GITHUB_OUTPUT"
+
+      - name: Share manual snapshot to target account
+        run: |
+          set -e
+          MANUAL_SNAP="${{ steps.create_snapshot.outputs.manual_snap }}"
+          echo "Sharing snapshot $MANUAL_SNAP to account ${{ secrets.TGT_ACCOUNT_ID }}"
+          aws rds modify-db-snapshot-attribute \
+            --db-snapshot-identifier "$MANUAL_SNAP" \
+            --attribute-name restore \
+            --values-to-add "${{ secrets.TGT_ACCOUNT_ID }}" \
+            --region "${{ env.AWS_REGION }}"
+          echo "Shared."
+
+  copy-and-restore-on-target:
+    name: Copy shared snapshot in target account & restore DB
+    needs: share-manual-snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS (target account)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.TGT_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TGT_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Copy shared snapshot into target account
+        id: copy_snap
+        run: |
+          set -e
+          MANUAL_SNAP="${{ needs.share-manual-snapshot.outputs.manual_snap }}"
+          if [ -z "$MANUAL_SNAP" ] || [ "$MANUAL_SNAP" = "null" ]; then
+            echo "ERROR: manual snapshot name not found from previous job."
+            exit 1
+          fi
+          SNAP_ARN="arn:aws:rds:${{ env.AWS_REGION }}:${{ secrets.SRC_ACCOUNT_ID }}:snapshot:${MANUAL_SNAP}"
+          COPY_SNAP="${MANUAL_SNAP}-copy-$(date +%s)"
+          echo "Copying snapshot from $SNAP_ARN to new snapshot $COPY_SNAP in this (target) account..."
+          aws rds copy-db-snapshot \
+            --source-db-snapshot-identifier "$SNAP_ARN" \
+            --target-db-snapshot-identifier "$COPY_SNAP" \
+            --region "${{ env.AWS_REGION }}"
+          echo "Waiting for copied snapshot to become available..."
+          aws rds wait db-snapshot-available \
+            --db-snapshot-identifier "$COPY_SNAP" \
+            --region "${{ env.AWS_REGION }}"
+          echo "copy_snap=$COPY_SNAP" >> "$GITHUB_OUTPUT"
+
+      - name: Restore DB from copied snapshot (creates new instance ${TGT_DB_IDENTIFIER})
+        run: |
+          set -e
+          COPY_SNAP="${{ steps.copy_snap.outputs.copy_snap }}"
+          if [ -z "$COPY_SNAP" ] || [ "$COPY_SNAP" = "null" ]; then
+            echo "ERROR: copy snapshot name not found."
+            exit 1
+          fi
+          echo "Restoring DB instance '${{ env.TGT_DB_IDENTIFIER }}' from snapshot '${COPY_SNAP}' on instance class ${{ env.TGT_DB_INSTANCE_CLASS }}..."
+          aws rds restore-db-instance-from-db-snapshot \
+            --db-instance-identifier "${{ env.TGT_DB_IDENTIFIER }}" \
+            --db-snapshot-identifier "$COPY_SNAP" \
+            --db-instance-class "${{ env.TGT_DB_INSTANCE_CLASS }}" \
+            --region "${{ env.AWS_REGION }}"
+          echo "Waiting for restored DB to be available..."
+          aws rds wait db-instance-available \
+            --db-instance-identifier "${{ env.TGT_DB_IDENTIFIER }}" \
+            --region "${{ env.AWS_REGION }}"
+          echo "Restored target DB '${{ env.TGT_DB_IDENTIFIER }}' is available."
+
+  cleanup-source-temp:
+    name: Cleanup (delete temp DB & manual snapshot in source) [optional]
+    needs: copy-and-restore-on-target
+    if: ${{ github.event.inputs.cleanup == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS (source account)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.SRC_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SRC_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Delete temp DB (skip final snapshot)
+        run: |
+          set -e
+          TEMP_DB="${{ env.TEMP_DB_IDENTIFIER }}"
+          echo "Deleting temp DB instance $TEMP_DB (skip final snapshot)..."
+          aws rds delete-db-instance \
+            --db-instance-identifier "$TEMP_DB" \
+            --skip-final-snapshot \
+            --region "${{ env.AWS_REGION }}" || true
+          echo "Waiting for deletion (may take a while)..."
+          aws rds wait db-instance-deleted --db-instance-identifier "$TEMP_DB" --region "${{ env.AWS_REGION }}" || true
+          echo "Deleted temp DB (or already deleted)."
+
+      - name: Delete manual snapshot
+        run: |
+          set -e
+          MANUAL_SNAP="${{ needs.share-manual-snapshot.outputs.manual_snap }}"
+          if [ -n "$MANUAL_SNAP" ] && [ "$MANUAL_SNAP" != "null" ]; then
+            echo "Deleting manual snapshot $MANUAL_SNAP ..."
+            aws rds delete-db-snapshot --db-snapshot-identifier "$MANUAL_SNAP" --region "${{ env.AWS_REGION }}" || true
+            echo "Deleted manual snapshot (or already deleted)."
+          else
+            echo "No manual snapshot name found; skipping snapshot delete."
+          fi
